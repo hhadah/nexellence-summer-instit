@@ -1,0 +1,29 @@
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*_cache/
+*_files/
+
+# Stata
+*.smcl
+*.stpr
+*.gph
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.toc
+*.bbl
+*.blg
+
+# macOS
+.DS_Store
+
+# General
+*.tmp
