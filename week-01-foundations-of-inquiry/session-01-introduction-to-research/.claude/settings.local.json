@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m markitdown Presentation1.pptx)",
+      "Bash(python3 -m markitdown Presentation1.pptx)",
+      "Bash(mdls -name kMDItemNumberOfPages \"/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/assets/Presentation1.pdf\")"
+    ]
+  }
+}
