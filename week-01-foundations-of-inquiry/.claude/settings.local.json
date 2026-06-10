@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m markitdown assets/Presentation2.pptx)"
+    ]
+  }
+}
