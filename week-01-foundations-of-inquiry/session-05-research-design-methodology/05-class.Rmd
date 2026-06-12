@@ -1,0 +1,1218 @@
+---
+title: "Research Methods"
+subtitle: "Day 5: Research Design — Reliability, Validity, Sampling & the Literature Review"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Reflection: How Is It Going?</h4></li>
+    <li><h4 class="white">Reliability & Validity</h4></li>
+    <li><h4 class="white">Sampling</h4></li>
+    <li><h4 class="white">Materials, Resources & Timeline</h4></li>
+    <li><h4 class="white">Literature Review & Citing</h4></li>
+</ol>
+
+---
+class: segue-yellow
+
+# Welcome to Day 5! `r top_icon("star")`
+
+---
+### Let's Reflect on Our Process
+
+.pull-left[
+```{r img1, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/01-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+<br>
+
+### `r fontawesome::fa("comments", height = "1em", fill = "#4a7fb5")` &nbsp; What are your thoughts?
+
+<br>
+
+### `r fontawesome::fa("mountain", height = "1em", fill = "#4a7fb5")` &nbsp; What are the challenges you are facing?
+
+<br>
+
+### `r fontawesome::fa("forward", height = "1em", fill = "#4a7fb5")` &nbsp; What can be done next?
+]
+
+---
+### REFINEMENT IS NORMAL!
+
+.pull-left[
+```{r img2, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/02-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+<br>
+
+#### Questions and hypotheses often evolve as you learn more.
+
+<br>
+
+### But how do you "learn more"?
+
+.font120[<strong style="color:#0148A4;">Answer: Literature Review &mdash; next phase of research!</strong>]
+]
+
+---
+### SMALL PROGRESS IS STILL PROGRESS
+
+.pull-left[
+```{r img2b, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/02-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+<br>
+
+<br>
+
+### You are just beginning this journey.
+
+<br>
+
+#### Allow yourself to take smaller steps. And trust the process.
+]
+
+---
+### HOW YOU LOOK AT IT IS A GAME-CHANGER
+
+.pull-left[
+```{r img2c, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/02-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+<br>
+
+<br>
+
+#### If you see it like "spending your time reading articles" vs. **making an exploration**.
+
+<br>
+
+#### Take 2&ndash;3 key points from a resource and keep on with exploring.
+]
+
+---
+### Now, Let's Continue with Planning
+
+.pull-left[
+```{r img1b, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/01-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+<br>
+
+<br>
+
+## `r fontawesome::fa("bullseye", height = "1em", fill = "#4a7fb5")` &nbsp; Reliability &amp; Validity
+
+<br>
+
+## `r fontawesome::fa("users", height = "1em", fill = "#4a7fb5")` &nbsp; Sampling
+]
+
+---
+### Reliability and Validity
+
+.pull-left[
+.content-box-blue[
+### `r fontawesome::fa("rotate", height = "1em", fill = "#4a7fb5")` Reliability
+
+**Consistency of results if repeated under the same conditions.**
+
+- Would you get similar results if repeated?
+- Are measurements consistent?
+- Is your procedure standardized?
+]
+]
+
+.pull-right[
+```{r img3, echo=FALSE, warning=FALSE, out.width="80%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/03-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+background-image: url("assets/04-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Improving Reliability
+
+.font90[
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("list-check", fill = "#4a7fb5")` Standardize Procedures**
+
+Use the same methods, instructions, and conditions for all participants or trials.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("wrench", fill = "#4a7fb5")` Check Instruments**
+
+Ensure measuring tools are working properly and giving consistent readings.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("rotate", fill = "#4a7fb5")` Multiple Trials**
+
+Repeat measurements or tests to see if results are consistent.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("users", fill = "#4a7fb5")` Larger Sample Size**
+
+Include more participants or items to reduce the impact of individual variations.
+]
+]
+]
+
+---
+### Reliability and Validity
+
+.pull-left[
+.content-box-blue[
+### `r fontawesome::fa("rotate", height = "1em", fill = "#4a7fb5")` Reliability
+
+**Consistency of results if repeated under the same conditions.**
+]
+]
+
+.pull-right[
+.content-box-green[
+### `r fontawesome::fa("bullseye", height = "1em", fill = "#4a7fb5")` Validity
+
+**Whether you're actually measuring what you intend to measure.**
+
+- Does your method truly address your question?
+- Are your measurements relevant?
+- Can you draw appropriate conclusions?
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[.font110[Good research needs **both reliability and validity** to be trustworthy.]]
+
+---
+### Improving Validity
+
+.pull-left[
+```{r img5, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/05-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Align Methods with Questions</strong><br>
+  Choose research approaches that directly address what you want to know.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Use Multiple Measures</strong><br>
+  Collect different types of data to get a more complete picture of what you're studying.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Control Variables</strong><br>
+  Identify and minimize factors that could confuse your results.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Pilot Test</strong><br>
+  Try out your methods on a small scale first to identify and fix problems.</div>
+</div>
+]]
+
+---
+### Aisha's Research Revisited
+
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("xmark", fill = "#D55E00")` Initial Approach (Poor)**
+
+- Different music for each friend
+- "Productivity" measured by self-reports of "fine" or "good"
+- Different tasks for each person
+- Inconsistent reporting methods
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("check", fill = "#009E73")` Improved Approach (Better)**
+
+- Same calm music playlist for all
+- Productivity measured by task completion and quiz scores
+- Same reading and math tasks for everyone
+- Consistent 30-minute sessions
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[The improved design has **better reliability and validity**, leading to more trustworthy results.]
+
+---
+### Sampling: Who or What Will You Study?
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` What is a Sample?**
+
+A smaller subset of the population or items you're interested in.
+
+Since studying everyone or everything is usually impossible, researchers select representatives.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**`r fontawesome::fa("key", fill = "#4a7fb5")` Key Sampling Questions**
+
+- How many people/items will you include?
+- How will you select them?
+- Will your sample represent the larger group?
+- What potential biases might affect your selection?
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[Good sampling makes your results more **reliable, generalizable and valid**.]
+
+---
+### Types of Sampling
+
+.pull-left[.font90[
+.content-box-blue[
+**`r fontawesome::fa("dice", fill = "#4a7fb5")` Random Sampling**
+
+Everyone has equal chance of selection (like drawing names from a hat).
+]
+
+.content-box-blue[
+**`r fontawesome::fa("layer-group", fill = "#4a7fb5")` Stratified Sampling**
+
+Select from important subgroups to ensure representation (e.g., different grades).
+]
+
+.content-box-blue[
+**`r fontawesome::fa("object-group", fill = "#4a7fb5")` Cluster Sampling**
+
+Randomly select entire groups (randomly choose 3 classrooms).
+]
+]]
+
+--
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("hand-point-right", fill = "#4a7fb5")` Convenience Sampling**
+
+Select whoever is easiest to reach (like your own class).
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("bullseye", fill = "#4a7fb5")` Purposive Sampling**
+
+Deliberately select specific cases based on research needs.
+]
+]]
+
+---
+### Sampling Examples
+
+.pull-left[
+```{r img8, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/08-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+#### `r fontawesome::fa("clipboard-list", height = "1em", fill = "#4a7fb5")` &nbsp; Survey
+Instead of surveying all 1,200 students in a school, randomly select 120 students across all grade levels.
+
+#### `r fontawesome::fa("seedling", height = "1em", fill = "#4a7fb5")` &nbsp; Plant Experiment
+Use 30 plants of the same species and size, randomly assigning 15 to experimental and 15 to control groups.
+
+#### `r fontawesome::fa("eye", height = "1em", fill = "#4a7fb5")` &nbsp; Observation
+Instead of observing a park 24/7, sample time periods by observing for 1 hour on mornings and 1 hour on afternoons.
+
+#### `r fontawesome::fa("landmark", height = "1em", fill = "#4a7fb5")` &nbsp; Historical Research
+Instead of reading every newspaper from 100 years, sample by examining the first issue of each month from selected years.
+]]
+
+---
+### Sampling Bias
+
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` What is Sampling Bias?**
+
+When your sample doesn't fairly represent the population you're studying.
+
+This can skew results and lead to incorrect conclusions.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("utensils", fill = "#4a7fb5")` Example**
+
+Surveying only cooking club members about school lunch preferences would give biased results.
+
+These students likely have different food interests than the general student body.
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[Even with limited resources, try to **broaden your sample** to reduce obvious biases.]
+
+---
+background-image: url("assets/10-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Practical Sampling Tips
+
+.font90[
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("tower-broadcast", fill = "#4a7fb5")` Broaden Your Reach**
+
+Instead of just surveying friends, include students from different classes or groups.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("dice", fill = "#4a7fb5")` Use Random Selection**
+
+When possible, use methods like drawing names or random number generators to select participants.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("scale-balanced", fill = "#4a7fb5")` Consider Balance**
+
+Try to include representation from important subgroups (different grades, genders, etc.).
+]
+
+.content-box-blue[
+**`r fontawesome::fa("comment-dots", fill = "#4a7fb5")` Acknowledge Limitations**
+
+Be transparent about who your sample represents and any potential biases.
+]
+]
+]
+
+---
+### Materials and Resources
+
+.pull-left[
+```{r img11, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/11-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+<br>
+
+### `r fontawesome::fa("laptop", height = "1em", fill = "#4a7fb5")` &nbsp; Equipment
+
+### `r fontawesome::fa("users", height = "1em", fill = "#4a7fb5")` &nbsp; People
+
+### `r fontawesome::fa("key", height = "1em", fill = "#4a7fb5")` &nbsp; Access &amp; Permissions
+
+### `r fontawesome::fa("coins", height = "1em", fill = "#4a7fb5")` &nbsp; Budget
+]
+
+---
+background-image: url("assets/12-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Equipment Planning
+
+.font90[
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("laptop", fill = "#4a7fb5")` Technology**
+
+Computers, tablets, cameras, recording devices, or specialized equipment.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("flask", fill = "#4a7fb5")` Lab Supplies**
+
+Chemicals, test tubes, measuring tools, or experiment-specific materials.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("file-lines", fill = "#4a7fb5")` Documentation Tools**
+
+Survey forms, observation checklists, interview guides, or data collection sheets.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("ruler", fill = "#4a7fb5")` Measurement Instruments**
+
+Stopwatches, rulers, scales, thermometers, or other measuring devices.
+]
+]
+]
+
+---
+### Budget Considerations
+
+.pull-left[
+```{r img13, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/13-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Low-Cost Alternatives</strong><br>
+  Look for free or inexpensive substitutes for costly materials. Borrow equipment when possible.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>School Resources</strong><br>
+  Check what supplies your school already has available for student projects.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Funding Options</strong><br>
+  Consider mini-grants from school clubs, PTAs, or community organizations for special projects.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Scale Appropriately</strong><br>
+  Adjust your project scope to match available resources rather than overextending.</div>
+</div>
+]]
+
+---
+background-image: url("assets/14-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Access and Permissions
+
+.font90[
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("door-open", fill = "#4a7fb5")` Physical Spaces**
+
+Permission to use classrooms, labs, libraries, or community spaces for your research.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("database", fill = "#4a7fb5")` Information Access**
+
+Approval to use school records, databases, or other information sources.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("signature", fill = "#4a7fb5")` Participant Consent**
+
+Permission from people (and parents for minors) to participate in your study.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("building-columns", fill = "#4a7fb5")` Institutional Approval**
+
+Permission from school administration for activities that affect school operations.
+]
+]
+]
+
+---
+### People Resources
+
+.pull-left[
+```{r img15, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/15-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+#### `r fontawesome::fa("people-group", height = "1em", fill = "#4a7fb5")` &nbsp; Research Team
+Friends or classmates who will help conduct the research. List specific roles and responsibilities.
+
+#### `r fontawesome::fa("user-check", height = "1em", fill = "#4a7fb5")` &nbsp; Participants
+How many people will be in your study? How will you recruit them? What will they need to do?
+
+#### `r fontawesome::fa("chalkboard-user", height = "1em", fill = "#4a7fb5")` &nbsp; Supervisors
+Teachers, parents, or other adults who need to oversee activities, especially for safety or access reasons.
+
+#### `r fontawesome::fa("user-graduate", height = "1em", fill = "#4a7fb5")` &nbsp; Experts
+People with specialized knowledge who might advise on your project or help interpret results.
+]]
+
+---
+### Timeline and Logistics
+
+.font110[Your project moves through four phases:]
+
+.font90[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("pen-ruler", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>1. Planning Phase</strong><br>
+    Design research, create materials, get permissions, and prepare resources.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("table-list", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>2. Data Collection</strong><br>
+    Conduct experiments, distribute surveys, perform interviews or observations.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-line", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>3. Analysis</strong><br>
+    Organize data, perform calculations, identify patterns, and interpret findings.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("share-nodes", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>4. Reporting</strong><br>
+    Write up results, create visuals, prepare presentation, and share conclusions.</p>
+  </div>
+</div>
+]
+
+---
+### Creating a Detailed Timeline
+
+.pull-left[
+```{r img17, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/17-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Schedule Data Collection</strong><br>
+  Plan exactly when you'll collect data, with specific dates and times.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Estimate Duration</strong><br>
+  Calculate how long each session or step will take to ensure it's feasible.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Include Waiting Periods</strong><br>
+  Account for necessary delays between steps, like plant growth or survey response time.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Set Internal Deadlines</strong><br>
+  Create target dates for completing each phase to stay on track throughout the project.</div>
+</div>
+]]
+
+---
+### Flexibility and Troubleshooting
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` Anticipate Challenges**
+
+Think ahead about what might go wrong and how you'll handle it.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("arrows-rotate", fill = "#4a7fb5")` Be Ready to Adapt**
+
+Prepare to adjust your methods if you discover better approaches.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("file-pen", fill = "#4a7fb5")` Document Changes**
+
+Record any modifications to your original plan and why you made them.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("shield-halved", fill = "#4a7fb5")` Have Backup Plans**
+
+Create alternative approaches for critical parts of your research.
+]
+]
+
+---
+class: segue-green
+
+# NEXT: LITERATURE REVIEW `r top_icon("book-open")`
+
+---
+### What is a Literature Review?
+
+.pull-left[
+```{r img18, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/18-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+.content-box-blue[
+A literature review is a **summary and analysis** of what has already been written on a topic.
+]
+
+**It helps you:**
+
+#### `r fontawesome::fa("book-open", height = "1em", fill = "#4a7fb5")` &nbsp; Understand what's already known
+
+#### `r fontawesome::fa("magnifying-glass", height = "1em", fill = "#4a7fb5")` &nbsp; See where there are gaps or debates
+
+#### `r fontawesome::fa("ban", height = "1em", fill = "#4a7fb5")` &nbsp; Avoid repeating others' work
+
+#### `r fontawesome::fa("trowel-bricks", height = "1em", fill = "#4a7fb5")` &nbsp; Build a strong foundation for your own research
+]
+
+---
+### How to Conduct a Lit Review (Steps 1&ndash;4)
+
+.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Clarify Your Topic or Research Question</strong></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Search for Reliable Sources</strong></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Skim and Select</strong><br>
+  Read abstracts first to decide if the source is relevant. Choose a mix of recent, relevant, and diverse perspectives. Aim for at least 5&ndash;10 solid sources (depending on assignment length).</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Take Notes</strong><br>
+  Write down the main point of each source. Note how it relates to your topic, and any key quotes or data. Use color coding or a chart to organize themes or arguments.</div>
+</div>
+]
+
+---
+### How to Conduct a Lit Review (Steps 5&ndash;7)
+
+.font90[
+<div class="chev-row">
+  <div class="chev">5</div>
+  <div class="chev-text"><strong>Group by Themes or Ideas</strong><br>
+  Don't stop at summarizing each article one by one. Instead, group your notes by common themes, disagreements, or trends. Ask: What do these sources have in common? How do they differ?</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">6</div>
+  <div class="chev-text"><strong>Start Writing</strong></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">7</div>
+  <div class="chev-text"><strong>Cite Everything</strong></div>
+</div>
+]
+
+---
+### Literature Review Template (Short Version)
+
+.pull-left[
+```{r img18b, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/18-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("flag", fill = "#4a7fb5")` Begin with a short introduction**
+
+What is your topic? Why is it important?
+]
+
+.content-box-blue[
+**`r fontawesome::fa("paragraph", fill = "#4a7fb5")` Body**
+
+Share what other studies have found. Organize the body **by themes, not by author**.
+]
+
+.content-box-green[
+**`r fontawesome::fa("flag-checkered", fill = "#4a7fb5")` End with a summary**
+
+Clarify how your project connects to past research.
+]
+]
+
+---
+### Importance of Giving Reference, aka Citing
+
+.content-box-blue[
+**`r fontawesome::fa("quote-right", fill = "#4a7fb5")` What is Citing?**
+
+Citing your sources means **giving credit** to the original authors of the ideas, words, or data you use in your work.
+]
+
+--
+
+**We cite to:**
+
+#### `r fontawesome::fa("user-shield", height = "1em", fill = "#4a7fb5")` &nbsp; Avoid plagiarism (taking credit for someone else's work)
+
+#### `r fontawesome::fa("map-pin", height = "1em", fill = "#4a7fb5")` &nbsp; Show where your information came from
+
+#### `r fontawesome::fa("magnifying-glass", height = "1em", fill = "#4a7fb5")` &nbsp; Help others find those sources if they want to learn more
+
+---
+### What to Cite? What Not to Cite?
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("check", fill = "#009E73")` You should cite:**
+
+- Direct quotes (even short ones)
+- Paraphrased ideas (putting someone else's idea into your own words)
+- Statistics or data
+- Images, charts, or graphics you didn't create
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**`r fontawesome::fa("xmark", fill = "#D55E00")` You do not need to cite:**
+
+- Common knowledge (e.g., "Water freezes at 0&deg;C")
+- Your own original thoughts
+]
+]
+
+<div style="clear: both;"></div>
+
+.font90[**How to cite** *(more about this on Day 8)*: name of the first author &amp; date&mdash;in the text; full info&mdash;on the references page.]
+
+---
+class: segue-yellow
+
+# Hands-on Reading / Writing Time `r top_icon("pencil-alt")`
+
+---
+### Homework &mdash; Teamwork
+
+.pull-left[
+```{r img19, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/19-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+#### `r fontawesome::fa("file-lines", height = "1em", fill = "#4a7fb5")` &nbsp; Finish Handout 4: Research Design Blueprint
+
+#### `r fontawesome::fa("book-open", height = "1em", fill = "#4a7fb5")` &nbsp; Continue with your lit review
+Make sure you have resources that speak to **why your topic is important**. You would need this information for your upcoming presentation!
+
+#### `r fontawesome::fa("table-list", height = "1em", fill = "#4a7fb5")` &nbsp; As always, keep track of your resources
+Through "Source Tracker". Share your notes with your team members.
+]]
+
+---
+class: segue
+
+# EXTRA SLIDES FOR DAY 5
+
+---
+### Common Research Challenges
+
+.font80[
+.three-col[
+.col[
+.content-box-blue[
+**`r fontawesome::fa("user-slash", fill = "#4a7fb5")` Participation Issues**
+
+- Low survey response rates
+- Participants dropping out
+- Scheduling conflicts
+
+**Solution:** Recruit more than needed, send reminders, offer incentives, be flexible with scheduling.
+]
+]
+.col[
+.content-box-blue[
+**`r fontawesome::fa("ruler", fill = "#4a7fb5")` Measurement Problems**
+
+- Unclear results
+- Equipment failures
+- Inconsistent data
+
+**Solution:** Test instruments beforehand, use multiple measures, document anomalies, increase sample size.
+]
+]
+.col[
+.content-box-blue[
+**`r fontawesome::fa("coins", fill = "#4a7fb5")` Resource Limitations**
+
+- Budget constraints
+- Limited access
+- Time shortages
+
+**Solution:** Scale project appropriately, find alternatives, prioritize essential elements.
+]
+]
+]
+]
+
+---
+### Ethical Considerations
+
+.pull-left[
+```{r img21, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/21-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font80[
+#### `r fontawesome::fa("user-shield", height = "1em", fill = "#4a7fb5")` &nbsp; Respect Privacy
+Protect participants' identities and personal information. Use anonymous responses when possible.
+
+#### `r fontawesome::fa("signature", height = "1em", fill = "#4a7fb5")` &nbsp; Informed Consent
+Ensure participants understand what they're agreeing to. Get permission from parents for minors.
+
+#### `r fontawesome::fa("heart", height = "1em", fill = "#4a7fb5")` &nbsp; Minimize Harm
+Design research that doesn't cause physical or emotional distress to participants.
+
+#### `r fontawesome::fa("stamp", height = "1em", fill = "#4a7fb5")` &nbsp; Get Approvals
+Obtain necessary permissions from teachers, administrators, or other authorities.
+]]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.html
+
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.html",
+       to = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.pdf")
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.html")
+```
