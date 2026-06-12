@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Research Methods</title>
+    <meta charset="utf-8" />
+    <script src="08-class_files/header-attrs/header-attrs.js"></script>
+    <link href="08-class_files/remark-css/default.css" rel="stylesheet" />
+    <link href="08-class_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="08-class_files/panelset/panelset.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/tulane-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tulane.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Research Methods
+]
+.subtitle[
+## Day 8: Introduction to R — Your First Data Analysis
+]
+
+---
+
+layout: true
+&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | Research Methods | 12 June 2026&lt;/div&gt;
+
+&lt;!--- Day 8: Introduction to R — Your First Data Analysis | 12 June 2026--&gt;
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+&lt;/style&gt;
+
+# .text-shadow[.white[Outline for Today]]
+
+&lt;ol&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;What Is R and Why Use It?&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Getting Started: Installing R and RStudio&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Working with Data: Reading a CSV in R&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Scripts, Comments &amp; Reproducibility&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Data Visualization: Histograms, Bar Charts &amp; Scatter Plots&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Coding Agents for R-Based Analysis&lt;/h4&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+---
+class: segue-yellow
+
+# Chapter 3: Introduction to R — &lt;br&gt; Your First Data Analysis &lt;svg viewBox="0 0 512 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M396.8 352h22.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-192 0h22.4c6.4 0 12.8-6.4 12.8-12.8V140.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h22.4c6.4 0 12.8-6.4 12.8-12.8V204.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zM496 400H48V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zm-387.2-48h22.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### What is R and Why Use It for Data Analysis?
+
+.pull-left[.font85[
+.content-box-blue[
+**R** is an open-source statistical computing language **purpose-built for data analysis, modeling, and visualization** &amp;mdash; used by researchers at Google, the FDA, the New York Times, and most academic journals.
+]
+
+- Created by statisticians **Ross Ihaka and Robert Gentleman (1993)**.
+
+- Free, open-source, and backed by **CRAN** (Comprehensive R Archive Network) with 20,000+ packages.
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img02-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### The R Ecosystem
+
+.pull-left[.font85[
+- The R ecosystem includes **20,000+ packages on CRAN**. The most important: **tidyverse** (data wrangling), **ggplot2** (publication-quality graphics), **caret/tidymodels** (machine learning), and **Shiny** (interactive web apps).
+
+- **R vs Python:** R was built by statisticians and excels at statistical tests, mixed models, and reproducible research. Python dominates ML pipelines. Many professional data scientists use both &amp;mdash; *choose R when the question is statistical*.
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img03a-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="08-class_files/figure-html/img03b-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Real World Examples
+
+&lt;img src="08-class_files/figure-html/img04-1.png" alt="" width="68%" style="display: block; margin: auto;" /&gt;
+
+.font70[Source: [Reporting on NYC taxi data with RStudio and Databricks (Posit)](https://posit.co/blog/reporting-on-nyc-taxi-data-with-rstudio-and-databricks/)]
+
+---
+### Getting Started: Installing R and RStudio
+
+.pull-left[
+.content-box-blue[
+**RStudio** is a user-friendly application that makes coding in R easier.
+]
+
+.font90[RStudio is an **IDE** (Integrated Development Environment), which means it provides tools like a script editor, results console, and plotting window all in one place.]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img05-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Step 1: Install R
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"/></svg> &amp;nbsp; Go to: [cran.rstudio.com](https://cran.rstudio.com/)
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M128 32C92.7 32 64 60.7 64 96V352h64V96H512V352h64V96c0-35.3-28.7-64-64-64H128zM19.2 384C8.6 384 0 392.6 0 403.2C0 445.6 34.4 480 76.8 480H563.2c42.4 0 76.8-34.4 76.8-76.8c0-10.6-8.6-19.2-19.2-19.2H19.2z"/></svg> &amp;nbsp; Choose your operating system (Windows, Mac, or Linux) and download the latest version of R
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg> &amp;nbsp; After it's downloaded, follow the prompts and install it on your machine
+
+&lt;img src="08-class_files/figure-html/img06-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+### Step 2: Install RStudio
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"/></svg> &amp;nbsp; Go to: [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg> &amp;nbsp; Click on "Download RStudio..."
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M152.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 113C-2.3 103.6-2.3 88.4 7 79s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zm0 160c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 273c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zM224 96c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zM160 416c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H192c-17.7 0-32-14.3-32-32zM48 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg> &amp;nbsp; Follow the prompts
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> &amp;nbsp; Install it on your machine
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img07-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Step 3: In Case You Can't Install
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 336c0 79.5 64.5 144 144 144H512c70.7 0 128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z"/></svg> &amp;nbsp; Go to the RStudio Cloud website: [posit.cloud](https://posit.cloud/)
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg> &amp;nbsp; Sign up for a free account, and create a new project
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M.3 89.5C.1 91.6 0 93.8 0 96V224 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64V224 96c0-35.3-28.7-64-64-64H64c-2.2 0-4.4 .1-6.5 .3c-9.2 .9-17.8 3.8-25.5 8.2C21.8 46.5 13.4 55.1 7.7 65.5c-3.9 7.3-6.5 15.4-7.4 24zM48 224H464l0 192c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16l0-192z"/></svg> &amp;nbsp; You'll get an interface almost identical to RStudio Desktop
+
+.font90[This way, you can follow along with R coding through your browser **without installing anything**.]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img08-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Step 4: Run It!
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg> &amp;nbsp; Run RStudio
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M448 96V224H288V96H448zm0 192V416H288V288H448zM224 224H64V96H224V224zM64 288H224V416H64V288zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/></svg> &amp;nbsp; You should see 3 panes
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg> &amp;nbsp; Click on the left top **+** sign to start a new script
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img09-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### The Four Panes of RStudio
+
+.font80[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V299.6l-94.7 94.7c-8.2 8.2-14 18.5-16.8 29.7l-15 60.1c-2.3 9.4-1.8 19 1.4 27.8H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z"/></svg> Script Editor**
+
+A text editor for your R scripts. You can write multiple lines of code, save, and run parts or all of it.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M9.4 86.6C-3.1 74.1-3.1 53.9 9.4 41.4s32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 9.4 86.6zM256 416H544c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg> Console**
+
+The console is R's command line. Type commands one at a time and press Enter to execute &amp;mdash; or "Ctrl+Enter" on your script and it will come here.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zm0 128H480V416c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V160zm128 80c0 8.8 7.2 16 16 16H336c8.8 0 16-7.2 16-16s-7.2-16-16-16H176c-8.8 0-16 7.2-16 16z"/></svg> Environment**
+
+The Environment tab lists all the variables, data frames, and values you have created in your R session.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M384 480h48c11.4 0 21.9-6 27.6-15.9l112-192c5.8-9.9 5.8-22.1 .1-32.1S555.5 224 544 224H144c-11.4 0-21.9 6-27.6 15.9L48 357.1V96c0-8.8 7.2-16 16-16H181.5c4.2 0 8.3 1.7 11.3 4.7l26.5 26.5c21 21 49.5 32.8 79.2 32.8H416c8.8 0 16 7.2 16 16v32h48V160c0-35.3-28.7-64-64-64H298.5c-17 0-33.3-6.7-45.3-18.7L226.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H87.7 384z"/></svg> Files / Plots / Packages / Help / Viewer**
+
+**Files:** navigate files on your computer. **Plots:** graphs appear here. **Packages:** installed R packages. **Help:** documentation. **Viewer:** web content or interactive reports.
+]
+]
+]
+
+---
+### R Console Notes
+
+.font80[
+.three-col[
+.col[
+&lt;img src="assets/11a-img.png" style="width:100%; border-radius:6px;"&gt;
+
+The console shows `&gt;` &amp;mdash; it's **not running anything and is ready to go**.
+]
+.col[
+&lt;img src="assets/11b-img.png" style="width:100%; border-radius:6px;"&gt;
+
+Shows `+` &amp;mdash; **I didn't close my parenthesis.** It's waiting for me to finish my line. If you see this, check your code!
+]
+.col[
+&lt;img src="assets/11c-img.png" style="width:100%; border-radius:6px;"&gt;
+
+**I just used it as a calculator.** Try it, it's fun!
+]
+]
+]
+
+---
+### Running Your First R Commands
+
+&lt;div class="img-row" style="max-width: 85%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/12a-img.png"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/12b-img.png"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+--
+
+.content-box-yellow[
+.font90[**Quick note:** `&lt;-` and `=` are the same in R. But sticking to `&lt;-` will avoid some subtle issues.]
+]
+
+---
+### Exercise
+
+.font85[
+.content-box-blue[
+**Part A &amp;mdash; Arithmetic and assignment:**
+
+Create `a &lt;- 5` and `b &lt;- 7`. Compute: `a+b`, `a-b`, `a*b`, `a/b`, `a^2`, `b%%a`. What does `%%` (modulo) return?
+]
+
+.content-box-blue[
+**Part B &amp;mdash; Vectors (R's basic data structure):**
+
+`scores &lt;- c(85, 92, 78, 95, 61)`. Compute `mean(scores)`, `median(scores)`, `sd(scores)`, `range(scores)`. What does `c()` stand for?
+]
+
+.content-box-blue[
+**Part C &amp;mdash; Vector arithmetic is vectorized:**
+
+Try `scores * 0.9` (10% grade penalty). What happens? How does this differ from Python lists?
+]
+]
+
+---
+### Exercise: Solution
+
+.pull-left[
+**Create two variables:** `a = 5` and `b = 7`
+
+**Calculate:**
+
+```r
+a &lt;- 5
+b &lt;- 7
+
+a + b   # 12
+a - b   # -2
+a * b   # 35
+```
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img14-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Working with Data: Reading a CSV File in R
+
+.pull-left[.font90[
+- Data often comes in files, and a common format is **CSV (Comma-Separated Values)**.
+
+- Let's use a small example dataset about cars (originally derived from the `mtcars` dataset in R).
+
+**Contains information on a set of cars:**
+
+- their fuel efficiency (miles per gallon),
+- number of cylinders,
+- horsepower
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img15-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+
+.font70[.center[Source: [ebay.com](https://www.ebay.com/itm/362971887232)]]
+]
+
+---
+### Set Working Directory
+
+&lt;img src="08-class_files/figure-html/img16-1.png" alt="" width="78%" style="display: block; margin: auto;" /&gt;
+
+---
+### Read the CSV File
+
+```r
+car_data &lt;- read.csv("car_data.csv")
+```
+
+--
+
+### What happens when you run `read.csv`?
+
+.font90[
+1. R opens the file `car_data.csv`.
+
+2. It **parses the contents**, assuming the first line has column names (like "mpg", "cyl", "hp", etc.) and the subsequent lines are data.
+
+3. It creates a **data frame** object named `car_data` in memory to hold the data.
+
+4. In the Environment panel, you'll see `car_data` listed with a preview like *obs=74 vars=12*.
+]
+
+---
+### Possible Error Message
+
+.content-box-yellow[
+**If you didn't specify the data path correctly** or set your working directory correctly, R can't find the file:
+
+```
+Error in file(file, "rt") : cannot open the connection
+In addition: Warning message: ... No such file or directory
+```
+]
+
+--
+
+.content-box-green[
+**Solution:**
+
+- Set your working directory again, **or**
+- Change your `car_data.csv` path to the correct path.
+]
+
+---
+### Still Having Trouble? Another Solution
+
+.font90[Click **File &amp;rarr; Import Dataset &amp;rarr; From Text (base) &amp;rarr;** find and select your file **(Open) &amp;rarr; Import**]
+
+&lt;img src="08-class_files/figure-html/img20-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+### Get Summary Statistics
+
+```r
+summary(car_data)
+```
+
+--
+
+### Some useful functions
+
+.font80[
+- **`head(df, n=6)`**: first n rows. Run immediately after loading data. **`str(df)`** shows column types &amp;mdash; critical for catching numeric IDs read as character.
+
+- **`nrow(df)`** and **`ncol(df)`** return dimensions. **`dim(df)`** returns both as a vector. **`names(df)`** lists all column names.
+
+- **`summary(df)`**: for numerical columns shows Min/Q1/Median/Mean/Q3/Max. For categorical (factor) columns shows frequency counts. *Notice when mean and median diverge &amp;mdash; that signals skew or outliers.*
+
+- `summary()` reveals outliers: when mean &amp;gt;&amp;gt; median, the distribution is right-skewed. Columns showing "NA's: N" alert you to missing values immediately.
+]
+
+---
+### Check Your Knowledge
+
+.pull-left[
+.content-box-blue[
+**What is the min and max mpg?**
+
+**What is the mean and median mpg?**
+]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img23-1.png" alt="" width="48%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Check Your Knowledge: Answer
+
+&lt;img src="08-class_files/figure-html/img24-1.png" alt="" width="92%" style="display: block; margin: auto;" /&gt;
+
+.font90[Reading from `summary(car_data)`: min mpg = 12, max mpg = 41; mean mpg &amp;asymp; 21.3, median mpg = 20.]
+
+---
+### Some More Functions: the `$` Operator
+
+.pull-left[.font80[
+- The **`$` operator extracts a column as a vector**. Combine with any R function: `mean()`, `median()`, `sd()`, `quantile()`, `table()`.
+
+- Use logical indexing to filter: `car_data$mpg[car_data$foreign==1]`.
+
+- Also valid: `car_data[["mpg"]]` (bracket notation). In tidyverse dplyr, you access columns directly inside `mutate()`, `filter()`, `summarise()` without `$`.
+
+- Try: `quantile(car_data$mpg, probs=c(0.25, 0.75))` to get the IQR boundaries.
+]
+
+&lt;img src="08-class_files/figure-html/img25b-1.png" alt="" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img23b-1.png" alt="" width="48%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Your Turn!
+
+.pull-left[.font85[
+.content-box-blue[
+**Calculate the mean, median, and standard deviation of car price.**
+
+Then: is the mean or median a better measure of typical price? Why? Use `summary(car_data$price)` to check for outliers.
+]
+
+.content-box-yellow[
+**Extension:** compute the coefficient of variation (`sd/mean * 100`). What does it tell you about price variability? These are 1974 prices &amp;mdash; a $6,000 car in 1974 is roughly $38,000 today.
+]
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img26-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Your Turn: Mean Price
+
+.font90[Calculate the mean price of a car using the `mean` function!]
+
+&lt;img src="08-class_files/figure-html/img27-1.png" alt="" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+### Frequency: the `table` Function
+
+.pull-left[.font90[
+- The **`table` function** provides us the frequency values for each category.
+
+- For example, there is a variable called **"foreign"**, which shows whether the car is domestic or foreign.
+
+- We can find how many of them are domestic and how many of them are foreign using the table function.
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img28-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Writing and Running R Scripts
+
+.font90[
+- It's OK to run your code in the **Console** for a quick check.
+
+- But for a project or assignment, you'll want to **save your code** so you can run it again or share it.
+
+- This is where the **script** comes in.
+]
+
+--
+
+.content-box-blue[
+**Creating a script:** In RStudio, go to **File &amp;rarr; New File &amp;rarr; R Script**.
+
+**Saving a script:** **File &amp;rarr; Save** (or Ctrl+S / Cmd+S) &amp;mdash; give it a clear name like `car_analysis.R`.
+
+**Running code from a script:** put your cursor on a line (or select several lines) and press **Ctrl+Enter** (Cmd+Enter on Mac).
+]
+
+---
+### Benefits of Using Scripts
+
+.font85[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg> Reproducibility**
+
+Scientific reproducibility: anyone with your script and data can rerun your exact analysis. This is now required by many journals and organizations.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M80 104a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm80-24c0 32.8-19.7 61-48 73.3v87.8c18.8-10.9 40.7-17.1 64-17.1h96c35.3 0 64-28.7 64-64v-6.7C307.7 141 288 112.8 288 80c0-44.2 35.8-80 80-80s80 35.8 80 80c0 32.8-19.7 61-48 73.3V160c0 70.7-57.3 128-128 128H176c-35.3 0-64 28.7-64 64v6.7c28.3 12.3 48 40.5 48 73.3c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-32.8 19.7-61 48-73.3V352 153.3C19.7 141 0 112.8 0 80C0 35.8 35.8 0 80 0s80 35.8 80 80zm232 0a24 24 0 1 0 -48 0 24 24 0 1 0 48 0zM80 456a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/></svg> Organization**
+
+Version control: scripts can be tracked with Git, so you can see every change made and roll back mistakes &amp;mdash; essential for professional and academic work.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> Troubleshooting**
+
+Auditability: every transformation is documented in code, not hidden in manual spreadsheet steps. Your analysis can be independently verified.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/></svg> Sharing**
+
+Collaboration: share your `.R` script and others can reproduce, extend, or peer-review your work &amp;mdash; the foundation of open science.
+]
+]
+]
+
+---
+### Using Comments in Scripts
+
+.pull-left[
+.content-box-blue[
+**What Are Comments?**
+
+Text preceded by the `#` symbol that **R ignores when running code**.
+
+Used to explain what your code does in plain language.
+]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img34-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Data Visualization: Why It Matters
+
+.pull-left[.font80[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M288 80c-65.2 0-118.8 29.6-159.9 67.7C89.6 183.5 63 226 49.4 256c13.6 30 40.2 72.5 78.6 108.3C169.2 402.4 222.8 432 288 432s118.8-29.6 159.9-67.7C486.4 328.5 513 286 526.6 256c-13.6-30-40.2-72.5-78.6-108.3C406.8 109.6 353.2 80 288 80zM95.4 112.6C142.5 68.8 207.2 32 288 32s145.5 36.8 192.6 80.6c46.8 43.5 78.1 95.4 93 131.1c3.3 7.9 3.3 16.7 0 24.6c-14.9 35.7-46.2 87.7-93 131.1C433.5 443.2 368.8 480 288 480s-145.5-36.8-192.6-80.6C48.6 356 17.3 304 2.5 268.3c-3.3-7.9-3.3-16.7 0-24.6C17.3 208 48.6 156 95.4 112.6zM288 336c44.2 0 80-35.8 80-80s-35.8-80-80-80c-.7 0-1.3 0-2 0c1.3 5.1 2 10.5 2 16c0 35.3-28.7 64-64 64c-5.5 0-10.9-.7-16-2c0 .7 0 1.3 0 2c0 44.2 35.8 80 80 80zm0-208a128 128 0 1 1 0 256 128 128 0 1 1 0-256z"/></svg> See Patterns**
+
+A mean of 21 MPG tells you little &amp;mdash; a histogram instantly shows whether the distribution is symmetric, skewed, bimodal, or has outliers. *Numbers compress; plots reveal.*
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z"/></svg> Tell Stories**
+
+The grammar of graphics (ggplot2): every chart is built from data + aesthetic mappings + geometric layers. This mental model applies across R, Python (seaborn/plotly), and Vega-Lite.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> Generate Insights**
+
+Base R plots are fast for exploration; ggplot2 is the standard for publication and presentation. We start with base R, then introduce ggplot2 syntax.
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img35-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Simple Data Analysis Example: Summaries and Visualizations
+
+.font90[We start with **base R graphics** for speed. In practice, **ggplot2** is the standard &amp;mdash; both produce the same plots; ggplot2 scales to complex, layered visualizations.]
+
+--
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"/></svg> A Histogram**
+
+Of a numeric variable (MPG) to see its **distribution**.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> A Bar Chart**
+
+Of a categorical-like variable (number of foreign cars) to see **how many cars fall into each category**.
+]
+]
+
+---
+### Histogram of MPG
+
+.font90[A **histogram** shows the distribution of a continuous numeric variable by grouping values into "bins" (ranges) and plotting bars for the count of observations in each bin. In base R, we use the `hist()` function:]
+
+```r
+# Plot a histogram of the MPG (Miles per Gallon) column
+hist(car_data$mpg,
+     main="Distribution of Car MPG",
+     xlab="Miles per Gallon (MPG)",
+     col="skyblue", border="black")
+```
+
+---
+### Histogram of MPG
+
+.pull-left[
+```r
+# Plot a histogram of the MPG column
+hist(car_data$mpg,
+     main="Distribution of Car MPG",
+     xlab="Miles per Gallon (MPG)",
+     col="skyblue", border="black")
+```
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img38-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Histogram of MPG &amp;mdash; Let's Break Down the Arguments
+
+.pull-left[
+```r
+hist(car_data$mpg,
+     main="Distribution of Car MPG",
+     xlab="Miles per Gallon (MPG)",
+     col="skyblue", border="black")
+```
+
+.font90[
+- `car_data$mpg` &amp;mdash; **the data we want to plot**
+- `main`, `xlab` &amp;mdash; **title and axis label**
+- `col="skyblue"` &amp;mdash; **color that fills the bars**
+- `border="black"` &amp;mdash; **color that outlines the bars**
+]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img39-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Histogram &amp;mdash; Interpretation
+
+.pull-left[.font75[
+- This histogram shows the **distribution shape** of MPG. Shape reveals more than any single statistic &amp;mdash; here we can assess skewness, outliers, and the most common value range.
+
+- This distribution is **right-skewed**: the right tail extends further. This means mean &amp;gt; median, and a few high-MPG outliers pull the average up.
+
+- The **mode is in the 15&amp;ndash;20 MPG bin**. The median is a better center than the mean for skewed data.
+
+- **Detective question:** if you only saw the mean MPG of 21.3, would you have guessed this shape? This is exactly why visualization precedes modeling &amp;mdash; *distributions tell stories statistics summarize away*.
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img40-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Quick Tip: Read the Error
+
+.font90[You **will** get an error message now or later. **Read the error message!**]
+
+.content-box-yellow[
+The below message says R can't find the data file. If you get this error, it means that `car_data` is not in your environment and you need to read it.
+]
+
+&lt;img src="08-class_files/figure-html/img41-1.png" alt="" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+### Bar Chart
+
+.font90[Let's visualize the distribution of a **categorical variable**: the number of foreign cars. Base R has a `barplot()` function, which can take a vector of counts and plot bars. We can pipe the output of `table()` directly into `barplot()`:]
+
+```r
+for_counts &lt;- table(car_data$foreign)
+barplot(for_counts,
+        main="Number of Cars by Production Location",
+        xlab="Production",
+        ylab="Number of Cars",
+        col="coral")
+```
+
+---
+### Bar Chart
+
+.pull-left[
+```r
+for_counts &lt;- table(car_data$foreign)
+barplot(for_counts,
+        main="Number of Cars by Production Location",
+        xlab="Production",
+        ylab="Number of Cars",
+        col="coral")
+```
+
+.font90[
+- `table()` &amp;mdash; **creates a table of counts**
+- `for_counts` &amp;mdash; **we pass the table count as the data**
+- `main`, `xlab`, `ylab` &amp;mdash; **title and axis labels**
+- `col="coral"` &amp;mdash; **filling color of the bars**
+]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img43-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Saving Your Plots (Optional)
+
+.font90[Two easy ways to save a plot:]
+
+.content-box-blue[
+**In RStudio:** in the Plots pane, click **Export &amp;rarr; Save as Image...** (or *Copy to Clipboard*).
+]
+
+.content-box-green[
+**In code:**
+
+```r
+png("mpg_histogram.png", width = 800, height = 600)
+hist(car_data$mpg, main = "Distribution of Car MPG",
+     xlab = "Miles per Gallon (MPG)", col = "skyblue")
+dev.off()  # closes the file — don't forget this!
+```
+]
+
+---
+### Common Pitfalls and How to Troubleshoot
+
+.font80[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> File not found error** &amp;mdash; this means R cannot find the file. Usually a file path problem. Ensure that the CSV is in your working directory or provide the correct path.
+
+```r
+getwd()                        # shows your working directory
+setwd("path/to/your/folder")   # sets your working directory
+```
+]
+
+--
+
+.font80[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> "could not find function" error** &amp;mdash; means you forgot to load the package that provides that function:
+
+```r
+install.packages("ggplot2")   # install once
+library(ggplot2)              # call it from the library each session
+```
+
+Finally, the function works!
+]
+
+---
+### How to Use R Help?
+
+.font100[You can get the help document for almost any function by typing a **question mark and the function name**:]
+
+```r
+?mean
+?hist
+?read.csv
+```
+
+.font90[The documentation will appear in the **Help** tab of the lower-right pane.]
+
+---
+### Chapter 3 Summary
+
+.font75[
+**R as an analytical environment:**
+
+- R is a statistical computing language with 20,000+ packages. Its vectorized operations and built-in statistical functions make it purpose-built for data analysis.
+- RStudio provides a four-pane IDE: script editor, console, environment, and plots/packages/help. Scripts ensure reproducibility; comments document intent.
+
+**Working with data:**
+
+- Data frames: 2D tabular structure. Access columns with `$`. Always run `str()`, `head()`, and `summary()` after loading data to detect type issues, missingness, and outlier signals.
+- Visualization reveals what statistics compress: skewness, outliers, bimodality, and patterns only visible in shape. Base R `hist()` and `barplot()` for exploration; ggplot2 for presentation.
+]
+
+--
+
+.content-box-yellow[
+.font85[**Key mindset:** Always plot before modeling. When mean and median diverge, investigate why. A right-skewed distribution suggests outliers pulling the mean &amp;mdash; the median tells the more typical story.]
+]
+
+---
+### Your Turn!
+
+.content-box-blue[
+**Create a histogram of the price** similar to what we did for MPG. Describe the shape: is it skewed or roughly symmetric? Are there multiple peaks?
+]
+
+---
+### Your Turn: Solution
+
+.pull-left[
+```r
+car_data &lt;- read.csv("car_data.csv")
+
+hist(car_data$price,
+     main="Distribution of Car Prices",
+     xlab="Car Price (Dollar)",
+     col="skyblue", border="black")
+```
+
+--
+
+.content-box-green[
+.font90[Most cars are between **4,000 and 6,000 dollars** and the most expensive ones are around **$16,000**.]
+]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img50-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Challenge
+
+.pull-left[.font90[
+.content-box-blue[
+Use `plot()` to create a **scatter plot of weight vs. MPG**. Before running the code, formulate a hypothesis: what direction do you expect the relationship to go, and why?
+]
+
+**After plotting:**
+
+1. Describe the direction, form, and strength of the relationship.
+2. Are there outliers?
+3. Does this look linear or curved?
+4. What does this suggest about the physics of fuel efficiency?
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img52-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Challenge: Getting Started
+
+.pull-left[.font90[
+**First, find which variables to use:**
+
+- Weight and MPG
+
+**Second, which function to use:**
+
+- The `plot` function would work fine
+
+**If you don't know how to do it**, you can check the help file:
+
+```r
+?plot
+```
+
+Let's run it now!
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img53-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Challenge: Solution
+
+.pull-left[
+```r
+plot(car_data$weight, car_data$mpg,
+     main = "Scatter plot of MPG vs. Weight",
+     xlab = "Car Weight (1000 lbs)",
+     ylab = "Miles Per Gallon",
+     pch = 19,  # solid circles
+     col = "blue")
+```
+
+--
+
+.content-box-green[
+.font90[**Interpretation:** As car weight increases, miles per gallon (MPG) generally **decreases**, indicating that heavier cars tend to be less fuel efficient.]
+]
+]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img54-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Reflection Questions
+
+.pull-left[.font80[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> What Was Easy?**
+
+Which R concepts map directly to Python? Which are fundamentally different? What does R's vectorized arithmetic imply about how it handles data?
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c12.5 0 24.1 6.4 30.8 17L503.4 394.4c5.6 8.9 8.6 19.2 8.6 29.7c0 30.9-25 55.9-55.9 55.9H55.9C25 480 0 455 0 424.1c0-10.5 3-20.8 8.6-29.7L225.2 49c6.6-10.6 18.3-17 30.8-17zm65 192L256 120.4 176.9 246.5l18.3 24.4c6.4 8.5 19.2 8.5 25.6 0l25.6-34.1c6-8.1 15.5-12.8 25.6-12.8h49z"/></svg> What Was Challenging?**
+
+The `$` operator, working directory, and factor data types trip up most new R users. What mental model helped you understand them? What would you explain differently to someone new?
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z"/></svg> What Story Does the Data Tell?**
+
+Based on MPG, weight, and price distributions: what hypotheses would you form about what drove car design in the 1970s? How would you test them with the data available?
+]
+]]
+
+.pull-right[
+&lt;img src="08-class_files/figure-html/img55-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: segue-green
+
+# Coding Agents for R-Based Analysis &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M32,224H64V416H32A31.96166,31.96166,0,0,1,0,384V256A31.96166,31.96166,0,0,1,32,224Zm512-48V448a64.06328,64.06328,0,0,1-64,64H160a64.06328,64.06328,0,0,1-64-64V176a79.974,79.974,0,0,1,80-80H288V32a32,32,0,0,1,64,0V96H464A79.974,79.974,0,0,1,544,176ZM264,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,264,256Zm-8,128H192v32h64Zm96,0H288v32h64ZM456,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,456,256Zm-8,128H384v32h64ZM640,256V384a31.96166,31.96166,0,0,1-32,32H576V224h32A31.96166,31.96166,0,0,1,640,256Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Using a Coding Agent with R
+
+.font80[
+.content-box-blue[
+A coding agent can **write, run, and debug R code** based on your natural language instructions &amp;mdash; but *you* must frame the analytical question precisely.
+]
+
+- **What the agent handles:** syntax (function names, argument order, `$` notation), package loading, error messages, and iterating on plot aesthetics.
+
+- **What you must handle:** choosing the right statistical method, interpreting whether the output answers your actual question, and catching plausible-but-wrong results.
+
+- **Workflow:** (1) Describe your dataset and question. (2) Ask for EDA first (`str`, `summary`, `head`). (3) Request specific plots or statistics. (4) Verify the output against what you know about the data.
+]
+
+--
+
+.content-box-yellow[
+.font85[**Key risk:** agents confidently produce incorrect code. Always check &amp;mdash; does the output match what `summary()` told you? Are the axis labels right? Is the sample size what you expected?]
+]
+
+---
+### Prompting a Coding Agent for R Analysis
+
+.pull-left[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg> Weak**
+
+"Analyze the car data."
+
+&amp;rarr; Agent may produce arbitrary outputs that don't answer any specific question.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#009E73;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Strong**
+
+"Load car_data.csv. Run `str()` and `summary()`. For the mpg column: compute mean, median, sd, and IQR. Then produce a histogram with 10 bins. Describe whether the distribution is skewed and why mean vs median differ."
+]
+]
+
+&lt;div style="clear: both;"&gt;&lt;/div&gt;
+
+.font75[
+**Follow-up prompts that sharpen the analysis:**
+
+- "Is the relationship between weight and mpg linear? Produce a scatter plot and overlay a regression line using `abline(lm(mpg~weight, data=car_data))`."
+- "Compare the mean and median mpg for domestic vs. foreign cars separately. Which group has higher variability? Use `tapply()`."
+- "Flag any car with mpg more than 2 standard deviations from the mean as an outlier. Print those rows."
+]
+
+---
+### Hands-On: Agent-Assisted R Analysis
+
+.font90[**Activity (pairs, 25 minutes)** &amp;mdash; use `car_data.csv` with a coding agent:]
+
+.font80[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Data audit:&lt;/strong&gt; Prompt the agent to run &lt;code&gt;str()&lt;/code&gt;, &lt;code&gt;head()&lt;/code&gt;, &lt;code&gt;summary()&lt;/code&gt;, and &lt;code&gt;dim()&lt;/code&gt;. Report the number of rows, columns, data types, and any columns with NA values.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Distribution analysis:&lt;/strong&gt; Ask for histograms of mpg, weight, and price. For each, identify: is it skewed? Symmetric? Are there visible outliers? Which measure of center is most appropriate?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Group comparison:&lt;/strong&gt; Use &lt;code&gt;tapply()&lt;/code&gt; to compare mean mpg for domestic vs. foreign cars. Then ask: is this difference statistically meaningful, or could it be sampling noise?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Catch the agent:&lt;/strong&gt; Deliberately ask a vague question ("tell me something interesting"). Evaluate whether the agent's response actually answers a meaningful analytical question.&lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.font90[**Present:** one insight that surprised you, and one output you had to correct or reframe.]
+
+---
+### Chapter 3: What You Can Do Now
+
+.font80[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64H240l-10.7 32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H346.7L336 416H512c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM512 64V288H64V64H512z"/></svg> R environment:**
+
+- Set up RStudio (or Posit Cloud), run scripts, and use comments to document analytical decisions.
+- Load CSV data with `read.csv()`, inspect with `str()`/`head()`/`summary()`, and access columns with the `$` operator.
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"/></svg> Agent-assisted analysis:**
+
+- Write precise analytical prompts for a coding agent working in R. Verify its outputs against known summary statistics and catch plausible-but-wrong results.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> Data analysis in R:**
+
+- Compute mean, median, sd, `quantile()`, and `table()` on real data. Interpret `summary()` output to identify skew, outliers, and missing values.
+- Create histograms, bar charts, and scatter plots in base R. Interpret distribution shape &amp;mdash; connecting visual patterns to statistical concepts (skewness, outliers, central tendency).
+]
+]
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/remark-zoom.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9",
+  "navigation": {
+    "scroll": false
+  }
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
