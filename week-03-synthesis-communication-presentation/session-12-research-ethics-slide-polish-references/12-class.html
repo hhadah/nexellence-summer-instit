@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Research Methods</title>
+    <meta charset="utf-8" />
+    <script src="12-class_files/header-attrs/header-attrs.js"></script>
+    <link href="12-class_files/remark-css/default.css" rel="stylesheet" />
+    <link href="12-class_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="12-class_files/panelset/panelset.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/tulane-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tulane.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Research Methods
+]
+.subtitle[
+## Day 12: Data Wrangling in Action
+]
+
+---
+
+layout: true
+&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | Research Methods | 12 June 2026&lt;/div&gt;
+
+&lt;!--- Day 12: Data Wrangling in Action | 12 June 2026--&gt;
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.72em !important;
+    }
+
+&lt;/style&gt;
+
+# .text-shadow[.white[Outline for Today]]
+
+&lt;ol&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Detecting &amp; Handling Missing Values&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Identifying &amp; Handling Outliers: The IQR Method&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Standardizing Formats: Dates &amp; Text&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Filtering, Selecting &amp; Combining Data&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;The 8-Step Data Cleaning Checklist&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Coding Agents for Data Wrangling&lt;/h4&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+---
+class: segue-yellow
+
+# Chapter 7: &lt;br&gt; Data Wrangling in Action &lt;svg viewBox="0 0 512 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Learning Objectives
+
+.font80[**By the end of this chapter you will be able to:**]
+
+.font75[
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Detect, evaluate, and handle missing values&lt;/strong&gt; using listwise deletion and mean/median imputation &amp;mdash; and explain which method is appropriate given the missingness type (MCAR vs. MNAR).&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Apply the IQR method&lt;/strong&gt; to detect outliers programmatically in both Python and R, and choose from four evidence-based handling strategies.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Standardize date formats and text inconsistencies&lt;/strong&gt; using &lt;code&gt;pd.to_datetime()&lt;/code&gt;, &lt;code&gt;str.strip()&lt;/code&gt;, and regex replacement.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Filter, select, and reshape DataFrames&lt;/strong&gt; using boolean indexing, &lt;code&gt;.query()&lt;/code&gt;, and column selection.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;5&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Combine datasets&lt;/strong&gt; using all four join types (inner, left, right, full) and vertical concatenation (append/bind_rows).&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;6&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Apply the 8-step data cleaning checklist&lt;/strong&gt; to a real messy dataset and document every decision in a cleaning log.&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Detecting Missing Values &amp;mdash; R
+
+.font90[In R, `is.na()` returns TRUE for missing (NA) values and FALSE otherwise. Summing the result counts the total NAs, since TRUE = 1 and FALSE = 0 in R:]
+
+```r
+# Create a sample vector of scores with some NAs
+scores &lt;- c(88, 92, NA, 75, 90, NA, 85)
+# Check which elements are NA
+is.na(scores)
+# [1] FALSE FALSE TRUE FALSE FALSE TRUE FALSE
+
+# Count how many NAs
+sum(is.na(scores))
+# [1] 2
+```
+
+---
+### Detecting Missing Values &amp;mdash; Python
+
+.font90[In Python's pandas, `isnull()` (or equivalently `isna()`) returns a Series of booleans indicating missing values. We then use `.sum()` to count the True values:]
+
+```python
+import pandas as pd
+
+# Create a pandas Series of scores with some NaN values
+scores = pd.Series([88, 92, None, 75, 90, None, 85])
+# Check which entries are null
+scores.isnull()
+# 0    False
+# 1    False
+# 2     True
+# ...
+
+# Count how many null values
+scores.isnull().sum()
+# 2
+```
+
+---
+### Two Ways to Handle Missing Data
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg> Remove**
+
+Delete rows containing missing values (listwise deletion). Simple, but you lose data.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M41.4 9.4C53.9-3.1 74.1-3.1 86.6 9.4L168 90.7l53.1-53.1c28.1-28.1 73.7-28.1 101.8 0L474.3 189.1c28.1 28.1 28.1 73.7 0 101.8L283.9 481.4c-37.5 37.5-98.3 37.5-135.8 0L30.6 363.9c-37.5-37.5-37.5-98.3 0-135.8L122.7 136 41.4 54.6c-12.5-12.5-12.5-32.8 0-45.3zm176 221.3L168 181.3 75.9 273.4c-4.2 4.2-7 9.3-8.4 14.6H386.7l42.3-42.3c3.1-3.1 3.1-8.2 0-11.3L277.7 82.9c-3.1-3.1-8.2-3.1-11.3 0L213.3 136l49.4 49.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0zM512 512c-35.3 0-64-28.7-64-64c0-25.2 32.6-79.6 51.2-108.7c6-9.4 19.5-9.4 25.5 0C543.4 368.4 576 422.8 576 448c0 35.3-28.7 64-64 64z"/></svg> Impute**
+
+Fill in the blanks with an estimate &amp;mdash; a static value, the mean, the median, or something smarter.
+]
+]
+
+---
+### Removing Missing Data
+
+.font80[
+- **Listwise deletion (complete-case analysis):** removes any row containing at least one missing value. Simple and guaranteed complete data &amp;mdash; but valid only if data is **MCAR** (Missing Completely At Random).
+
+- **Advanced:** `dropna(thresh=k)` keeps rows with at least k non-null values &amp;mdash; useful when you can tolerate some missingness. `dropna(subset=['col'])` targets specific columns only.
+
+- Simple and guarantees no missing values remain.
+
+- **Downside:** if lots of data is missing, you lose a lot of cases.
+]
+
+--
+
+.content-box-yellow[
+.font85[**Critical:** if missingness is MNAR (e.g., low scorers more likely to skip), listwise deletion inflates the apparent average. Always check whether completers differ from non-completers before deleting rows.]
+]
+
+---
+### Removing Missing Data in R
+
+.font90[The `drop_na` function in the tidyr package removes any rows with NA values:]
+
+**Option 1**
+
+```r
+install.packages("tidyr")  # If you haven't already installed it
+library(tidyr)
+
+# Suppose df is a data frame with some NAs
+clean_df &lt;- drop_na(df)
+# This will drop any rows of df that contain NA in any column.
+```
+
+**Option 2**
+
+```r
+clean_df &lt;- na.omit(df)
+```
+
+---
+### Removing Missing Data in Python
+
+.font90[Pandas provides the `dropna()` method for DataFrames:]
+
+```python
+# Assume df is a pandas DataFrame with some missing values
+clean_df = df.dropna()
+# By default, this drops any row with any NaN in it.
+```
+
+.font90[
+- `df.dropna(how='all')` would drop only rows that are **completely empty**.
+- `df.dropna(subset=['col1','col2'])` would drop rows missing data in **specific columns** of interest.
+]
+
+---
+### Let's Do It!
+
+.content-box-blue[
+1. Read the `students_scores.csv` data
+2. Check the dimensions of the data
+3. Remove missing students
+4. Check the dimensions again
+5. **How many rows did you lose?**
+]
+
+---
+### Solution
+
+.pull-left[
+**R**
+
+```r
+df &lt;- read.csv("students_scores.csv")
+dim(df)
+
+df_clean &lt;- na.omit(df)
+dim(df_clean)
+```
+
+**Python**
+
+```python
+import pandas as pd
+
+df = pd.read_csv("students_scores.csv")
+df.shape
+
+df_clean = df.dropna()
+df_clean.shape
+```
+]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img11-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Imputing Missing Data (Filling in the Blanks)
+
+.font80[
+**Imputation** replaces missing values with estimates &amp;mdash; but every method makes assumptions. Mean imputation reduces variance and inflates correlations. *Choose the method based on why data is missing (MCAR/MAR/MNAR).*
+
+**Strategies from simple to advanced:**
+
+- Use a static value (e.g., 0 or "Unknown")
+- Fill with the **mean or median** (for numeric data)
+- For time-series: use forward fill (last value) or backward fill (next value)
+- **MCAR data:** mean/median imputation is defensible. **MAR data:** regression imputation or KNN imputation. **MNAR data:** no simple fix &amp;mdash; document and report the limitation.
+]
+
+--
+
+.content-box-yellow[
+.font85[**Mean imputation warning:** replacing 20% of a variable with its mean artificially shrinks the standard deviation and inflates correlations with other variables. Always report the imputation method and percentage imputed.]
+]
+
+---
+### Let's Practice with R
+
+**Option 1**
+
+```r
+scores &lt;- c(88, 92, NA, 75, 90, NA, 85)
+# Calculate mean of scores, excluding NA (na.rm = TRUE)
+mean_score &lt;- mean(scores, na.rm = TRUE)
+mean_score
+# [1] 86
+# Replace NA values with the mean
+scores_filled &lt;- ifelse(is.na(scores), mean_score, scores)
+scores_filled
+# [1] 88.0 92.0 86.0 75.0 90.0 86.0 85.0
+```
+
+**Option 2**
+
+```r
+library(tidyr)
+scores_filled &lt;- replace_na(scores, mean_score)
+```
+
+---
+### Let's Practice with Python
+
+```python
+scores = pd.Series([88, 92, None, 75, 90, None, 85])
+# Calculate mean of the scores (ignoring NaN by default)
+mean_score = scores.mean()
+mean_score
+# 86.0
+
+# Fill NaN values with the mean
+scores_filled = scores.fillna(mean_score)
+scores_filled
+# 0    88.0
+# 1    92.0
+# 2    86.0
+# 3    75.0
+# 4    90.0
+# 5    86.0
+# 6    85.0
+# dtype: float64
+```
+
+---
+### Identifying and Handling Outliers
+
+.pull-left[.font85[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> What Are Outliers?**
+
+Values that deviate markedly from the rest of the distribution. **Important:** outliers are not inherently wrong &amp;mdash; they may be legitimate extreme values (record-breaking athlete), data errors (typo), or evidence of a completely different process.
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M177.9 494.1c-18.7 18.7-49.1 18.7-67.9 0L17.9 401.9c-18.7-18.7-18.7-49.1 0-67.9l50.7-50.7 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 50.7-50.7c18.7-18.7 49.1-18.7 67.9 0l92.1 92.1c18.7 18.7 18.7 49.1 0 67.9L177.9 494.1z"/></svg> Examples**
+
+A student's height recorded as 300 cm or a survey response of "50" on a scale of 1&amp;ndash;5.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M522.1 62.4c16.8-5.6 25.8-23.7 20.2-40.5S518.6-3.9 501.9 1.6l-113 37.7C375 15.8 349.3 0 320 0c-44.2 0-80 35.8-80 80c0 3 .2 5.9 .5 8.8L117.9 129.6c-16.8 5.6-25.8 23.7-20.2 40.5s23.7 25.8 40.5 20.2l135.5-45.2c4.5 3.2 9.3 5.9 14.4 8.2V480c0 17.7 14.3 32 32 32H512c17.7 0 32-14.3 32-32s-14.3-32-32-32H352V153.3c21-9.2 37.2-27 44.2-49l125.9-42zM439.6 288L512 163.8 584.4 288H439.6zM512 384c62.9 0 115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L536.1 109.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L392.7 273.1c-5.7 9.8-9.3 21.1-6.7 32.1C396.8 350 449.1 384 512 384zM129.2 291.8L201.6 416H56.7l72.4-124.2zM3.2 433.1C14 478 66.3 512 129.2 512s115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L153.2 237.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L9.9 401.1c-5.7 9.8-9.3 21.1-6.7 32.1z"/></svg> Why They Matter**
+
+A single outlier can shift the mean by several standard deviations while leaving the median unchanged. Comparing mean and median is an outlier diagnostic &amp;mdash; divergence signals potential outliers.
+]
+]]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img15-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### What Counts as an Outlier? &amp;mdash; The IQR Method
+
+.content-box-blue[
+The **interquartile range (IQR)** is the distance between the first and third quartiles:
+
+`$$\text{IQR} = Q_3 - Q_1$$`
+]
+
+.font95[A value is flagged as an outlier if it falls outside the "fences":]
+
+`$$x &lt; Q_1 - 1.5 \times \text{IQR} \quad \text{or} \quad x &gt; Q_3 + 1.5 \times \text{IQR}$$`
+
+--
+
+.content-box-green[
+.font90[This is the same rule that box plots use to draw their whiskers &amp;mdash; points beyond the whiskers are the outliers. The 1.5&amp;times; multiplier is convention; 3&amp;times; flags only "extreme" outliers.]
+]
+
+---
+### Let's Practice with R
+
+.pull-left[
+```r
+# Sample data: homework minutes
+homework_minutes &lt;- c(120, 90, 100, 95,
+                      110, 105, 115, 300)
+summary(homework_minutes)
+# Min. 1st Qu. Median  Mean  3rd Qu. Max.
+# 90    95     105     129.4  115    300
+
+# Calculate Q1, Q3, and IQR
+Q1 &lt;- quantile(homework_minutes, 0.25)
+Q3 &lt;- quantile(homework_minutes, 0.75)
+IQR_val &lt;- IQR(homework_minutes)  # Q3 - Q1
+
+# Determine the outlier thresholds
+lower_thresh &lt;- Q1 - 1.5 * IQR_val  # 65
+upper_thresh &lt;- Q3 + 1.5 * IQR_val  # 145
+
+# Find values outside these thresholds
+homework_minutes[homework_minutes &lt; lower_thresh |
+                 homework_minutes &gt; upper_thresh]
+# [1] 300
+```
+]
+
+.pull-right[.font85[
+- In the example, Q1 = 95 and Q3 = 115, so the **IQR is 20**.
+
+- Outlier thresholds: below **65** or above **145** minutes (using the 1.5 &amp;times; IQR rule).
+
+- Most values fall within 65&amp;ndash;145 minutes.
+
+- One value, **300 minutes, is flagged as an outlier**.
+
+- This could be a data entry error or a very unusual case.
+]]
+
+---
+### Let's Practice with Python
+
+```python
+import numpy as np
+
+homework_minutes = np.array([120, 90, 100, 95, 110, 105, 115, 300])
+Q1 = np.percentile(homework_minutes, 25)
+Q3 = np.percentile(homework_minutes, 75)
+IQR_val = Q3 - Q1
+lower_thresh = Q1 - 1.5 * IQR_val
+upper_thresh = Q3 + 1.5 * IQR_val
+outliers = homework_minutes[(homework_minutes &lt; lower_thresh) |
+                            (homework_minutes &gt; upper_thresh)]
+print(Q1, Q3, IQR_val, lower_thresh, upper_thresh, outliers)
+# 95.0 115.0 20.0 65.0 145.0 [300]
+```
+
+---
+### Handling Outliers: Four Strategies
+
+.pull-left[.font75[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> 1. Investigate**
+Always investigate first: compare the outlier to the source data or domain knowledge. Is Age=300 physically impossible? Is Sales=$50M plausible given other context? *The answer determines the correct strategy.*
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg> 2. Remove**
+Remove only if confirmed data errors. Removing legitimate extreme values biases your analysis &amp;mdash; the very student with 300 minutes of homework may be the most interesting data point.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 96l320 0V32c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l96 96c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-96 96c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V160L32 160c-17.7 0-32-14.3-32-32s14.3-32 32-32zM480 352c17.7 0 32 14.3 32 32s-14.3 32-32 32H160v64c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-96-96c-6-6-9.4-14.1-9.4-22.6s3.4-16.6 9.4-22.6l96-96c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 64H480z"/></svg> 3. Replace (Winsorize)**
+Replace values above the 95th percentile with the 95th percentile value instead of removing them. Preserves the observation while limiting its influence: `df["col"].clip(upper=df["col"].quantile(0.95))`
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8V444.8C394 378 431.1 230.1 432 141.4L256 66.8l0 0z"/></svg> 4. Keep but Use Robust Methods**
+Sensitivity analysis: run the analysis both with and without the outlier. If conclusions change dramatically, report both results and let the reader decide.
+]]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img19-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Remove the Outlier with R
+
+**Option 1**
+
+```r
+# Remove outliers from the vector
+homework_no_outliers &lt;- homework_minutes[homework_minutes &gt;= lower_thresh &amp;
+                                         homework_minutes &lt;= upper_thresh]
+homework_no_outliers
+# [1] 120 90 100 95 110 105 115
+
+mean(homework_minutes)
+# [1] 129.375  (with the outlier)
+mean(homework_no_outliers)
+# [1] 105.0    (without the outlier)
+```
+
+**Option 2**
+
+```r
+library(dplyr)
+df_clean &lt;- df %&gt;% filter(minutes &gt;= lower_thresh &amp; minutes &lt;= upper_thresh)
+```
+
+---
+### Remove the Outlier with Python
+
+```python
+# Filter the numpy array for values within [lower_thresh, upper_thresh]
+homework_no_outliers = homework_minutes[(homework_minutes &gt;= lower_thresh) &amp;
+                                        (homework_minutes &lt;= upper_thresh)]
+print(homework_no_outliers)
+# [120  90 100  95 110 105 115]
+
+import pandas as pd
+df = pd.DataFrame({'minutes': homework_minutes})
+df_clean = df[(df['minutes'] &gt;= lower_thresh) &amp; (df['minutes'] &lt;= upper_thresh)]
+df_clean['minutes'].mean()
+# 105.0
+```
+
+---
+### Standardizing Formats: Why It Matters
+
+.pull-left[.font90[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/></svg> Date Format Issues**
+
+"2025-12-31" vs "12/31/2025" vs "31-Dec-2025" &amp;mdash; all the same date!
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M254 52.8C249.3 40.3 237.3 32 224 32s-25.3 8.3-30 20.8L57.8 416H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-1.8l18-48H303.8l18 48H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H390.2L254 52.8zM279.8 304H168.2L224 155.1 279.8 304z"/></svg> Text Consistency Problems**
+
+"USA" vs "U.S.A." vs "United States" &amp;mdash; all referring to the same country!
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> The Consequences**
+
+Inconsistent formats prevent matching, combining, and analyzing data correctly.
+]
+]]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img22-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Fix Dates with R
+
+.font90[The **lubridate** package (part of the tidyverse) is very handy for date parsing. First, install the package:]
+
+```r
+install.packages("lubridate")
+library(lubridate)
+```
+
+```r
+dates &lt;- c("01/05/2022", "2022-01-06", "Jan 7 2022")
+# "January 5, 2022", "January 6, 2022", "January 7, 2022" in different formats.
+parsed_dates &lt;- mdy(dates[1])                    # mdy for "01/05/2022"
+parsed_dates &lt;- c(parsed_dates, ymd(dates[2]))   # ymd for year-month-day
+parsed_dates &lt;- c(parsed_dates, mdy(dates[3]))   # mdy for "Jan 7 2022"
+parsed_dates
+# [1] "2022-01-05" "2022-01-06" "2022-01-07"
+```
+
+---
+### Fix Dates with Python
+
+```python
+import pandas as pd
+
+dates = ["01/05/2022", "2022-01-06", "Jan 7 2022"]
+parsed_dates = [pd.to_datetime(d) for d in dates]
+print(parsed_dates)
+# [Timestamp('2022-01-05 00:00:00'),
+#  Timestamp('2022-01-06 00:00:00'),
+#  Timestamp('2022-01-07 00:00:00')]
+```
+
+--
+
+.content-box-green[
+.font90[Pandas recognized **all three formats** and converted them to Timestamp objects.]
+]
+
+---
+### Text Consistency
+
+.three-col[
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:2.5em;width:2.19em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M254 52.8C249.3 40.3 237.3 32 224 32s-25.3 8.3-30 20.8L57.8 416H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-1.8l18-48H303.8l18 48H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H390.2L254 52.8zM279.8 304H168.2L224 155.1 279.8 304z"/></svg>
+
+**Case Consistency**
+
+Convert text to consistent case (upper, lower, or title case).
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2.5em;width:2.5em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 192l-39.5-39.5c4.9-12.6 7.5-26.2 7.5-40.5C224 50.1 173.9 0 112 0S0 50.1 0 112s50.1 112 112 112c14.3 0 27.9-2.7 40.5-7.5L192 256l-39.5 39.5c-12.6-4.9-26.2-7.5-40.5-7.5C50.1 288 0 338.1 0 400s50.1 112 112 112s112-50.1 112-112c0-14.3-2.7-27.9-7.5-40.5L499.2 76.8c7.1-7.1 7.1-18.5 0-25.6c-28.3-28.3-74.1-28.3-102.4 0L256 192zm22.6 150.6L396.8 460.8c28.3 28.3 74.1 28.3 102.4 0c7.1-7.1 7.1-18.5 0-25.6L342.6 278.6l-64 64zM64 112a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm48 240a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
+
+**Remove Extra Spaces**
+
+Trim leading and trailing whitespace that can cause mismatches.
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2.5em;width:2.5em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 96l320 0V32c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l96 96c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-96 96c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V160L32 160c-17.7 0-32-14.3-32-32s14.3-32 32-32zM480 352c17.7 0 32 14.3 32 32s-14.3 32-32 32H160v64c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-96-96c-6-6-9.4-14.1-9.4-22.6s3.4-16.6 9.4-22.6l96-96c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 64H480z"/></svg>
+
+**Standardize Synonyms**
+
+Map variations like "NYC," "New York City," and "New York, NY" to one standard form.
+]
+]
+
+---
+### Text Standardization with R
+
+**Example 1**
+
+```r
+words &lt;- c(" Apple", "apple ", "APPLE")
+# Trim whitespace
+words &lt;- trimws(words)
+# Convert to lower case
+words_lower &lt;- tolower(words)
+words_lower
+# [1] "apple" "apple" "apple"
+```
+
+**Example 2**
+
+```r
+countries &lt;- c("USA", "U.S.A.", "United States")
+countries_clean &lt;- gsub("\\.|\\s", "", countries)  # remove dots and spaces
+countries_clean &lt;- ifelse(countries_clean %in% c("USA", "UnitedStates"),
+                          "USA", countries_clean)
+countries_clean
+# [1] "USA" "USA" "USA"
+```
+
+---
+### Text Standardization with Python
+
+**Example 1**
+
+```python
+words = pd.Series([" Apple", "apple ", "APPLE"])
+words = words.str.strip()       # remove leading/trailing whitespace
+words_lower = words.str.lower() # convert to lowercase
+print(words_lower.tolist())
+# ['apple', 'apple', 'apple']
+```
+
+**Example 2**
+
+```python
+# For replacements and removing punctuation:
+countries = pd.Series(["USA", "U.S.A.", "United States"])
+countries_clean = countries.str.replace(r"\.", "", regex=True)   # remove dots
+countries_clean = countries_clean.str.replace(" ", "", regex=True)  # remove spaces
+countries_clean = countries_clean.replace({"UnitedStates": "USA"})
+print(countries_clean.tolist())
+# ['USA', 'USA', 'USA']
+```
+
+---
+### Filtering and Combining Data
+
+.pull-left[.font85[
+- **Data subsetting is where analytical judgment and code meet:** filtering defines the population you're studying. Every filter is an analytical decision that should be documented &amp;mdash; "I filtered to Grade==9" changes what conclusions are valid.
+
+- **Method chaining:** in pandas, you can chain operations: `df.dropna().query("Grade==9")[["Student","Math_Score"]]`. This produces clean, readable pipelines. In R, the pipe operator `|&gt;` (or `%&gt;%`) achieves the same.
+
+- **Rule:** always filter *after* you've understood the full dataset. Premature filtering can hide patterns in data you haven't examined yet.
+]]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img30-1.png" alt="" width="72%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Filtering Rows by Condition Using R
+
+```r
+library(dplyr)
+# Assume students_df is a data frame with a column Grade (9, 10, 11, 12)
+# We want only 9th graders
+freshmen_df &lt;- students_df %&gt;% filter(Grade == 9)
+
+# If we also only want 9th graders who scored above 80 in Math:
+high_achievers &lt;- students_df %&gt;% filter(Grade == 9, MathScore &gt; 80)
+```
+
+---
+### Filtering Rows by Condition Using Python
+
+**Option 1 &amp;mdash; boolean indexing**
+
+```python
+df = pd.read_csv("students_scores.csv")
+freshmen_df = df[df['Grade'] == 9]
+# For multiple conditions, use &amp; for AND, | for OR, with parentheses:
+high_achievers = df[(df['Grade'] == 9) &amp; (df['Math_Score'] &gt; 80)]
+```
+
+**Option 2 &amp;mdash; `.query()`**
+
+```python
+freshmen_df = df.query("Grade == 9")
+high_achievers = df.query("Grade == 9 and Math_Score &gt; 80")
+```
+
+---
+### Let's Exercise
+
+.pull-left[
+.content-box-blue[
+1. Read the `books.csv`
+2. Filter data with **only mystery books**
+]
+
+**R**
+
+```r
+books &lt;- read.csv("books.csv")
+mystery_books &lt;- books %&gt;%
+  filter(Genre == "Mystery")
+dim(mystery_books)
+head(mystery_books)
+```
+
+**Python**
+
+```python
+books = pd.read_csv("books.csv")
+mystery_books = books[books['Genre'] == 'Mystery']
+# or:
+mystery_books = books.query("Genre == 'Mystery'")
+mystery_books.head()
+```
+]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img33-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Selecting and Dropping Columns with R
+
+.font90[Selecting columns (or dropping columns) can make data easier to work with &amp;mdash; and can **protect privacy** if we remove sensitive information:]
+
+```r
+# Select only Student, Grade, and Math_Score from df
+small_df &lt;- df %&gt;% select(Student, Grade, Math_Score)
+head(small_df)
+
+# You can also drop columns by using a minus sign
+no_names &lt;- df %&gt;% select(-Student, -English_Score)
+head(no_names)
+```
+
+---
+### Selecting and Dropping Columns with Python
+
+```python
+# Select only some columns
+small_df = df[["Student", "Grade", "Math_Score"]]
+small_df.head()
+
+# Drop columns
+no_names = df.drop(columns=["Student", "English_Score"])
+no_names.head()
+```
+
+&lt;img src="12-class_files/figure-html/img36-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+
+---
+### Combining Data: Merging and Joining
+
+.font85[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M48 115.8C38.2 107 32 94.2 32 80c0-26.5 21.5-48 48-48c14.2 0 27 6.2 35.8 16H460.2c8.8-9.8 21.6-16 35.8-16c26.5 0 48 21.5 48 48c0 14.2-6.2 27-16 35.8V396.2c9.8 8.8 16 21.6 16 35.8c0 26.5-21.5 48-48 48c-14.2 0-27-6.2-35.8-16H115.8c-8.8 9.8-21.6 16-35.8 16c-26.5 0-48-21.5-48-48c0-14.2 6.2-27 16-35.8V115.8zM125.3 96c-4.8 13.6-15.6 24.4-29.3 29.3V386.7c13.6 4.8 24.4 15.6 29.3 29.3H450.7c4.8-13.6 15.6-24.4 29.3-29.3V125.3c-13.6-4.8-24.4-15.6-29.3-29.3H125.3zm2.7 64c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V160zM256 320h32c35.3 0 64-28.7 64-64V224h64c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32H288c-17.7 0-32-14.3-32-32V320z"/></svg> Merging Tables**
+
+Combining data from different sources based on a common key.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zM376 96a40 40 0 1 1 0 80 40 40 0 1 1 0-80z"/></svg> Matching Keys**
+
+Finding records that match between datasets.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z"/></svg> Appending Rows**
+
+Stacking datasets with the same structure.
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> Verifying Results**
+
+Ensuring the combined data makes sense.
+]
+]
+]
+
+---
+### Combining Data with R
+
+```r
+# Filter Student Scores
+df &lt;- read.csv("students_scores.csv")
+scores_df &lt;- df %&gt;% select("Student", "Math_Score", "English_Score")
+
+# Read Student Information
+info_df &lt;- read.csv("Student_Information.csv")
+combined_df &lt;- scores_df %&gt;% left_join(info_df, by = "Student")
+head(combined_df)
+```
+
+--
+
+&lt;img src="12-class_files/figure-html/img38-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+### The Four Join Types
+
+.font80[
+.content-box-blue[
+**LEFT JOIN:** all rows from the left table, matched rows from the right. NaN fills unmatched right-side values. *Use when the left table is your analytical ground truth and you need to enrich it.*
+]
+
+.content-box-blue[
+**INNER JOIN:** only rows present in **both** tables. *Warning: silently drops unmatched rows &amp;mdash; check `df.shape` before and after to confirm no unexpected data loss.*
+]
+
+.content-box-blue[
+**FULL JOIN:** all rows from both tables, NaN where no match. *Use for data reconciliation: finding records in one source but not another.*
+]
+
+.content-box-blue[
+**RIGHT JOIN:** all rows from the right table, matched rows from the left. Equivalent to a left join with the tables swapped.
+]
+]
+
+--
+
+.font85[**After any join:** check `df.shape` and `df.isnull().sum()` to verify.]
+
+---
+### Combining Data with Python
+
+```python
+df = pd.read_csv("students_scores.csv")
+scores_df = df[["Student", "Math_Score", "English_Score"]]
+
+info_df = pd.read_csv("Student_Information.csv")
+combined_df = pd.merge(scores_df, info_df, on="Student", how="left")
+
+combined_df.head()
+```
+
+--
+
+&lt;img src="12-class_files/figure-html/img40-1.png" alt="" width="82%" style="display: block; margin: auto;" /&gt;
+
+---
+### Appending Rows (Stacking Data)
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> What is Appending?**
+
+Stacking one dataset below another with the **same columns** &amp;mdash; like adding more pages to a book with the same format.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg> Common Scenarios**
+
+- Combining data from different time periods
+- Merging data from different locations
+- Consolidating multiple surveys with the same questions
+- Building a complete dataset from partial files
+]
+]
+
+---
+### Appending Rows with R
+
+```r
+# Read the 2021 scores CSV file into a data frame
+scores_2021_df &lt;- read.csv("Scores_2021.csv")
+dim(scores_2021_df)
+
+# Read the 2022 scores CSV file into a data frame
+scores_2022_df &lt;- read.csv("Scores_2022.csv")
+dim(scores_2022_df)
+
+# Combine the 2021 and 2022 data frames by stacking them
+all_scores_df &lt;- bind_rows(scores_2021_df, scores_2022_df)
+
+# Display the dimensions of the combined data frame
+dim(all_scores_df)
+```
+
+---
+### Appending Rows with Python
+
+```python
+# Read the 2021 scores CSV file into a DataFrame
+scores_2021_df = pd.read_csv("Scores_2021.csv")
+print(scores_2021_df.shape)
+
+# Read the 2022 scores CSV file into a DataFrame
+scores_2022_df = pd.read_csv("Scores_2022.csv")
+print(scores_2022_df.shape)
+
+# Combine the 2021 and 2022 DataFrames by stacking them
+all_scores_df = pd.concat([scores_2021_df, scores_2022_df],
+                          ignore_index=True)
+print(all_scores_df.shape)
+```
+
+---
+### Your Turn!
+
+.pull-left[
+.content-box-blue[
+We have 2 datasets: **`lab_results.csv`** and **`patients.csv`**
+
+1. Combine the two files
+2. Experiment with different join types
+]
+]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img45-1.png" alt="" width="65%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Answers with R: Read and Know Your Data
+
+.pull-left[
+```r
+# 1. Read the DataSets
+lab_results &lt;- read.csv("lab_results.csv")
+patients &lt;- read.csv("patients.csv")
+
+# 2. Know your data
+# Check the heads
+head(lab_results)
+head(patients)
+
+# Check the dimensions
+dim(lab_results) # 35 3
+dim(patients)    # 30 3
+```
+]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img46-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Answers with R: inner_join and full_join
+
+.pull-left[
+.font90[**Try `inner_join` &amp;mdash; it kept all the matching data:**]
+
+```r
+# 3. Try inner_join
+library(dplyr)
+in_join_df &lt;- patients %&gt;%
+  inner_join(lab_results, by = "ID")
+
+dim(in_join_df)
+head(in_join_df)
+```
+
+.font90[**Try `full_join` &amp;mdash; it kept all data regardless of match:**]
+
+```r
+# 4. Try full_join
+f_join_df &lt;- patients %&gt;%
+  full_join(lab_results, by = "ID")
+
+dim(f_join_df)
+head(f_join_df)
+tail(f_join_df) # patients without lab results
+```
+]
+
+.pull-right[
+&lt;img src="12-class_files/figure-html/img48-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Answers with Python
+
+```python
+# 1. Read the DataSets
+import pandas as pd
+lab_results = pd.read_csv("lab_results.csv")
+patients = pd.read_csv("patients.csv")
+
+# 2. Know your data
+print(lab_results.head())
+print(patients.head())
+print(lab_results.shape)
+print(patients.shape)
+
+# 3. Try inner join
+in_join_df = pd.merge(patients, lab_results, on="ID", how="inner")
+print(in_join_df.shape)
+
+# 4. Try outer (full) join — same as full_join in R
+full_join_df = pd.merge(patients, lab_results, on="ID", how="outer")
+print(full_join_df.shape)
+```
+
+---
+class: segue-green
+
+# Chapter 7 Summary: &lt;br&gt; The Data Cleaning Checklist &lt;svg viewBox="0 0 384 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M336 64h-80c0-35.3-28.7-64-64-64s-64 28.7-64 64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM192 40c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm121.2 231.8l-143 141.8c-4.7 4.7-12.3 4.6-17-.1l-82.6-83.3c-4.7-4.7-4.6-12.3.1-17L99.1 285c4.7-4.7 12.3-4.6 17 .1l46 46.4 106-105.2c4.7-4.7 12.3-4.6 17 .1l28.2 28.4c4.7 4.8 4.6 12.3-.1 17z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Data Cleaning Checklist (1/2)
+
+.font80[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Understand Your Data Context&lt;/strong&gt;&lt;br&gt;
+  Read the data dictionary first. Without domain knowledge, you can't distinguish a valid extreme value from an error. Ask: what is the unit? What is the valid range? What do missing values mean in this context?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Check the Structure&lt;/strong&gt;&lt;br&gt;
+  Check &lt;code&gt;df.shape&lt;/code&gt;, &lt;code&gt;df.dtypes&lt;/code&gt;, &lt;code&gt;df.describe()&lt;/code&gt;, &lt;code&gt;df.isnull().sum()&lt;/code&gt; for every new dataset. Before cleaning anything, form hypotheses about what you expect to find &amp;mdash; surprises are the most important signals.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Handle Missing Data&lt;/strong&gt;&lt;br&gt;
+  Identify missingness type (MCAR/MAR/MNAR). Choose method: listwise deletion only for MCAR; mean/median imputation for continuous MCAR/MAR; document all decisions with before/after row counts.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Identify Outliers&lt;/strong&gt;&lt;br&gt;
+  Apply at least two detection methods (IQR + domain knowledge). For each flagged value: investigate before acting. Document whether you removed, replaced, winsorized, or kept it.&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Data Cleaning Checklist (2/2)
+
+.font80[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;5&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Standardize Formats&lt;/strong&gt;&lt;br&gt;
+  Parse all dates to a single format (ISO 8601: YYYY-MM-DD) using &lt;code&gt;pd.to_datetime()&lt;/code&gt;. Normalize text with &lt;code&gt;.str.strip().str.lower()&lt;/code&gt;. Test with &lt;code&gt;value_counts()&lt;/code&gt; after each transformation.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;6&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Filter as Needed&lt;/strong&gt;&lt;br&gt;
+  Every filter is an analytical decision &amp;mdash; document it in your log. "Filtered to Grade==9" restricts generalizability. If you filter outliers, note that conclusions apply only to the filtered population.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;7&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Combine Data&lt;/strong&gt;&lt;br&gt;
+  Always check row counts after merging. An unexpected row count increase suggests many-to-many matches. An unexpected decrease indicates mismatched keys. Both are data quality issues, not just code bugs.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;8&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Verify and Save Clean Data&lt;/strong&gt;&lt;br&gt;
+  Run your original &lt;code&gt;df.describe()&lt;/code&gt; and &lt;code&gt;df.isnull().sum()&lt;/code&gt; against the cleaned version. Also run basic sanity checks: are there still negative ages? Any dates in the future? Does the mean match domain expectations?&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Let's Merge and Clean!
+
+.pull-left[.font85[
+**You have two datasets:**
+
+- `school_participation_class1.csv`
+- `school_participation_class2.csv`
+
+**Columns:** StudentID, Name, Grade, Age, Club, SignupDate.
+
+**Upon inspection, you find:**
+
+- Some Age values are **missing**.
+- One Age is recorded as **144** (clearly an error, likely meant 14).
+- The SignupDate column has dates in **mixed formats**: some are "MM/DD/YYYY", others are "Month Day, Year".
+- Grade is recorded as 9, 10, 11, 12 but one entry says **"Freshman"** instead of 9.
+- There are two files (two classes) you need to combine, and a few students appear in both (**duplicates**).
+]]
+
+.pull-right[
+.content-box-blue[
+**Your task: use the checklist to clean this data.**
+
+1. Understand Your Data Context
+2. Check the Structure
+3. Handle Missing Data
+4. Identify Outliers
+5. Standardize Formats
+6. Filter as Needed
+7. Combine Data
+8. Verify and Save Clean Data
+]
+]
+
+---
+### Answers
+
+.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 581 512" style="height:1em;width:1.13em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"/></svg> &amp;nbsp; Check one way to deal with these issues in R: **`Ch7_FinalTaskAnswer.R`**
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"/></svg> &amp;nbsp; For Python: **`Ch7_FinalTaskAnswer.ipynb`**
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V304H176c-35.3 0-64 28.7-64 64V512H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM200 352h16c22.1 0 40 17.9 40 40v8c0 8.8-7.2 16-16 16s-16-7.2-16-16v-8c0-4.4-3.6-8-8-8H200c-4.4 0-8 3.6-8 8v80c0 4.4 3.6 8 8 8h16c4.4 0 8-3.6 8-8v-8c0-8.8 7.2-16 16-16s16 7.2 16 16v8c0 22.1-17.9 40-40 40H200c-22.1 0-40-17.9-40-40V392c0-22.1 17.9-40 40-40zm133.1 0H368c8.8 0 16 7.2 16 16s-7.2 16-16 16H333.1c-7.2 0-13.1 5.9-13.1 13.1c0 5.2 3 9.9 7.8 12l37.4 16.6c16.3 7.2 26.8 23.4 26.8 41.2c0 24.9-20.2 45.1-45.1 45.1H304c-8.8 0-16-7.2-16-16s7.2-16 16-16h42.9c7.2 0 13.1-5.9 13.1-13.1c0-5.2-3-9.9-7.8-12l-37.4-16.6c-16.3-7.2-26.8-23.4-26.8-41.2c0-24.9 20.2-45.1 45.1-45.1zm98.9 0c8.8 0 16 7.2 16 16v31.6c0 23 5.5 45.6 16 66c10.5-20.3 16-42.9 16-66V368c0-8.8 7.2-16 16-16s16 7.2 16 16v31.6c0 34.7-10.3 68.7-29.6 97.6l-5.1 7.7c-3 4.5-8 7.1-13.3 7.1s-10.3-2.7-13.3-7.1l-5.1-7.7c-19.3-28.9-29.6-62.9-29.6-97.6V368c0-8.8 7.2-16 16-16z"/></svg> &amp;nbsp; Check the example log record: **`Ch7_FinalTask_data_cleaning_log.csv`**
+]
+
+--
+
+.content-box-yellow[
+.font85[**Key principle:** there is no single correct cleaning approach &amp;mdash; different analytical questions may justify different decisions. What matters is that **every decision is documented and defensible**.]
+]
+
+.content-box-blue[
+.font85[**Your cleaning log is as important as the cleaned data.** Without it, your analysis is not reproducible. A cleaned dataset without a log cannot be verified, audited, or extended by collaborators.]
+]
+
+---
+class: segue
+
+# Coding Agents for Data Wrangling &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M32,224H64V416H32A31.96166,31.96166,0,0,1,0,384V256A31.96166,31.96166,0,0,1,32,224Zm512-48V448a64.06328,64.06328,0,0,1-64,64H160a64.06328,64.06328,0,0,1-64-64V176a79.974,79.974,0,0,1,80-80H288V32a32,32,0,0,1,64,0V96H464A79.974,79.974,0,0,1,544,176ZM264,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,264,256Zm-8,128H192v32h64Zm96,0H288v32h64ZM456,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,456,256Zm-8,128H384v32h64ZM640,256V384a31.96166,31.96166,0,0,1-32,32H576V224h32A31.96166,31.96166,0,0,1,640,256Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Coding Agent Workflow for Data Wrangling
+
+.font80[A coding agent can automate the full 8-step cleaning pipeline &amp;mdash; **but your analytical judgment drives every decision**:]
+
+.pull-left[
+.content-box-yellow[
+.font80[**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg> Weak:** "Clean this dataset." &amp;rarr; Agent applies arbitrary defaults (e.g., drops all rows with any missing value) without knowing your analytical goals.]
+]
+]
+
+.pull-right[
+.content-box-green[
+.font80[**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#009E73;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Strong:** "Load school_participation_class1.csv and class2.csv. Stack them with pd.concat. Then: (1) report df.shape and df.dtypes, (2) count missing values per column and flag rates &amp;gt;5%, (3) apply IQR outlier detection to all numerical columns, (4) report all unique values in the Grade and SignupDate columns."]
+]
+]
+
+&lt;div style="clear: both;"&gt;&lt;/div&gt;
+
+.font80[
+**After the audit, give cleaning instructions one step at a time:**
+
+- "Fix SignupDate: convert all values to ISO format YYYY-MM-DD using `pd.to_datetime()`. Show me the first 5 rows of SignupDate before and after."
+- "Standardize Grade: replace 'Freshman' with 9. Show `value_counts()` before and after."
+- "After every cleaning step, print `df.shape` so I can verify no rows were unexpectedly dropped."
+]
+
+---
+### Verifying Agent-Cleaned Data
+
+.font80[**The most important skill: knowing when the agent made a plausible-but-wrong decision.**]
+
+.font75[
+**Common agent mistakes in wrangling:**
+
+1. Drops rows with ANY missing value when you only needed to handle one column.
+2. Converts a ZIP code (stored as "06001") to integer 6001 &amp;mdash; destroying the leading zero.
+3. Fills all missing Ages with the mean, including rows where Age was MNAR.
+
+**Verify after every step:** compare `df.shape` before and after. Check `df.dtypes` to catch silent type conversions. Run `value_counts()` on categorical columns to confirm standardization worked.
+]
+
+--
+
+.content-box-blue[
+.font80[
+**The cleaning log is your verification tool:**
+
+- Ask: "Produce a cleaning log as a numbered list. For each step: what was changed, how many values/rows were affected, and what method was used."
+- Then verify each log entry against the data: if the log says "3 duplicate rows removed," confirm with `df.shape` that you lost exactly 3 rows, not 3 different ones.
+- **Final check:** rerun your original data quality audit on the cleaned dataset. Every issue from Step 1 should now be resolved.
+]
+]
+
+---
+### Hands-On: Agent-Assisted Wrangling of Class Participation Data
+
+.font90[**Activity (pairs, 25 minutes)** &amp;mdash; using `school_participation_class1.csv` and `class2.csv`:]
+
+.font80[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Stack and audit:&lt;/strong&gt; Prompt the agent to concatenate the two files and produce a full data quality report (shape, dtypes, missing rates, unique values per column).&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Clean one issue at a time:&lt;/strong&gt; Direct the agent to fix Age=144, standardize date formats, fix Grade="Freshman", and remove duplicates. After each fix, verify with a targeted check (not a general "looks good").&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Impute missing Ages:&lt;/strong&gt; Ask the agent to impute with the column mean. Then ask: "How many rows were imputed? What was the mean before and after? Did the standard deviation change?" Explain why it changed.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Generate the cleaning log:&lt;/strong&gt; Ask for a numbered log matching the professional format from Chapter 6. Compare your log to the example answer.&lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.font90[**Challenge:** find one issue the agent misses or handles incorrectly. Document it and explain the better approach.]
+
+---
+### Chapter 7: What You Can Do Now
+
+.font75[
+**Missing data handling:**
+
+- Detect missing values with `is.na()`/`isnull().sum()`. Choose listwise deletion vs. mean/median imputation based on missingness type (MCAR/MAR/MNAR). Report imputation method and percentage imputed.
+
+**Outlier detection and treatment:**
+
+- Apply IQR outlier detection in Python (`numpy.percentile`) and R (`quantile`/`IQR`). Choose from the four strategies (investigate, remove, winsorize, robust methods) based on whether the outlier is an error or a legitimate extreme value.
+
+**Data transformation and combination:**
+
+- Standardize dates with `pd.to_datetime()` and text with `.str.strip()`/`.str.lower()`/regex. Filter with boolean indexing and `.query()`. Merge tables using all four join types and verify results with `df.shape` checks.
+
+**Agent-assisted wrangling:**
+
+- Direct a coding agent through the 8-step cleaning checklist. Verify each step, catch plausible-but-wrong cleaning decisions, and produce a reproducible cleaning log that fully documents every transformation.
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/remark-zoom.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9",
+  "navigation": {
+    "scroll": false
+  }
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,1477 @@
+---
+title: "Research Methods"
+subtitle: "Day 12: Data Wrangling in Action"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.72em !important;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Detecting & Handling Missing Values</h4></li>
+    <li><h4 class="white">Identifying & Handling Outliers: The IQR Method</h4></li>
+    <li><h4 class="white">Standardizing Formats: Dates & Text</h4></li>
+    <li><h4 class="white">Filtering, Selecting & Combining Data</h4></li>
+    <li><h4 class="white">The 8-Step Data Cleaning Checklist</h4></li>
+    <li><h4 class="white">Coding Agents for Data Wrangling</h4></li>
+</ol>
+
+---
+class: segue-yellow
+
+# Chapter 7: <br> Data Wrangling in Action `r top_icon("tools")`
+
+---
+### Learning Objectives
+
+.font80[**By the end of this chapter you will be able to:**]
+
+.font75[
+<div class="chev-row-sm">
+  <div class="chev-sm">1</div>
+  <div class="chev-text"><strong>Detect, evaluate, and handle missing values</strong> using listwise deletion and mean/median imputation &mdash; and explain which method is appropriate given the missingness type (MCAR vs. MNAR).</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">2</div>
+  <div class="chev-text"><strong>Apply the IQR method</strong> to detect outliers programmatically in both Python and R, and choose from four evidence-based handling strategies.</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">3</div>
+  <div class="chev-text"><strong>Standardize date formats and text inconsistencies</strong> using <code>pd.to_datetime()</code>, <code>str.strip()</code>, and regex replacement.</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">4</div>
+  <div class="chev-text"><strong>Filter, select, and reshape DataFrames</strong> using boolean indexing, <code>.query()</code>, and column selection.</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">5</div>
+  <div class="chev-text"><strong>Combine datasets</strong> using all four join types (inner, left, right, full) and vertical concatenation (append/bind_rows).</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">6</div>
+  <div class="chev-text"><strong>Apply the 8-step data cleaning checklist</strong> to a real messy dataset and document every decision in a cleaning log.</div>
+</div>
+]
+
+---
+### Detecting Missing Values &mdash; R
+
+.font90[In R, `is.na()` returns TRUE for missing (NA) values and FALSE otherwise. Summing the result counts the total NAs, since TRUE = 1 and FALSE = 0 in R:]
+
+```r
+# Create a sample vector of scores with some NAs
+scores <- c(88, 92, NA, 75, 90, NA, 85)
+# Check which elements are NA
+is.na(scores)
+# [1] FALSE FALSE TRUE FALSE FALSE TRUE FALSE
+
+# Count how many NAs
+sum(is.na(scores))
+# [1] 2
+```
+
+---
+### Detecting Missing Values &mdash; Python
+
+.font90[In Python's pandas, `isnull()` (or equivalently `isna()`) returns a Series of booleans indicating missing values. We then use `.sum()` to count the True values:]
+
+```python
+import pandas as pd
+
+# Create a pandas Series of scores with some NaN values
+scores = pd.Series([88, 92, None, 75, 90, None, 85])
+# Check which entries are null
+scores.isnull()
+# 0    False
+# 1    False
+# 2     True
+# ...
+
+# Count how many null values
+scores.isnull().sum()
+# 2
+```
+
+---
+### Two Ways to Handle Missing Data
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("trash", fill = "#4a7fb5")` Remove**
+
+Delete rows containing missing values (listwise deletion). Simple, but you lose data.
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("fill-drip", fill = "#4a7fb5")` Impute**
+
+Fill in the blanks with an estimate &mdash; a static value, the mean, the median, or something smarter.
+]
+]
+
+---
+### Removing Missing Data
+
+.font80[
+- **Listwise deletion (complete-case analysis):** removes any row containing at least one missing value. Simple and guaranteed complete data &mdash; but valid only if data is **MCAR** (Missing Completely At Random).
+
+- **Advanced:** `dropna(thresh=k)` keeps rows with at least k non-null values &mdash; useful when you can tolerate some missingness. `dropna(subset=['col'])` targets specific columns only.
+
+- Simple and guarantees no missing values remain.
+
+- **Downside:** if lots of data is missing, you lose a lot of cases.
+]
+
+--
+
+.content-box-yellow[
+.font85[**Critical:** if missingness is MNAR (e.g., low scorers more likely to skip), listwise deletion inflates the apparent average. Always check whether completers differ from non-completers before deleting rows.]
+]
+
+---
+### Removing Missing Data in R
+
+.font90[The `drop_na` function in the tidyr package removes any rows with NA values:]
+
+**Option 1**
+
+```r
+install.packages("tidyr")  # If you haven't already installed it
+library(tidyr)
+
+# Suppose df is a data frame with some NAs
+clean_df <- drop_na(df)
+# This will drop any rows of df that contain NA in any column.
+```
+
+**Option 2**
+
+```r
+clean_df <- na.omit(df)
+```
+
+---
+### Removing Missing Data in Python
+
+.font90[Pandas provides the `dropna()` method for DataFrames:]
+
+```python
+# Assume df is a pandas DataFrame with some missing values
+clean_df = df.dropna()
+# By default, this drops any row with any NaN in it.
+```
+
+.font90[
+- `df.dropna(how='all')` would drop only rows that are **completely empty**.
+- `df.dropna(subset=['col1','col2'])` would drop rows missing data in **specific columns** of interest.
+]
+
+---
+### Let's Do It!
+
+.content-box-blue[
+1. Read the `students_scores.csv` data
+2. Check the dimensions of the data
+3. Remove missing students
+4. Check the dimensions again
+5. **How many rows did you lose?**
+]
+
+---
+### Solution
+
+.pull-left[
+**R**
+
+```r
+df <- read.csv("students_scores.csv")
+dim(df)
+
+df_clean <- na.omit(df)
+dim(df_clean)
+```
+
+**Python**
+
+```python
+import pandas as pd
+
+df = pd.read_csv("students_scores.csv")
+df.shape
+
+df_clean = df.dropna()
+df_clean.shape
+```
+]
+
+.pull-right[
+```{r img11, echo=FALSE, warning=FALSE, out.width="95%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/11-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Imputing Missing Data (Filling in the Blanks)
+
+.font80[
+**Imputation** replaces missing values with estimates &mdash; but every method makes assumptions. Mean imputation reduces variance and inflates correlations. *Choose the method based on why data is missing (MCAR/MAR/MNAR).*
+
+**Strategies from simple to advanced:**
+
+- Use a static value (e.g., 0 or "Unknown")
+- Fill with the **mean or median** (for numeric data)
+- For time-series: use forward fill (last value) or backward fill (next value)
+- **MCAR data:** mean/median imputation is defensible. **MAR data:** regression imputation or KNN imputation. **MNAR data:** no simple fix &mdash; document and report the limitation.
+]
+
+--
+
+.content-box-yellow[
+.font85[**Mean imputation warning:** replacing 20% of a variable with its mean artificially shrinks the standard deviation and inflates correlations with other variables. Always report the imputation method and percentage imputed.]
+]
+
+---
+### Let's Practice with R
+
+**Option 1**
+
+```r
+scores <- c(88, 92, NA, 75, 90, NA, 85)
+# Calculate mean of scores, excluding NA (na.rm = TRUE)
+mean_score <- mean(scores, na.rm = TRUE)
+mean_score
+# [1] 86
+# Replace NA values with the mean
+scores_filled <- ifelse(is.na(scores), mean_score, scores)
+scores_filled
+# [1] 88.0 92.0 86.0 75.0 90.0 86.0 85.0
+```
+
+**Option 2**
+
+```r
+library(tidyr)
+scores_filled <- replace_na(scores, mean_score)
+```
+
+---
+### Let's Practice with Python
+
+```python
+scores = pd.Series([88, 92, None, 75, 90, None, 85])
+# Calculate mean of the scores (ignoring NaN by default)
+mean_score = scores.mean()
+mean_score
+# 86.0
+
+# Fill NaN values with the mean
+scores_filled = scores.fillna(mean_score)
+scores_filled
+# 0    88.0
+# 1    92.0
+# 2    86.0
+# 3    75.0
+# 4    90.0
+# 5    86.0
+# 6    85.0
+# dtype: float64
+```
+
+---
+### Identifying and Handling Outliers
+
+.pull-left[.font85[
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` What Are Outliers?**
+
+Values that deviate markedly from the rest of the distribution. **Important:** outliers are not inherently wrong &mdash; they may be legitimate extreme values (record-breaking athlete), data errors (typo), or evidence of a completely different process.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("ruler", fill = "#4a7fb5")` Examples**
+
+A student's height recorded as 300 cm or a survey response of "50" on a scale of 1&ndash;5.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("scale-unbalanced", fill = "#4a7fb5")` Why They Matter**
+
+A single outlier can shift the mean by several standard deviations while leaving the median unchanged. Comparing mean and median is an outlier diagnostic &mdash; divergence signals potential outliers.
+]
+]]
+
+.pull-right[
+```{r img15, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="52%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/15-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### What Counts as an Outlier? &mdash; The IQR Method
+
+.content-box-blue[
+The **interquartile range (IQR)** is the distance between the first and third quartiles:
+
+$$\text{IQR} = Q_3 - Q_1$$
+]
+
+.font95[A value is flagged as an outlier if it falls outside the "fences":]
+
+$$x < Q_1 - 1.5 \times \text{IQR} \quad \text{or} \quad x > Q_3 + 1.5 \times \text{IQR}$$
+
+--
+
+.content-box-green[
+.font90[This is the same rule that box plots use to draw their whiskers &mdash; points beyond the whiskers are the outliers. The 1.5&times; multiplier is convention; 3&times; flags only "extreme" outliers.]
+]
+
+---
+### Let's Practice with R
+
+.pull-left[
+```r
+# Sample data: homework minutes
+homework_minutes <- c(120, 90, 100, 95,
+                      110, 105, 115, 300)
+summary(homework_minutes)
+# Min. 1st Qu. Median  Mean  3rd Qu. Max.
+# 90    95     105     129.4  115    300
+
+# Calculate Q1, Q3, and IQR
+Q1 <- quantile(homework_minutes, 0.25)
+Q3 <- quantile(homework_minutes, 0.75)
+IQR_val <- IQR(homework_minutes)  # Q3 - Q1
+
+# Determine the outlier thresholds
+lower_thresh <- Q1 - 1.5 * IQR_val  # 65
+upper_thresh <- Q3 + 1.5 * IQR_val  # 145
+
+# Find values outside these thresholds
+homework_minutes[homework_minutes < lower_thresh |
+                 homework_minutes > upper_thresh]
+# [1] 300
+```
+]
+
+.pull-right[.font85[
+- In the example, Q1 = 95 and Q3 = 115, so the **IQR is 20**.
+
+- Outlier thresholds: below **65** or above **145** minutes (using the 1.5 &times; IQR rule).
+
+- Most values fall within 65&ndash;145 minutes.
+
+- One value, **300 minutes, is flagged as an outlier**.
+
+- This could be a data entry error or a very unusual case.
+]]
+
+---
+### Let's Practice with Python
+
+```python
+import numpy as np
+
+homework_minutes = np.array([120, 90, 100, 95, 110, 105, 115, 300])
+Q1 = np.percentile(homework_minutes, 25)
+Q3 = np.percentile(homework_minutes, 75)
+IQR_val = Q3 - Q1
+lower_thresh = Q1 - 1.5 * IQR_val
+upper_thresh = Q3 + 1.5 * IQR_val
+outliers = homework_minutes[(homework_minutes < lower_thresh) |
+                            (homework_minutes > upper_thresh)]
+print(Q1, Q3, IQR_val, lower_thresh, upper_thresh, outliers)
+# 95.0 115.0 20.0 65.0 145.0 [300]
+```
+
+---
+### Handling Outliers: Four Strategies
+
+.pull-left[.font75[
+**`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` 1. Investigate**
+Always investigate first: compare the outlier to the source data or domain knowledge. Is Age=300 physically impossible? Is Sales=$50M plausible given other context? *The answer determines the correct strategy.*
+
+**`r fontawesome::fa("trash", fill = "#4a7fb5")` 2. Remove**
+Remove only if confirmed data errors. Removing legitimate extreme values biases your analysis &mdash; the very student with 300 minutes of homework may be the most interesting data point.
+
+**`r fontawesome::fa("right-left", fill = "#4a7fb5")` 3. Replace (Winsorize)**
+Replace values above the 95th percentile with the 95th percentile value instead of removing them. Preserves the observation while limiting its influence: `df["col"].clip(upper=df["col"].quantile(0.95))`
+
+**`r fontawesome::fa("shield-halved", fill = "#4a7fb5")` 4. Keep but Use Robust Methods**
+Sensitivity analysis: run the analysis both with and without the outlier. If conclusions change dramatically, report both results and let the reader decide.
+]]
+
+.pull-right[
+```{r img19, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="52%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/19-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Remove the Outlier with R
+
+**Option 1**
+
+```r
+# Remove outliers from the vector
+homework_no_outliers <- homework_minutes[homework_minutes >= lower_thresh &
+                                         homework_minutes <= upper_thresh]
+homework_no_outliers
+# [1] 120 90 100 95 110 105 115
+
+mean(homework_minutes)
+# [1] 129.375  (with the outlier)
+mean(homework_no_outliers)
+# [1] 105.0    (without the outlier)
+```
+
+**Option 2**
+
+```r
+library(dplyr)
+df_clean <- df %>% filter(minutes >= lower_thresh & minutes <= upper_thresh)
+```
+
+---
+### Remove the Outlier with Python
+
+```python
+# Filter the numpy array for values within [lower_thresh, upper_thresh]
+homework_no_outliers = homework_minutes[(homework_minutes >= lower_thresh) &
+                                        (homework_minutes <= upper_thresh)]
+print(homework_no_outliers)
+# [120  90 100  95 110 105 115]
+
+import pandas as pd
+df = pd.DataFrame({'minutes': homework_minutes})
+df_clean = df[(df['minutes'] >= lower_thresh) & (df['minutes'] <= upper_thresh)]
+df_clean['minutes'].mean()
+# 105.0
+```
+
+---
+### Standardizing Formats: Why It Matters
+
+.pull-left[.font90[
+.content-box-blue[
+**`r fontawesome::fa("calendar", fill = "#4a7fb5")` Date Format Issues**
+
+"2025-12-31" vs "12/31/2025" vs "31-Dec-2025" &mdash; all the same date!
+]
+
+.content-box-blue[
+**`r fontawesome::fa("font", fill = "#4a7fb5")` Text Consistency Problems**
+
+"USA" vs "U.S.A." vs "United States" &mdash; all referring to the same country!
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` The Consequences**
+
+Inconsistent formats prevent matching, combining, and analyzing data correctly.
+]
+]]
+
+.pull-right[
+```{r img22, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="52%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/22-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Fix Dates with R
+
+.font90[The **lubridate** package (part of the tidyverse) is very handy for date parsing. First, install the package:]
+
+```r
+install.packages("lubridate")
+library(lubridate)
+```
+
+```r
+dates <- c("01/05/2022", "2022-01-06", "Jan 7 2022")
+# "January 5, 2022", "January 6, 2022", "January 7, 2022" in different formats.
+parsed_dates <- mdy(dates[1])                    # mdy for "01/05/2022"
+parsed_dates <- c(parsed_dates, ymd(dates[2]))   # ymd for year-month-day
+parsed_dates <- c(parsed_dates, mdy(dates[3]))   # mdy for "Jan 7 2022"
+parsed_dates
+# [1] "2022-01-05" "2022-01-06" "2022-01-07"
+```
+
+---
+### Fix Dates with Python
+
+```python
+import pandas as pd
+
+dates = ["01/05/2022", "2022-01-06", "Jan 7 2022"]
+parsed_dates = [pd.to_datetime(d) for d in dates]
+print(parsed_dates)
+# [Timestamp('2022-01-05 00:00:00'),
+#  Timestamp('2022-01-06 00:00:00'),
+#  Timestamp('2022-01-07 00:00:00')]
+```
+
+--
+
+.content-box-green[
+.font90[Pandas recognized **all three formats** and converted them to Timestamp objects.]
+]
+
+---
+### Text Consistency
+
+.three-col[
+.col[
+`r fontawesome::fa("font", height = "2.5em", fill = "#4a7fb5")`
+
+**Case Consistency**
+
+Convert text to consistent case (upper, lower, or title case).
+]
+.col[
+`r fontawesome::fa("scissors", height = "2.5em", fill = "#4a7fb5")`
+
+**Remove Extra Spaces**
+
+Trim leading and trailing whitespace that can cause mismatches.
+]
+.col[
+`r fontawesome::fa("right-left", height = "2.5em", fill = "#4a7fb5")`
+
+**Standardize Synonyms**
+
+Map variations like "NYC," "New York City," and "New York, NY" to one standard form.
+]
+]
+
+---
+### Text Standardization with R
+
+**Example 1**
+
+```r
+words <- c(" Apple", "apple ", "APPLE")
+# Trim whitespace
+words <- trimws(words)
+# Convert to lower case
+words_lower <- tolower(words)
+words_lower
+# [1] "apple" "apple" "apple"
+```
+
+**Example 2**
+
+```r
+countries <- c("USA", "U.S.A.", "United States")
+countries_clean <- gsub("\\.|\\s", "", countries)  # remove dots and spaces
+countries_clean <- ifelse(countries_clean %in% c("USA", "UnitedStates"),
+                          "USA", countries_clean)
+countries_clean
+# [1] "USA" "USA" "USA"
+```
+
+---
+### Text Standardization with Python
+
+**Example 1**
+
+```python
+words = pd.Series([" Apple", "apple ", "APPLE"])
+words = words.str.strip()       # remove leading/trailing whitespace
+words_lower = words.str.lower() # convert to lowercase
+print(words_lower.tolist())
+# ['apple', 'apple', 'apple']
+```
+
+**Example 2**
+
+```python
+# For replacements and removing punctuation:
+countries = pd.Series(["USA", "U.S.A.", "United States"])
+countries_clean = countries.str.replace(r"\.", "", regex=True)   # remove dots
+countries_clean = countries_clean.str.replace(" ", "", regex=True)  # remove spaces
+countries_clean = countries_clean.replace({"UnitedStates": "USA"})
+print(countries_clean.tolist())
+# ['USA', 'USA', 'USA']
+```
+
+---
+### Filtering and Combining Data
+
+.pull-left[.font85[
+- **Data subsetting is where analytical judgment and code meet:** filtering defines the population you're studying. Every filter is an analytical decision that should be documented &mdash; "I filtered to Grade==9" changes what conclusions are valid.
+
+- **Method chaining:** in pandas, you can chain operations: `df.dropna().query("Grade==9")[["Student","Math_Score"]]`. This produces clean, readable pipelines. In R, the pipe operator `|>` (or `%>%`) achieves the same.
+
+- **Rule:** always filter *after* you've understood the full dataset. Premature filtering can hide patterns in data you haven't examined yet.
+]]
+
+.pull-right[
+```{r img30, echo=FALSE, warning=FALSE, out.width="72%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/30-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Filtering Rows by Condition Using R
+
+```r
+library(dplyr)
+# Assume students_df is a data frame with a column Grade (9, 10, 11, 12)
+# We want only 9th graders
+freshmen_df <- students_df %>% filter(Grade == 9)
+
+# If we also only want 9th graders who scored above 80 in Math:
+high_achievers <- students_df %>% filter(Grade == 9, MathScore > 80)
+```
+
+---
+### Filtering Rows by Condition Using Python
+
+**Option 1 &mdash; boolean indexing**
+
+```python
+df = pd.read_csv("students_scores.csv")
+freshmen_df = df[df['Grade'] == 9]
+# For multiple conditions, use & for AND, | for OR, with parentheses:
+high_achievers = df[(df['Grade'] == 9) & (df['Math_Score'] > 80)]
+```
+
+**Option 2 &mdash; `.query()`**
+
+```python
+freshmen_df = df.query("Grade == 9")
+high_achievers = df.query("Grade == 9 and Math_Score > 80")
+```
+
+---
+### Let's Exercise
+
+.pull-left[
+.content-box-blue[
+1. Read the `books.csv`
+2. Filter data with **only mystery books**
+]
+
+**R**
+
+```r
+books <- read.csv("books.csv")
+mystery_books <- books %>%
+  filter(Genre == "Mystery")
+dim(mystery_books)
+head(mystery_books)
+```
+
+**Python**
+
+```python
+books = pd.read_csv("books.csv")
+mystery_books = books[books['Genre'] == 'Mystery']
+# or:
+mystery_books = books.query("Genre == 'Mystery'")
+mystery_books.head()
+```
+]
+
+.pull-right[
+```{r img33, echo=FALSE, warning=FALSE, out.width="95%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/33-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Selecting and Dropping Columns with R
+
+.font90[Selecting columns (or dropping columns) can make data easier to work with &mdash; and can **protect privacy** if we remove sensitive information:]
+
+```r
+# Select only Student, Grade, and Math_Score from df
+small_df <- df %>% select(Student, Grade, Math_Score)
+head(small_df)
+
+# You can also drop columns by using a minus sign
+no_names <- df %>% select(-Student, -English_Score)
+head(no_names)
+```
+
+---
+### Selecting and Dropping Columns with Python
+
+```python
+# Select only some columns
+small_df = df[["Student", "Grade", "Math_Score"]]
+small_df.head()
+
+# Drop columns
+no_names = df.drop(columns=["Student", "English_Score"])
+no_names.head()
+```
+
+```{r img36, echo=FALSE, warning=FALSE, out.width="62%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/36-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+---
+### Combining Data: Merging and Joining
+
+.font85[
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("object-group", fill = "#4a7fb5")` Merging Tables**
+
+Combining data from different sources based on a common key.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("key", fill = "#4a7fb5")` Matching Keys**
+
+Finding records that match between datasets.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("layer-group", fill = "#4a7fb5")` Appending Rows**
+
+Stacking datasets with the same structure.
+]
+
+.content-box-green[
+**`r fontawesome::fa("circle-check", fill = "#4a7fb5")` Verifying Results**
+
+Ensuring the combined data makes sense.
+]
+]
+]
+
+---
+### Combining Data with R
+
+```r
+# Filter Student Scores
+df <- read.csv("students_scores.csv")
+scores_df <- df %>% select("Student", "Math_Score", "English_Score")
+
+# Read Student Information
+info_df <- read.csv("Student_Information.csv")
+combined_df <- scores_df %>% left_join(info_df, by = "Student")
+head(combined_df)
+```
+
+--
+
+```{r img38, echo=FALSE, warning=FALSE, out.width="85%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/38-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+---
+### The Four Join Types
+
+.font80[
+.content-box-blue[
+**LEFT JOIN:** all rows from the left table, matched rows from the right. NaN fills unmatched right-side values. *Use when the left table is your analytical ground truth and you need to enrich it.*
+]
+
+.content-box-blue[
+**INNER JOIN:** only rows present in **both** tables. *Warning: silently drops unmatched rows &mdash; check `df.shape` before and after to confirm no unexpected data loss.*
+]
+
+.content-box-blue[
+**FULL JOIN:** all rows from both tables, NaN where no match. *Use for data reconciliation: finding records in one source but not another.*
+]
+
+.content-box-blue[
+**RIGHT JOIN:** all rows from the right table, matched rows from the left. Equivalent to a left join with the tables swapped.
+]
+]
+
+--
+
+.font85[**After any join:** check `df.shape` and `df.isnull().sum()` to verify.]
+
+---
+### Combining Data with Python
+
+```python
+df = pd.read_csv("students_scores.csv")
+scores_df = df[["Student", "Math_Score", "English_Score"]]
+
+info_df = pd.read_csv("Student_Information.csv")
+combined_df = pd.merge(scores_df, info_df, on="Student", how="left")
+
+combined_df.head()
+```
+
+--
+
+```{r img40, echo=FALSE, warning=FALSE, out.width="82%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/40-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+---
+### Appending Rows (Stacking Data)
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` What is Appending?**
+
+Stacking one dataset below another with the **same columns** &mdash; like adding more pages to a book with the same format.
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("list", fill = "#4a7fb5")` Common Scenarios**
+
+- Combining data from different time periods
+- Merging data from different locations
+- Consolidating multiple surveys with the same questions
+- Building a complete dataset from partial files
+]
+]
+
+---
+### Appending Rows with R
+
+```r
+# Read the 2021 scores CSV file into a data frame
+scores_2021_df <- read.csv("Scores_2021.csv")
+dim(scores_2021_df)
+
+# Read the 2022 scores CSV file into a data frame
+scores_2022_df <- read.csv("Scores_2022.csv")
+dim(scores_2022_df)
+
+# Combine the 2021 and 2022 data frames by stacking them
+all_scores_df <- bind_rows(scores_2021_df, scores_2022_df)
+
+# Display the dimensions of the combined data frame
+dim(all_scores_df)
+```
+
+---
+### Appending Rows with Python
+
+```python
+# Read the 2021 scores CSV file into a DataFrame
+scores_2021_df = pd.read_csv("Scores_2021.csv")
+print(scores_2021_df.shape)
+
+# Read the 2022 scores CSV file into a DataFrame
+scores_2022_df = pd.read_csv("Scores_2022.csv")
+print(scores_2022_df.shape)
+
+# Combine the 2021 and 2022 DataFrames by stacking them
+all_scores_df = pd.concat([scores_2021_df, scores_2022_df],
+                          ignore_index=True)
+print(all_scores_df.shape)
+```
+
+---
+### Your Turn!
+
+.pull-left[
+.content-box-blue[
+We have 2 datasets: **`lab_results.csv`** and **`patients.csv`**
+
+1. Combine the two files
+2. Experiment with different join types
+]
+]
+
+.pull-right[
+```{r img45, echo=FALSE, warning=FALSE, out.width="65%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/45-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Answers with R: Read and Know Your Data
+
+.pull-left[
+```r
+# 1. Read the DataSets
+lab_results <- read.csv("lab_results.csv")
+patients <- read.csv("patients.csv")
+
+# 2. Know your data
+# Check the heads
+head(lab_results)
+head(patients)
+
+# Check the dimensions
+dim(lab_results) # 35 3
+dim(patients)    # 30 3
+```
+]
+
+.pull-right[
+```{r img46, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="55%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/46-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Answers with R: inner_join and full_join
+
+.pull-left[
+.font90[**Try `inner_join` &mdash; it kept all the matching data:**]
+
+```r
+# 3. Try inner_join
+library(dplyr)
+in_join_df <- patients %>%
+  inner_join(lab_results, by = "ID")
+
+dim(in_join_df)
+head(in_join_df)
+```
+
+.font90[**Try `full_join` &mdash; it kept all data regardless of match:**]
+
+```r
+# 4. Try full_join
+f_join_df <- patients %>%
+  full_join(lab_results, by = "ID")
+
+dim(f_join_df)
+head(f_join_df)
+tail(f_join_df) # patients without lab results
+```
+]
+
+.pull-right[
+```{r img48, echo=FALSE, warning=FALSE, out.width="90%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/48-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Answers with Python
+
+```python
+# 1. Read the DataSets
+import pandas as pd
+lab_results = pd.read_csv("lab_results.csv")
+patients = pd.read_csv("patients.csv")
+
+# 2. Know your data
+print(lab_results.head())
+print(patients.head())
+print(lab_results.shape)
+print(patients.shape)
+
+# 3. Try inner join
+in_join_df = pd.merge(patients, lab_results, on="ID", how="inner")
+print(in_join_df.shape)
+
+# 4. Try outer (full) join — same as full_join in R
+full_join_df = pd.merge(patients, lab_results, on="ID", how="outer")
+print(full_join_df.shape)
+```
+
+---
+class: segue-green
+
+# Chapter 7 Summary: <br> The Data Cleaning Checklist `r top_icon("clipboard-check")`
+
+---
+### Data Cleaning Checklist (1/2)
+
+.font80[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Understand Your Data Context</strong><br>
+  Read the data dictionary first. Without domain knowledge, you can't distinguish a valid extreme value from an error. Ask: what is the unit? What is the valid range? What do missing values mean in this context?</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Check the Structure</strong><br>
+  Check <code>df.shape</code>, <code>df.dtypes</code>, <code>df.describe()</code>, <code>df.isnull().sum()</code> for every new dataset. Before cleaning anything, form hypotheses about what you expect to find &mdash; surprises are the most important signals.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Handle Missing Data</strong><br>
+  Identify missingness type (MCAR/MAR/MNAR). Choose method: listwise deletion only for MCAR; mean/median imputation for continuous MCAR/MAR; document all decisions with before/after row counts.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Identify Outliers</strong><br>
+  Apply at least two detection methods (IQR + domain knowledge). For each flagged value: investigate before acting. Document whether you removed, replaced, winsorized, or kept it.</div>
+</div>
+]
+
+---
+### Data Cleaning Checklist (2/2)
+
+.font80[
+<div class="chev-row">
+  <div class="chev">5</div>
+  <div class="chev-text"><strong>Standardize Formats</strong><br>
+  Parse all dates to a single format (ISO 8601: YYYY-MM-DD) using <code>pd.to_datetime()</code>. Normalize text with <code>.str.strip().str.lower()</code>. Test with <code>value_counts()</code> after each transformation.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">6</div>
+  <div class="chev-text"><strong>Filter as Needed</strong><br>
+  Every filter is an analytical decision &mdash; document it in your log. "Filtered to Grade==9" restricts generalizability. If you filter outliers, note that conclusions apply only to the filtered population.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">7</div>
+  <div class="chev-text"><strong>Combine Data</strong><br>
+  Always check row counts after merging. An unexpected row count increase suggests many-to-many matches. An unexpected decrease indicates mismatched keys. Both are data quality issues, not just code bugs.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">8</div>
+  <div class="chev-text"><strong>Verify and Save Clean Data</strong><br>
+  Run your original <code>df.describe()</code> and <code>df.isnull().sum()</code> against the cleaned version. Also run basic sanity checks: are there still negative ages? Any dates in the future? Does the mean match domain expectations?</div>
+</div>
+]
+
+---
+### Let's Merge and Clean!
+
+.pull-left[.font85[
+**You have two datasets:**
+
+- `school_participation_class1.csv`
+- `school_participation_class2.csv`
+
+**Columns:** StudentID, Name, Grade, Age, Club, SignupDate.
+
+**Upon inspection, you find:**
+
+- Some Age values are **missing**.
+- One Age is recorded as **144** (clearly an error, likely meant 14).
+- The SignupDate column has dates in **mixed formats**: some are "MM/DD/YYYY", others are "Month Day, Year".
+- Grade is recorded as 9, 10, 11, 12 but one entry says **"Freshman"** instead of 9.
+- There are two files (two classes) you need to combine, and a few students appear in both (**duplicates**).
+]]
+
+.pull-right[
+.content-box-blue[
+**Your task: use the checklist to clean this data.**
+
+1. Understand Your Data Context
+2. Check the Structure
+3. Handle Missing Data
+4. Identify Outliers
+5. Standardize Formats
+6. Filter as Needed
+7. Combine Data
+8. Verify and Save Clean Data
+]
+]
+
+---
+### Answers
+
+.font90[
+#### `r fontawesome::fa("r-project", height = "1em", fill = "#4a7fb5")` &nbsp; Check one way to deal with these issues in R: **`Ch7_FinalTaskAnswer.R`**
+
+#### `r fontawesome::fa("python", height = "1em", fill = "#4a7fb5")` &nbsp; For Python: **`Ch7_FinalTaskAnswer.ipynb`**
+
+#### `r fontawesome::fa("file-csv", height = "1em", fill = "#4a7fb5")` &nbsp; Check the example log record: **`Ch7_FinalTask_data_cleaning_log.csv`**
+]
+
+--
+
+.content-box-yellow[
+.font85[**Key principle:** there is no single correct cleaning approach &mdash; different analytical questions may justify different decisions. What matters is that **every decision is documented and defensible**.]
+]
+
+.content-box-blue[
+.font85[**Your cleaning log is as important as the cleaned data.** Without it, your analysis is not reproducible. A cleaned dataset without a log cannot be verified, audited, or extended by collaborators.]
+]
+
+---
+class: segue
+
+# Coding Agents for Data Wrangling `r top_icon("robot")`
+
+---
+### Coding Agent Workflow for Data Wrangling
+
+.font80[A coding agent can automate the full 8-step cleaning pipeline &mdash; **but your analytical judgment drives every decision**:]
+
+.pull-left[
+.content-box-yellow[
+.font80[**`r fontawesome::fa("xmark", fill = "#D55E00")` Weak:** "Clean this dataset." &rarr; Agent applies arbitrary defaults (e.g., drops all rows with any missing value) without knowing your analytical goals.]
+]
+]
+
+.pull-right[
+.content-box-green[
+.font80[**`r fontawesome::fa("check", fill = "#009E73")` Strong:** "Load school_participation_class1.csv and class2.csv. Stack them with pd.concat. Then: (1) report df.shape and df.dtypes, (2) count missing values per column and flag rates &gt;5%, (3) apply IQR outlier detection to all numerical columns, (4) report all unique values in the Grade and SignupDate columns."]
+]
+]
+
+<div style="clear: both;"></div>
+
+.font80[
+**After the audit, give cleaning instructions one step at a time:**
+
+- "Fix SignupDate: convert all values to ISO format YYYY-MM-DD using `pd.to_datetime()`. Show me the first 5 rows of SignupDate before and after."
+- "Standardize Grade: replace 'Freshman' with 9. Show `value_counts()` before and after."
+- "After every cleaning step, print `df.shape` so I can verify no rows were unexpectedly dropped."
+]
+
+---
+### Verifying Agent-Cleaned Data
+
+.font80[**The most important skill: knowing when the agent made a plausible-but-wrong decision.**]
+
+.font75[
+**Common agent mistakes in wrangling:**
+
+1. Drops rows with ANY missing value when you only needed to handle one column.
+2. Converts a ZIP code (stored as "06001") to integer 6001 &mdash; destroying the leading zero.
+3. Fills all missing Ages with the mean, including rows where Age was MNAR.
+
+**Verify after every step:** compare `df.shape` before and after. Check `df.dtypes` to catch silent type conversions. Run `value_counts()` on categorical columns to confirm standardization worked.
+]
+
+--
+
+.content-box-blue[
+.font80[
+**The cleaning log is your verification tool:**
+
+- Ask: "Produce a cleaning log as a numbered list. For each step: what was changed, how many values/rows were affected, and what method was used."
+- Then verify each log entry against the data: if the log says "3 duplicate rows removed," confirm with `df.shape` that you lost exactly 3 rows, not 3 different ones.
+- **Final check:** rerun your original data quality audit on the cleaned dataset. Every issue from Step 1 should now be resolved.
+]
+]
+
+---
+### Hands-On: Agent-Assisted Wrangling of Class Participation Data
+
+.font90[**Activity (pairs, 25 minutes)** &mdash; using `school_participation_class1.csv` and `class2.csv`:]
+
+.font80[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Stack and audit:</strong> Prompt the agent to concatenate the two files and produce a full data quality report (shape, dtypes, missing rates, unique values per column).</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Clean one issue at a time:</strong> Direct the agent to fix Age=144, standardize date formats, fix Grade="Freshman", and remove duplicates. After each fix, verify with a targeted check (not a general "looks good").</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Impute missing Ages:</strong> Ask the agent to impute with the column mean. Then ask: "How many rows were imputed? What was the mean before and after? Did the standard deviation change?" Explain why it changed.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Generate the cleaning log:</strong> Ask for a numbered log matching the professional format from Chapter 6. Compare your log to the example answer.</div>
+</div>
+]
+
+--
+
+.font90[**Challenge:** find one issue the agent misses or handles incorrectly. Document it and explain the better approach.]
+
+---
+### Chapter 7: What You Can Do Now
+
+.font75[
+**Missing data handling:**
+
+- Detect missing values with `is.na()`/`isnull().sum()`. Choose listwise deletion vs. mean/median imputation based on missingness type (MCAR/MAR/MNAR). Report imputation method and percentage imputed.
+
+**Outlier detection and treatment:**
+
+- Apply IQR outlier detection in Python (`numpy.percentile`) and R (`quantile`/`IQR`). Choose from the four strategies (investigate, remove, winsorize, robust methods) based on whether the outlier is an error or a legitimate extreme value.
+
+**Data transformation and combination:**
+
+- Standardize dates with `pd.to_datetime()` and text with `.str.strip()`/`.str.lower()`/regex. Filter with boolean indexing and `.query()`. Merge tables using all four join types and verify results with `df.shape` checks.
+
+**Agent-assisted wrangling:**
+
+- Direct a coding agent through the 8-step cleaning checklist. Verify each step, catch plausible-but-wrong cleaning decisions, and produce a reproducible cleaning log that fully documents every transformation.
+]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/12-class.html
+
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/12-class.html",
+       to = "~/Documents/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/12-class.pdf")
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/12-class.html")
+```
