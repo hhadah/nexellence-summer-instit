@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Research Methods</title>
+    <meta charset="utf-8" />
+    <script src="11-class_files/header-attrs/header-attrs.js"></script>
+    <link href="11-class_files/remark-css/default.css" rel="stylesheet" />
+    <link href="11-class_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="11-class_files/panelset/panelset.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/tulane-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tulane.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Research Methods
+]
+.subtitle[
+## Day 11: Dirty Data — Detecting Data Issues and Ensuring Quality
+]
+
+---
+
+layout: true
+&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | Research Methods | 12 June 2026&lt;/div&gt;
+
+&lt;!--- Day 11: Dirty Data — Detecting Data Issues and Ensuring Quality | 12 June 2026--&gt;
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+&lt;/style&gt;
+
+# .text-shadow[.white[Outline for Today]]
+
+&lt;ol&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;What Is "Dirty Data"? Common Data Problems&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Strategies for Cleaning Data&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Hands-On Cleaning in Python and R&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Why Data Quality Is Critical&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Group Activity: Clean a Messy Dataset&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Coding Agents for Data Quality &amp; Cleaning&lt;/h4&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+---
+class: segue-yellow
+
+# Chapter 6: Dirty Data — &lt;br&gt; Detecting Data Issues and Ensuring Quality &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M256.47 216.77l86.73 109.18s-16.6 102.36-76.57 150.12C206.66 523.85 0 510.19 0 510.19s3.8-23.14 11-55.43l94.62-112.17c3.97-4.7-.87-11.62-6.65-9.5l-60.4 22.09c14.44-41.66 32.72-80.04 54.6-97.47 59.97-47.76 163.3-40.94 163.3-40.94zM636.53 31.03l-19.86-25c-5.49-6.9-15.52-8.05-22.41-2.56l-232.48 177.8-34.14-42.97c-5.09-6.41-15.14-5.21-18.59 2.21l-25.33 54.55 86.73 109.18 58.8-12.45c8-1.69 11.42-11.2 6.34-17.6l-34.09-42.92 232.48-177.8c6.89-5.48 8.04-15.53 2.55-22.44z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+background-image: url("assets/02-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### The Data Cleaning Reality
+
+.font75[
+.three-col[
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2em;width:2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+
+**80% Cleaning, 20% Analysis**
+
+Industry surveys consistently find 60&amp;ndash;80% of a data scientist's time is spent cleaning data. At companies like Airbnb and LinkedIn, entire teams are dedicated to data quality infrastructure.
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2em;width:2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
+
+**Be a Data Detective**
+
+A data detective doesn't just run code &amp;mdash; they verify that outputs match expectations, trace anomalies back to their source, and document every decision made.
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:2em;width:1.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+
+**Garbage In, Garbage Out**
+
+The 2012 Reinhart-Rogoff scandal: a landmark economic paper influencing austerity policy worldwide was based on a spreadsheet with selective data exclusions. Dirty data shapes government policy.
+]
+]
+]
+
+---
+### What We'll Learn
+
+.font85[
+**In this chapter:**
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> &amp;nbsp; Section 1 &amp;mdash; Types of dirty data
+Missing values (MCAR/MAR/MNAR), outliers, typos, inconsistent formats, duplicates, and integration errors.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M566.6 54.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192-34.7-34.7c-4.2-4.2-10-6.6-16-6.6c-12.5 0-22.6 10.1-22.6 22.6v29.1L364.3 320h29.1c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16l-34.7-34.7 192-192zM341.1 353.4L222.6 234.9c-42.7-3.7-85.2 11.7-115.8 42.3l-8 8C76.5 307.5 64 337.7 64 369.2c0 6.8 7.1 11.2 13.2 8.2l51.1-25.5c5-2.5 9.5 4.1 5.4 7.9L7.3 473.4C2.7 477.6 0 483.6 0 489.9C0 502.1 9.9 512 22.1 512l173.3 0c38.8 0 75.9-15.4 103.4-42.8c30.6-30.6 45.9-73.1 42.3-115.8z"/></svg> &amp;nbsp; Section 2 &amp;mdash; Cleaning strategies
+Validation rules, systematic detection, imputation methods, deduplication, and documenting your decisions.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"/></svg> &amp;nbsp; Section 3 &amp;mdash; Hands-on
+Clean a real messy dataset in Python and R, produce a cleaning log, and verify your results.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M184 48H328c4.4 0 8 3.6 8 8V96H176V56c0-4.4 3.6-8 8-8zm-56 8V96H64C28.7 96 0 124.7 0 160v96H192 320 512V160c0-35.3-28.7-64-64-64H384V56c0-30.9-25.1-56-56-56H184c-30.9 0-56 25.1-56 56zM512 288H320v32c0 17.7-14.3 32-32 32H224c-17.7 0-32-14.3-32-32V288H0V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V288z"/></svg> &amp;nbsp; Section 4 &amp;mdash; Data quality in practice
+Professional terminology (ETL, data lineage, schema validation), consequences of dirty data, and reporting on cleaning decisions.
+]
+
+--
+
+.content-box-blue[
+.font85[**Throughout:** use a coding agent to automate detection, generate cleaning reports, and verify that cleaned data meets quality criteria.]
+]
+
+---
+class: segue-green
+
+# What Is "Dirty Data"? &lt;br&gt; Common Data Problems &lt;svg viewBox="0 0 576 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### What is "Dirty Data"?
+
+.pull-left[.font90[
+.content-box-yellow[
+**Dirty data:** data with errors or quality problems that can mislead analysis.
+]
+
+Like a detective with bad evidence, a researcher can be misled by faulty data.
+
+**Common issues include:**
+
+- Incorrect or missing values
+- Duplicate entries
+- Inconsistent formatting
+- Outliers or impossible values
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img05-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Missing Data: What It Looks Like
+
+.font95[Missing values appear differently in different tools &amp;mdash; **R, Excel, and Python**:]
+
+&lt;img src="11-class_files/figure-html/img06a-1.png" alt="" width="60%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="11-class_files/figure-html/img06b-1.png" alt="" width="78%" style="display: block; margin: auto;" /&gt;
+
+---
+### Missing Data
+
+.pull-left[.font75[
+- **Missing data** = blank or null entries where info wasn't recorded.
+
+- **Three types of missingness:** **MCAR** (Missing Completely At Random &amp;mdash; safe to ignore or impute), **MAR** (depends on observed data &amp;mdash; imputation can work), **MNAR** (missingness predicts itself &amp;mdash; the most dangerous; biases results systematically).
+
+- Happens often in real life &amp;mdash; people skip survey questions or sensors glitch.
+
+- Many analysis methods can't handle missing values automatically. Too much missing data can bias results.
+
+- **MNAR example:** sicker patients drop out of a drug trial, making remaining data look healthier than reality. *Always ask: is there a pattern to what is missing?*
+
+- **Detection in pandas:** `df.isnull().sum()` per column, `df.isnull().mean()` for rate. Visualize with `sns.heatmap(df.isnull(), cbar=False)`.
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img07-1.png" alt="" width="72%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Typos &amp;amp; Data Entry Errors
+
+.pull-left[.font85[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 112c-8.8 0-16 7.2-16 16V384c0 8.8 7.2 16 16 16H512c8.8 0 16-7.2 16-16V128c0-8.8-7.2-16-16-16H64zM0 128C0 92.7 28.7 64 64 64H512c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zM176 320H400c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V336c0-8.8 7.2-16 16-16zm-72-72c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H120c-8.8 0-16-7.2-16-16V248zm16-96h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H120c-8.8 0-16-7.2-16-16V168c0-8.8 7.2-16 16-16zm64 96c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H200c-8.8 0-16-7.2-16-16V248zm16-96h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H200c-8.8 0-16-7.2-16-16V168c0-8.8 7.2-16 16-16zm64 96c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H280c-8.8 0-16-7.2-16-16V248zm16-96h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H280c-8.8 0-16-7.2-16-16V168c0-8.8 7.2-16 16-16zm64 96c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H360c-8.8 0-16-7.2-16-16V248zm16-96h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H360c-8.8 0-16-7.2-16-16V168c0-8.8 7.2-16 16-16zm64 96c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H440c-8.8 0-16-7.2-16-16V248zm16-96h16c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H440c-8.8 0-16-7.2-16-16V168c0-8.8 7.2-16 16-16z"/></svg> Human Error**
+
+Entry errors pass a dtype check but fail a domain check &amp;mdash; 88 is a valid integer but an impossible student age. Schema validation is necessary but not sufficient; always pair with range checks and domain knowledge.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 320 512" style="height:1em;width:0.62em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M182.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L128 109.3V402.7L86.6 361.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0l96-96c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 402.7V109.3l41.4 41.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-96-96z"/></svg> Misalignment**
+
+Answers might get shifted to wrong rows when entering data manually.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Unexpected Values**
+
+After computing summary statistics, always check whether min, max, mean, and std are plausible. An `age_max` of 150 or a `score_min` of -5 are data detective red flags.
+]
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img08-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Outliers
+
+&lt;img src="11-class_files/figure-html/img09-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+
+--
+
+.center[.font120[**One student scored above 180!!! Could it be true?**]]
+
+---
+### How Outliers Affect Analysis
+
+.font80[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M522.1 62.4c16.8-5.6 25.8-23.7 20.2-40.5S518.6-3.9 501.9 1.6l-113 37.7C375 15.8 349.3 0 320 0c-44.2 0-80 35.8-80 80c0 3 .2 5.9 .5 8.8L117.9 129.6c-16.8 5.6-25.8 23.7-20.2 40.5s23.7 25.8 40.5 20.2l135.5-45.2c4.5 3.2 9.3 5.9 14.4 8.2V480c0 17.7 14.3 32 32 32H512c17.7 0 32-14.3 32-32s-14.3-32-32-32H352V153.3c21-9.2 37.2-27 44.2-49l125.9-42zM439.6 288L512 163.8 584.4 288H439.6zM512 384c62.9 0 115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L536.1 109.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L392.7 273.1c-5.7 9.8-9.3 21.1-6.7 32.1C396.8 350 449.1 384 512 384zM129.2 291.8L201.6 416H56.7l72.4-124.2zM3.2 433.1C14 478 66.3 512 129.2 512s115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L153.2 237.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L9.9 401.1c-5.7 9.8-9.3 21.1-6.7 32.1z"/></svg> Skew Averages**
+
+One extreme value shifts the mean but not the median &amp;mdash; this is why comparing mean and median is an outlier diagnostic. A right skew (mean &amp;gt; median) signals potential high outliers.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> Distort Visualizations &amp;mdash; Three detection methods**
+
+(1) Domain threshold (Age&amp;gt;100), (2) IQR rule: outlier if value &amp;lt; Q1&amp;minus;1.5&amp;times;IQR or &amp;gt; Q3+1.5&amp;times;IQR, (3) Z-score: |z| &amp;gt; 3 means the value is 3 SDs from the mean.
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> Lead to Wrong Conclusions &amp;mdash; Key decision**
+
+Is this a **data error** (fix it) or a **legitimate extreme value** (keep it, note it)? A 180-point score might be a typo OR a genuine exceptional student &amp;mdash; *domain knowledge determines the answer*.
+]
+]
+
+---
+### Inconsistencies in Data Format
+
+.font85[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5V80C0 53.5 21.5 32 48 32H197.5c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Category Labels**
+
+Some responses say "Male", others say "M" &amp;mdash; computers see these as different!
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/></svg> Date Formats**
+
+Mixing "2025-04-16" and "April 16, 2025" causes confusion in analysis.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"/></svg> Number Formats**
+
+Numbers stored as text or with different separators (5,000 vs 5000).
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M177.9 494.1c-18.7 18.7-49.1 18.7-67.9 0L17.9 401.9c-18.7-18.7-18.7-49.1 0-67.9l50.7-50.7 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 50.7-50.7c18.7-18.7 49.1-18.7 67.9 0l92.1 92.1c18.7 18.7 18.7 49.1 0 67.9L177.9 494.1z"/></svg> Different Units**
+
+Heights recorded in both inches and centimeters without clear labels.
+]
+]
+]
+
+---
+### More Inconsistencies: Duplicates and Impossible Values
+
+.font95[**Duplicated values** and **incorrect or impossible values** (there are only 168 hours in a week: 24 &amp;times; 7 = 168):]
+
+&lt;img src="11-class_files/figure-html/img12-1.png" alt="" width="68%" style="display: block; margin: auto;" /&gt;
+
+---
+### Hidden Inconsistencies
+
+.pull-left[.font85[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zm151 118.3C226 97.7 269.5 80 320 80c65.2 0 118.8 29.6 159.9 67.7C518.4 183.5 545 226 558.6 256c-12.6 28-36.6 66.8-70.9 100.9l-53.8-42.2c9.1-17.6 14.2-37.5 14.2-58.7c0-70.7-57.3-128-128-128c-32.2 0-61.7 11.9-84.2 31.5l-46.1-36.1zM394.9 284.2l-81.5-63.9c4.2-8.5 6.6-18.2 6.6-28.3c0-5.5-.7-10.9-2-16c.7 0 1.3 0 2 0c44.2 0 80 35.8 80 80c0 9.9-1.8 19.4-5.1 28.2zm51.3 163.3l-41.9-33C378.8 425.4 350.7 432 320 432c-65.2 0-118.8-29.6-159.9-67.7C121.6 328.5 95 286 81.4 256c8.3-18.4 21.5-41.5 39.4-64.8L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5zm-88-69.3L302 334c-23.5-5.4-43.1-21.2-53.7-42.3l-56.1-44.2c-.2 2.8-.3 5.6-.3 8.5c0 70.7 57.3 128 128 128c13.3 0 26.1-2 38.2-5.8z"/></svg> Invisible Spaces**
+
+Trailing/leading spaces are invisible but computationally distinct. Fix with `df["col"].str.strip()`. One line prevents a silent category explosion that only shows up in `value_counts()`.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M254 52.8C249.3 40.3 237.3 32 224 32s-25.3 8.3-30 20.8L57.8 416H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-1.8l18-48H303.8l18 48H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H390.2L254 52.8zM279.8 304H168.2L224 155.1 279.8 304z"/></svg> Case Sensitivity**
+
+Normalize with `df["col"].str.lower()` or `.str.upper()` before any groupby or merge. Without this, "Male", "male", and "MALE" count as three separate categories.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"/></svg> Leading Zeros**
+
+ZIP codes or student IDs stored as int lose "06001" &amp;rarr; 6001. Always store ID fields as strings. Check `df.dtypes` and verify ID columns are not numeric.
+]
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img13-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Missing Documentation
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg> What's a Data Dictionary?**
+
+A document describing each variable in your dataset:
+
+- What each field means
+- Units of measurement
+- Possible values
+- How data was collected
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Why It Matters**
+
+Without proper documentation, it's easy to misinterpret data.
+
+**Example:** A column labeled "Temp" could be Celsius or Fahrenheit &amp;mdash; a huge difference!
+]
+]
+
+---
+### Data Integration Errors
+
+.pull-left[.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z"/></svg> &amp;nbsp; Multiple Data Sources
+Combining data from different spreadsheets or systems.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L489.3 358.2l90.5-90.5c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114l-96 96-31.9-25C430.9 239.6 420.1 175.1 377 132c-52.2-52.3-134.5-56.2-191.3-11.7L38.8 5.1zM239 162c30.1-14.9 67.7-9.9 92.8 15.3c20 20 27.5 48.3 21.7 74.5L239 162zM116.6 187.9L60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5l61.8-61.8-50.6-39.9zM220.9 270c-2.1 39.8 12.2 80.1 42.2 110c38.9 38.9 94.4 51 143.6 36.3L220.9 270z"/></svg> &amp;nbsp; Mismatched Records
+Student names get paired with wrong test scores during merging.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zm151 118.3C226 97.7 269.5 80 320 80c65.2 0 118.8 29.6 159.9 67.7C518.4 183.5 545 226 558.6 256c-12.6 28-36.6 66.8-70.9 100.9l-53.8-42.2c9.1-17.6 14.2-37.5 14.2-58.7c0-70.7-57.3-128-128-128c-32.2 0-61.7 11.9-84.2 31.5l-46.1-36.1zM394.9 284.2l-81.5-63.9c4.2-8.5 6.6-18.2 6.6-28.3c0-5.5-.7-10.9-2-16c.7 0 1.3 0 2 0c44.2 0 80 35.8 80 80c0 9.9-1.8 19.4-5.1 28.2zm51.3 163.3l-41.9-33C378.8 425.4 350.7 432 320 432c-65.2 0-118.8-29.6-159.9-67.7C121.6 328.5 95 286 81.4 256c8.3-18.4 21.5-41.5 39.4-64.8L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5zm-88-69.3L302 334c-23.5-5.4-43.1-21.2-53.7-42.3l-56.1-44.2c-.2 2.8-.3 5.6-.3 8.5c0 70.7 57.3 128 128 128c13.3 0 26.1-2 38.2-5.8z"/></svg> &amp;nbsp; Hidden Problems
+Records look complete but contain incorrect information.
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img15-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Do You See Any Issues Here?
+
+.font85[
+
+| Name   | Gender   | Age | Height    | Score |
+|--------|----------|-----|-----------|-------|
+| Alice  | F        | 17  | 65        | 90    |
+| Bob    | male     | 16  | 170 cm    |       |
+| Carlos | M&amp;nbsp;&amp;nbsp;*(trailing space)* | 150 | 68 | 85 |
+| Dana   |          | 18  | 64        | 88    |
+| Ed     | Male     |     | 5'9"      | 95    |
+
+]
+
+--
+
+.content-box-yellow[
+.font85[
+- **Gender variable:** inconsistent &amp;amp; missing &amp;amp; trailing space
+- **Age variable:** outlier and missing
+- **Height:** mixed units, outlier, character in the numeric vector
+- **Score:** missing as empty string
+]
+]
+
+---
+### Why Dirty Data Matters
+
+.three-col[
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:2.5em;width:1.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"/></svg>
+
+**Wrong Statistics**
+
+Errors lead to incorrect averages, counts, and other calculations.
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2.5em;width:2.5em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 0c53 0 96 43 96 96v3.6c0 15.7-12.7 28.4-28.4 28.4H188.4c-15.7 0-28.4-12.7-28.4-28.4V96c0-53 43-96 96-96zM41.4 105.4c12.5-12.5 32.8-12.5 45.3 0l64 64c.7 .7 1.3 1.4 1.9 2.1c14.2-7.3 30.4-11.4 47.5-11.4H312c17.1 0 33.2 4.1 47.5 11.4c.6-.7 1.2-1.4 1.9-2.1l64-64c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-64 64c-.7 .7-1.4 1.3-2.1 1.9c6.2 12 10.1 25.3 11.1 39.5H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H416c0 24.6-5.5 47.8-15.4 68.6c2.2 1.3 4.2 2.9 6 4.8l64 64c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-63.1-63.1c-24.5 21.8-55.8 36.2-90.3 39.6V240c0-8.8-7.2-16-16-16s-16 7.2-16 16V479.2c-34.5-3.4-65.8-17.8-90.3-39.6L86.6 502.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l64-64c1.9-1.9 3.9-3.4 6-4.8C101.5 367.8 96 344.6 96 320H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96.3c1.1-14.1 5-27.5 11.1-39.5c-.7-.6-1.4-1.2-2.1-1.9l-64-64c-12.5-12.5-12.5-32.8 0-45.3z"/></svg>
+
+**Software Errors**
+
+Many analysis tools can't handle missing or incorrect data types.
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2.5em;width:2.5em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg>
+
+**Misinterpretations**
+
+Bad data leads to false conclusions and poor decisions.
+]
+]
+
+---
+class: segue-yellow
+
+# Strategies for Cleaning Data &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M256.47 216.77l86.73 109.18s-16.6 102.36-76.57 150.12C206.66 523.85 0 510.19 0 510.19s3.8-23.14 11-55.43l94.62-112.17c3.97-4.7-.87-11.62-6.65-9.5l-60.4 22.09c14.44-41.66 32.72-80.04 54.6-97.47 59.97-47.76 163.3-40.94 163.3-40.94zM636.53 31.03l-19.86-25c-5.49-6.9-15.52-8.05-22.41-2.56l-232.48 177.8-34.14-42.97c-5.09-6.41-15.14-5.21-18.59 2.21l-25.33 54.55 86.73 109.18 58.8-12.45c8-1.69 11.42-11.2 6.34-17.6l-34.09-42.92 232.48-177.8c6.89-5.48 8.04-15.53 2.55-22.44z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Data Validation
+
+.font80[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Define Acceptable Ranges&lt;/strong&gt;&lt;br&gt;
+  Define a schema for each column: dtype (int64, float64, object, datetime), valid range (0&amp;le;GPA&amp;le;4.0), allowed categories (["M","F","Non-binary"]), and nullable (True/False). A data dictionary is the source of truth.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Check Categories&lt;/strong&gt;&lt;br&gt;
+  Schema validation in pandas: use &lt;code&gt;pd.api.types.is_numeric_dtype()&lt;/code&gt; and &lt;code&gt;df["col"].isin(valid_set)&lt;/code&gt;. For production pipelines, libraries like Great Expectations automate schema checks across thousands of rows.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Verify Required Fields&lt;/strong&gt;&lt;br&gt;
+  Flag any missing values in essential columns.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Look for Logical Consistency&lt;/strong&gt;&lt;br&gt;
+  Cross-field consistency checks: if Birth_Year=2005 and Grade=11, these are consistent. Use assertions in code to catch violations before they propagate into analysis.&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Finding Problems Systematically
+
+.pull-left[.font75[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> Count Missing Values**
+`df.isnull().sum()` for counts; `df.isnull().mean().round(2)` for rates. Flag columns with &amp;gt;5% missing &amp;mdash; they need a strategy decision (impute, drop, or document).
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"/></svg> Sort to Find Duplicates**
+`df.duplicated().sum()` for count; `df[df.duplicated(keep=False)]` to see all duplicate rows. Are full-row duplicates errors, or is a duplicate Student_ID with different scores a merge issue?
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"/></svg> Calculate Basic Stats**
+`df.describe()` for all numerics at once. Then apply domain knowledge: Age_max=150 is impossible; Score_min=-5 is invalid; GPA_max=5.0 could be a different scale.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg> List Unique Values**
+`df["col"].value_counts()` shows all category frequencies. A yes/no field showing 6 unique values has inconsistencies. Always inspect categoricals before any groupby.
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img22-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Visualizing to Find Problems
+
+.pull-left[
+.content-box-blue[
+**Box plots** are great for spotting outliers that fall outside the whiskers.
+]
+
+.font90[The isolated point above the whisker shows a clear outlier that **needs investigation**.]
+]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img23-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Handling Missing Data
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Remove rows&lt;/strong&gt; with missing values &amp;mdash; safe only when missingness is MCAR and the affected rows are few.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Impute values&lt;/strong&gt; &amp;mdash; fill with the mean, median, or mode of the column. Median is safer when the data is skewed.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Leave as missing&lt;/strong&gt; &amp;mdash; keep NA and use analysis methods that tolerate it; sometimes the honest choice.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Document the decision&lt;/strong&gt; &amp;mdash; whichever strategy you choose, record what was missing and how you handled it.&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Handling Outliers
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Verify first&lt;/strong&gt; &amp;mdash; trace the value back to its source. Is it a typo, a unit error, or real?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Fix obvious errors&lt;/strong&gt; &amp;mdash; if Age=150 should clearly be 15, correct it and log the change.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Remove or set missing&lt;/strong&gt; &amp;mdash; when the true value can't be recovered, set it to NA and document why.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Keep legitimate extremes&lt;/strong&gt; &amp;mdash; a genuine exceptional value stays in, with a note; consider reporting the median alongside the mean.&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Correcting Inconsistencies
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Standardize case&lt;/strong&gt; &amp;mdash; convert text to a single case (&lt;code&gt;.str.lower()&lt;/code&gt; / &lt;code&gt;toupper()&lt;/code&gt;) so "Yes", "yes", and "YES" match.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Strip stray spaces&lt;/strong&gt; &amp;mdash; remove leading/trailing whitespace (&lt;code&gt;.str.strip()&lt;/code&gt; / &lt;code&gt;trimws()&lt;/code&gt;).&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Unify category labels&lt;/strong&gt; &amp;mdash; map variants to one standard ("M", "male" &amp;rarr; "Male"); re-check with &lt;code&gt;value_counts()&lt;/code&gt; / &lt;code&gt;table()&lt;/code&gt;.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Convert formats and units&lt;/strong&gt; &amp;mdash; one date format, one unit of measurement, numbers stored as numbers.&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Removing Duplicates
+
+.pull-left[.font90[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M48 128c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48zm0 192c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48z"/></svg> Identify Exact Duplicates**
+
+Find records that match completely across all fields.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M369.8 37.4c14.7 9.8 18.7 29.7 8.9 44.4L337.1 144H400c17.7 0 32 14.3 32 32s-14.3 32-32 32H294.5l-64 96H400c17.7 0 32 14.3 32 32s-14.3 32-32 32H187.8l-65.2 97.7c-9.8 14.7-29.7 18.7-44.4 8.9s-18.7-29.7-8.9-44.4L110.9 368H48c-17.7 0-32-14.3-32-32s14.3-32 32-32H153.5l64-96H48c-17.7 0-32-14.3-32-32s14.3-32 32-32H260.2l65.2-97.7c9.8-14.7 29.7-18.7 44.4-8.9z"/></svg> Check for Partial Duplicates**
+
+Look for records that match on key fields but differ slightly in others.
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Decide Which to Keep**
+
+For partial duplicates, determine which record is more complete or accurate.
+]
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img28-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Document Your Cleaning
+
+.pull-left[.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V299.6l-94.7 94.7c-8.2 8.2-14 18.5-16.8 29.7l-15 60.1c-2.3 9.4-1.8 19 1.4 27.8H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z"/></svg> &amp;nbsp; Keep a Log
+Record all changes made: *"Replaced missing scores with class average"*
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M168.2 384.9c-15-5.4-31.7-3.1-44.6 6.4c-8.2 6-22.3 14.8-39.4 22.7c5.6-14.7 9.9-31.3 11.3-49.4c1-12.9-3.3-25.7-11.8-35.5C60.4 302.8 48 272 48 240c0-79.5 83.3-160 208-160s208 80.5 208 160s-83.3 160-208 160c-31.6 0-61.3-5.5-87.8-15.1zM26.3 423.8c-1.6 2.7-3.3 5.4-5.1 8.1l-.3 .5c-1.6 2.3-3.2 4.6-4.8 6.9c-3.5 4.7-7.3 9.3-11.3 13.5c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c5.1 0 10.2-.3 15.3-.8l.7-.1c4.4-.5 8.8-1.1 13.2-1.9c.8-.1 1.6-.3 2.4-.5c17.8-3.5 34.9-9.5 50.1-16.1c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9zM144 272a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm144-32a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm80 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg> &amp;nbsp; Note Decisions
+Explain why you chose certain approaches: *"Removed outliers above 3 standard deviations"*
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg> &amp;nbsp; Track Impact
+Note how cleaning affected results: *"Average age changed from 43 to 17 after fixing errors"*
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img29-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Test Your Cleaned Data
+
+.pull-left[.font90[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Check for Remaining Issues&lt;/strong&gt;&lt;br&gt;
+  Are there still missing values or outliers you meant to address?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Verify Basic Statistics&lt;/strong&gt;&lt;br&gt;
+  Do averages, minimums, and maximums now look reasonable?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Confirm Categories&lt;/strong&gt;&lt;br&gt;
+  Are all categorical values now consistent and correctly spelled?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Count Records&lt;/strong&gt;&lt;br&gt;
+  Does the number of records match what you expect after cleaning?&lt;/div&gt;
+&lt;/div&gt;
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img30-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: segue-green
+
+# Let's Do It!!! &lt;br&gt; Hands-On Cleaning in Python &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M255.03 261.65c6.25 6.25 16.38 6.25 22.63 0l11.31-11.31c6.25-6.25 6.25-16.38 0-22.63L253.25 192l35.71-35.72c6.25-6.25 6.25-16.38 0-22.63l-11.31-11.31c-6.25-6.25-16.38-6.25-22.63 0l-58.34 58.34c-6.25 6.25-6.25 16.38 0 22.63l58.35 58.34zm96.01-11.3l11.31 11.31c6.25 6.25 16.38 6.25 22.63 0l58.34-58.34c6.25-6.25 6.25-16.38 0-22.63l-58.34-58.34c-6.25-6.25-16.38-6.25-22.63 0l-11.31 11.31c-6.25 6.25-6.25 16.38 0 22.63L386.75 192l-35.71 35.72c-6.25 6.25-6.25 16.38 0 22.63zM624 416H381.54c-.74 19.81-14.71 32-32.74 32H288c-18.69 0-33.02-17.47-32.77-32H16c-8.8 0-16 7.2-16 16v16c0 35.2 28.8 64 64 64h512c35.2 0 64-28.8 64-64v-16c0-8.8-7.2-16-16-16zM576 48c0-26.4-21.6-48-48-48H112C85.6 0 64 21.6 64 48v336h512V48zm-64 272H128V64h384v256z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Open Python!
+
+.font95[Do you remember how to do it? Slides from Chapter 4:]
+
+&lt;div class="img-row" style="max-width: 85%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/31a-img.png"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/31b-img.png"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Create Your Messy Data!
+
+.font90[This code calls the pandas package and creates a data frame where **Bob's score is missing** and **Ed is sooo old**!]
+
+```python
+import pandas as pd
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie', 'Dana', 'Ed'],
+    'Age': [17, 16, 15, 18, 150],
+    'Grade': [11, 11, 10, 12, 11],
+    'Score': [90, None, 85, 88, 95]
+}
+df = pd.DataFrame(data)
+print("Raw data:")
+print(df)
+```
+
+--
+
+&lt;img src="11-class_files/figure-html/img32-1.png" alt="" width="42%" style="display: block; margin: auto;" /&gt;
+
+---
+### Check the Missing
+
+.pull-left[.font90[
+- We have only 5 students and 4 columns in this data. It's easy to find the issues with the naked eye.
+
+- **Think if you had 1,000,000 rows and 10,000 columns** 🤯
+
+- Let's check the missing now!
+]
+
+```python
+print("\nMissing values in each column:")
+print(df.isna().sum())
+```
+]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img33-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Check Outliers
+
+.font85[**Three detection methods:** (1) domain threshold (Age&amp;gt;100), (2) IQR rule: flag if value &amp;lt; Q1&amp;minus;1.5&amp;times;IQR or &amp;gt; Q3+1.5&amp;times;IQR (robust to skew), (3) z-score: |z|&amp;gt;3 (best for normal distributions). Here we use a **domain threshold**:]
+
+```python
+# Identify outliers in Age (say anything &gt; 100 is suspicious)
+outliers = df[df['Age'] &gt; 100]
+print("\nOutliers in Age:")
+print(outliers)
+```
+
+--
+
+&lt;img src="11-class_files/figure-html/img34-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+
+---
+### Let's Clean
+
+.font90[Fill Bob's Score with the **mean of the other scores**:]
+
+```python
+# Fill missing Score with mean of existing scores
+mean_score = df['Score'].mean(skipna=True)  # skipna ignores NaN
+df.fillna({'Score': mean_score}, inplace=True)
+```
+
+--
+
+&lt;img src="11-class_files/figure-html/img35-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+
+---
+### Let's Clean 2
+
+.font90[All the scores are integers &amp;mdash; let's convert Bob's 89.5 to an integer for consistency:]
+
+```python
+df['Score'] = df['Score'].round(0).astype('Int64')
+# round and make integer (pandas Int64 type allows NA if any)
+print("\nAfter rounding Bob's score:")
+print(df)
+```
+
+--
+
+&lt;img src="11-class_files/figure-html/img36-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+
+---
+### Let's Clean 3
+
+.font90[This replaces all Age values higher than 100 with 15 (assuming it's a typo):]
+
+```python
+# Fix outlier Age (assume it's a typo and should be 15)
+df.loc[df['Age'] &gt; 100, 'Age'] = 15
+
+print("\nCleaned data:")
+print(df)
+```
+
+--
+
+&lt;img src="11-class_files/figure-html/img37-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+
+---
+### Let's Try It with R
+
+.pull-left[
+.font95[Do you remember how to start R?]
+
+### <svg aria-hidden="true" role="img" viewBox="0 0 581 512" style="height:1em;width:1.13em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"/></svg> &amp;nbsp; Just run RStudio!
+]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img38-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Create the Data in R
+
+```r
+# Create the data.frame
+df &lt;- data.frame(
+  Name  = c("Alice", "Bob", "Charlie", "Dana", "Ed"),
+  Age   = c(17, 16, 15, 18, 150),
+  Grade = c(11, 11, 10, 12, 11),
+  Score = c(90, NA, 85, 88, 95),      # use NA for missing
+  stringsAsFactors = FALSE            # keep character columns as character
+)
+
+# Print it out
+cat("Raw data:\n")
+print(df)
+```
+
+---
+### Missing and Outlier in R
+
+.font90[In R, the `is.na` function finds the missing values. Here is how to impute the mean for missing values and replace ages over 100 with 15:]
+
+```r
+df$Score[is.na(df$Score)] &lt;- mean(df$Score, na.rm=TRUE)
+df$Age[df$Age &gt; 100] &lt;- 15
+```
+
+---
+### Key Cleaning Functions / Techniques (Summary)
+
+.font80[
+
+| Task | Python (pandas) | R |
+|------|-----------------|---|
+| Find missing values | `df.isna().sum()` | `is.na(df)` / `colSums(is.na(df))` |
+| Fill missing values | `df.fillna(value)` | `df$col[is.na(df$col)] &lt;- value` |
+| Mean ignoring NA | `df["col"].mean(skipna=True)` | `mean(x, na.rm=TRUE)` |
+| Find duplicates | `df.duplicated().sum()` | `sum(duplicated(df))` |
+| Remove duplicates | `df.drop_duplicates()` | `df[!duplicated(df), ]` |
+| Replace values | `df.replace(old, new)` | `gsub()` / direct assignment |
+| Strip spaces | `df["col"].str.strip()` | `trimws(x)` |
+| Normalize case | `df["col"].str.upper()` | `toupper(x)` |
+| Unique values | `df["col"].value_counts()` | `table(x)` / `unique(x)` |
+
+]
+
+---
+class: segue-yellow
+
+# Why Data Quality Is Critical: &lt;br&gt; Trustworthy Analysis &lt;svg viewBox="0 0 384 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M97.12 362.63c-8.69-8.69-4.16-6.24-25.12-11.85-9.51-2.55-17.87-7.45-25.43-13.32L1.2 448.7c-4.39 10.77 3.81 22.47 15.43 22.03l52.69-2.01L105.56 507c8 8.44 22.04 5.81 26.43-4.96l52.05-127.62c-10.84 6.04-22.87 9.58-35.31 9.58-19.5 0-37.82-7.59-51.61-21.37zM382.8 448.7l-45.37-111.24c-7.56 5.88-15.92 10.77-25.43 13.32-21.07 5.64-16.45 3.18-25.12 11.85-13.79 13.78-32.12 21.37-51.62 21.37-12.44 0-24.47-3.55-35.31-9.58L252 502.04c4.39 10.77 18.44 13.4 26.43 4.96l36.25-38.28 52.69 2.01c11.62.44 19.82-11.27 15.43-22.03zM263 340c15.28-15.55 17.03-14.21 38.79-20.14 13.89-3.79 24.75-14.84 28.47-28.98 7.48-28.4 5.54-24.97 25.95-45.75 10.17-10.35 14.14-25.44 10.42-39.58-7.47-28.38-7.48-24.42 0-52.83 3.72-14.14-.25-29.23-10.42-39.58-20.41-20.78-18.47-17.36-25.95-45.75-3.72-14.14-14.58-25.19-28.47-28.98-27.88-7.61-24.52-5.62-44.95-26.41-10.17-10.35-25-14.4-38.89-10.61-27.87 7.6-23.98 7.61-51.9 0-13.89-3.79-28.72.25-38.89 10.61-20.41 20.78-17.05 18.8-44.94 26.41-13.89 3.79-24.75 14.84-28.47 28.98-7.47 28.39-5.54 24.97-25.95 45.75-10.17 10.35-14.15 25.44-10.42 39.58 7.47 28.36 7.48 24.4 0 52.82-3.72 14.14.25 29.23 10.42 39.59 20.41 20.78 18.47 17.35 25.95 45.75 3.72 14.14 14.58 25.19 28.47 28.98C104.6 325.96 106.27 325 121 340c13.23 13.47 33.84 15.88 49.74 5.82a39.676 39.676 0 0 1 42.53 0c15.89 10.06 36.5 7.65 49.73-5.82zM97.66 175.96c0-53.03 42.24-96.02 94.34-96.02s94.34 42.99 94.34 96.02-42.24 96.02-94.34 96.02-94.34-42.99-94.34-96.02z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Why Data Quality Is Critical
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 48c-8.8 0-16 7.2-16 16V448c0 8.8 7.2 16 16 16h80V400c0-26.5 21.5-48 48-48s48 21.5 48 48v64h80c8.8 0 16-7.2 16-16V64c0-8.8-7.2-16-16-16H64zM0 64C0 28.7 28.7 0 64 0H320c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm88 40c0-8.8 7.2-16 16-16h48c8.8 0 16 7.2 16 16v48c0 8.8-7.2 16-16 16H104c-8.8 0-16-7.2-16-16V104zM232 88h48c8.8 0 16 7.2 16 16v48c0 8.8-7.2 16-16 16H232c-8.8 0-16-7.2-16-16V104c0-8.8 7.2-16 16-16zM88 232c0-8.8 7.2-16 16-16h48c8.8 0 16 7.2 16 16v48c0 8.8-7.2 16-16 16H104c-8.8 0-16-7.2-16-16V232zm144-16h48c8.8 0 16 7.2 16 16v48c0 8.8-7.2 16-16 16H232c-8.8 0-16-7.2-16-16V232c0-8.8 7.2-16 16-16z"/></svg> &amp;nbsp; Like a building needs a solid foundation, analysis needs clean data.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg> &amp;nbsp; Even the best analysis methods can't save bad data. *Garbage in, garbage out.*
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M272.2 64.6l-51.1 51.1c-15.3 4.2-29.5 11.9-41.5 22.5L153 161.9C142.8 171 129.5 176 115.8 176H96V304c20.4 .6 39.8 8.9 54.3 23.4l35.6 35.6 7 7 0 0L219.9 397c6.2 6.2 16.4 6.2 22.6 0c1.7-1.7 3-3.7 3.7-5.8c2.8-7.7 9.3-13.5 17.3-15.3s16.4 .6 22.2 6.5L296.5 393c11.6 11.6 30.4 11.6 41.9 0c5.4-5.4 8.3-12.3 8.6-19.4c.4-8.8 5.6-16.6 13.6-20.4s17.3-3 24.4 2.1c9.4 6.7 22.5 5.8 30.9-2.6c9.4-9.4 9.4-24.6 0-33.9L340.1 243l-35.8 33c-27.3 25.2-69.2 25.6-97 .9c-31.7-28.2-32.4-77.4-1.6-106.5l70.1-66.2C303.2 78.4 339.4 64 377.1 64c36.1 0 71 13.3 97.9 37.2L505.1 128H544h40 40c8.8 0 16 7.2 16 16V352c0 17.7-14.3 32-32 32H576c-11.8 0-22.2-6.4-27.7-16H463.4c-3.4 6.7-7.9 13.1-13.5 18.7c-17.1 17.1-40.8 23.8-63 20.1c-3.6 7.3-8.5 14.1-14.6 20.2c-27.3 27.3-70 30-100.4 8.1c-25.1 20.8-62.5 19.5-86-4.1L159 404l-7-7-35.6-35.6c-5.5-5.5-12.7-8.7-20.4-9.3C96 369.7 81.6 384 64 384H32c-17.7 0-32-14.3-32-32V144c0-8.8 7.2-16 16-16H56 96h19.8c2 0 3.9-.7 5.3-2l26.5-23.6C175.5 77.7 211.4 64 248.7 64H259c4.4 0 8.9 .2 13.2 .6zM544 320V176H496c-5.9 0-11.6-2.2-15.9-6.1l-36.9-32.8c-18.2-16.2-41.7-25.1-66.1-25.1c-25.4 0-49.8 9.7-68.3 27.1l-70.1 66.2c-10.3 9.8-10.1 26.3 .5 35.7c9.3 8.3 23.4 8.1 32.5-.3l71.9-66.4c9.7-9 24.9-8.4 33.9 1.4s8.4 24.9-1.4 33.9l-.8 .8 74.4 74.4c10 10 16.5 22.3 19.4 35.1H544zM64 336a16 16 0 1 0 -32 0 16 16 0 1 0 32 0zm528 16a16 16 0 1 0 0-32 16 16 0 1 0 0 32z"/></svg> &amp;nbsp; Clean data makes your findings **credible to others**.
+]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img43-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Consequences of Dirty Data
+
+.pull-left[.font75[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm306.7 69.1L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Misguided Decisions**
+Real case: a software company's churn model trained on duplicate customer records predicted 40% lower churn &amp;mdash; overprovisioning servers by $2M annually before the duplication was caught.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384v38.6C310.1 219.5 256 287.4 256 368c0 59.1 29.1 111.3 73.7 143.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zm48 96a144 144 0 1 1 0 288 144 144 0 1 1 0-288zm59.3 107.3c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0L432 345.4l-36.7-36.7c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6L409.4 368l-36.7 36.7c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0L432 390.6l36.7 36.7c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6L454.6 368l36.7-36.7z"/></svg> Erroneous Research**
+Reinhart-Rogoff (2013): a landmark economics paper cited by governments worldwide to justify austerity was based on a spreadsheet that excluded certain country-years from a key calculation. A grad student found the error. Policy was already enacted.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M119.4 44.1c23.3-3.9 46.8-1.9 68.6 5.3l49.8 77.5-75.4 75.4c-1.5 1.5-2.4 3.6-2.3 5.8s1 4.2 2.6 5.7l112 104c2.9 2.7 7.4 2.9 10.5 .3s3.8-7 1.7-10.4l-60.4-98.1 90.7-75.6c2.6-2.1 3.5-5.7 2.4-8.8L296.8 61.8c28.5-16.7 62.4-23.2 95.7-17.6C461.5 55.6 512 115.2 512 185.1v5.8c0 41.5-17.2 81.2-47.6 109.5L283.7 469.1c-7.5 7-17.4 10.9-27.7 10.9s-20.2-3.9-27.7-10.9L47.6 300.4C17.2 272.1 0 232.4 0 190.9v-5.8c0-69.9 50.5-129.5 119.4-141z"/></svg> Loss of Trust**
+The credibility multiplier: one discovered error makes everyone doubt the entire analysis. Clean data builds trust; dirty data destroys it &amp;mdash; and the destruction is asymmetric.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg> Wasted Effort**
+Redoing analysis after discovering data issues wastes valuable time.
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img44-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Benefits of Clean Data
+
+.pull-left[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg> Reveals True Patterns**
+
+Clean data lets you see actual trends without distortion from errors.
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg> Enables Integration**
+
+Standardized data can be combined with other sources for richer analysis.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg> Saves Time Later**
+
+Investing in cleaning prevents rework and troubleshooting during analysis.
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> Improves Visualizations**
+
+Charts and graphs based on clean data are more accurate and informative.
+]
+]
+
+---
+### Important Tip!
+
+.content-box-blue[
+**Creating a data dictionary and validating data against it helps maintain quality.**
+]
+
+&lt;img src="11-class_files/figure-html/img46a-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="11-class_files/figure-html/img46b-1.png" alt="" width="92%" style="display: block; margin: auto;" /&gt;
+
+---
+### Professional Data Cleaning Terms
+
+.pull-left[.font75[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M249.4 25.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3L269.3 96 416 96c53 0 96 43 96 96v32c0 17.7-14.3 32-32 32s-32-14.3-32-32V192c0-17.7-14.3-32-32-32l-146.7 0 25.4 25.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-80-80c-12.5-12.5-12.5-32.8 0-45.3l80-80zm13.3 256l80 80c12.5 12.5 12.5 32.8 0 45.3l-80 80c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 416 96 416c-17.7 0-32 14.3-32 32v32c0 17.7-14.3 32-32 32s-32-14.3-32-32V448c0-53 43-96 96-96l146.7 0-25.4-25.4c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0zM384 384a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM64 192A64 64 0 1 1 64 64a64 64 0 1 1 0 128z"/></svg> ETL**
+Extract, Transform, Load &amp;mdash; the pipeline that moves data from source systems (databases, APIs) through cleaning and transformation into analytical stores. A broken ETL job is often the root cause of data quality incidents.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M566.6 54.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192-34.7-34.7c-4.2-4.2-10-6.6-16-6.6c-12.5 0-22.6 10.1-22.6 22.6v29.1L364.3 320h29.1c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16l-34.7-34.7 192-192zM341.1 353.4L222.6 234.9c-42.7-3.7-85.2 11.7-115.8 42.3l-8 8C76.5 307.5 64 337.7 64 369.2c0 6.8 7.1 11.2 13.2 8.2l51.1-25.5c5-2.5 9.5 4.1 5.4 7.9L7.3 473.4C2.7 477.6 0 483.6 0 489.9C0 502.1 9.9 512 22.1 512l173.3 0c38.8 0 75.9-15.4 103.4-42.8c30.6-30.6 45.9-73.1 42.3-115.8z"/></svg> Data Wrangling**
+Informal term for the hands-on work of cleaning &amp;mdash; filtering, reshaping, joining, and transforming raw data until it's fit for analysis. In Python: pandas; in R: dplyr/tidyr.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zm-312 8v64c0 13.3 10.7 24 24 24s24-10.7 24-24l0-64c0-13.3-10.7-24-24-24s-24 10.7-24 24zm80-96V280c0 13.3 10.7 24 24 24s24-10.7 24-24V120c0-13.3-10.7-24-24-24s-24 10.7-24 24zm80 64v96c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg> Data Profiling**
+Systematic examination of a dataset to understand structure (schemas, dtypes), content (distributions, frequency tables), and quality (missing rates, outliers). *Always the first step before cleaning.*
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg> Data Preprocessing**
+Broader than wrangling: includes feature engineering, normalization, encoding, and train/test splitting. In ML workflows, preprocessing pipelines are codified to ensure consistency.
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img47-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### When You Write a Report
+
+.pull-left[.font85[
+**Explain the cleaning process.** Such as:
+
+.content-box-blue[
+*"After cleaning the data, we found and corrected 5 data entry errors and filled 3% missing values using domain-appropriate methods. The cleaned dataset of 500 responses was then analyzed..."*
+]
+
+**Professional standard &amp;mdash; always report:**
+
+1. Raw dataset dimensions
+2. Final cleaned dimensions
+3. What was removed and why
+4. How missing values were handled (method and imputed count)
+5. Any assumptions made
+
+*Omitting this is a reproducibility failure.*
+]]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img48-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: segue-green
+
+# Group Activity: &lt;br&gt; Data Cleaning &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Group Activity &amp;mdash; Data Cleaning
+
+.content-box-blue[
+**Your Data:** `messy_school_data.csv`
+]
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"/></svg> &amp;nbsp; Use either Python or R
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> &amp;nbsp; Identify all the issues and perform the cleaning steps
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V299.6l-94.7 94.7c-8.2 8.2-14 18.5-16.8 29.7l-15 60.1c-2.3 9.4-1.8 19 1.4 27.8H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z"/></svg> &amp;nbsp; Create a log report
+
+---
+### Group Activity with R &amp;mdash; Example Answer
+
+.font90[Read the dataset (don't forget to change the path or save the CSV to your working directory), then check the summary statistics:]
+
+```r
+msd &lt;- read.csv("messy_school_data.csv")
+summary(msd)
+```
+
+--
+
+&lt;img src="11-class_files/figure-html/img51-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+### You Will See the Issues for the Numeric Variables
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> &amp;nbsp; Max GPA is 6.5!!! Doesn't look right.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> &amp;nbsp; Smallest height is 25 inches!!
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> &amp;nbsp; There is a student born in 2025?
+]
+
+.pull-right[
+&lt;div class="img-row"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/52a-img.png"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/52b-img.png"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/52c-img.png"&gt;&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Check the Categorical Variables
+
+.pull-left[.font90[
+- Let's check the categorical variables using the `table` function, which provides frequencies.
+
+- We can write a function or loop to check each variable, but for simplicity let's do it one by one.
+]
+
+.content-box-yellow[.font80[
+- **State** has both CA and Cali, FL and Florida, IL and Illinois, Ny and NY, Texas and Texs &amp;mdash; these categories should be combined.
+- **Club** has a "none" category, which might be missing or "no club association".
+- **Parent_Consent** has "no" and "No", "yes" and "Yes".
+]]
+]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img53-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Check Duplicates!
+
+.font90[In R, use the `duplicated` function (returns TRUE or FALSE). Let's check if there are any duplicated IDs:]
+
+```r
+print("Number of Duplicated IDs:")
+sum(duplicated(msd$Student_ID))
+```
+
+--
+
+.font90[There are **three duplicated student IDs** &amp;mdash; let's find them:]
+
+```r
+dup_ids &lt;- msd$Student_ID[duplicated(msd$Student_ID)]
+print("Duplicated IDs:")
+dup_ids
+```
+
+&lt;img src="11-class_files/figure-html/img57b-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+### Decide Which Rows to Remove
+
+.font90[Let's check duplicated ID = 1. Row 30 doesn't have the email, the rest is the same &amp;mdash; let's get rid of line 30. But first, check the others:]
+
+&lt;img src="11-class_files/figure-html/img59-1.png" alt="" width="92%" style="display: block; margin: auto;" /&gt;
+
+---
+### Remove the Duplicate Rows
+
+.font90[Remove rows 30, 32, 33 &amp;mdash; and some issues are already resolved:]
+
+&lt;img src="11-class_files/figure-html/img60-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+### Fix the Categories
+
+.pull-left[
+```r
+# 1. Standardize known variants
+msd$State[msd$State %in% c("Cali")] &lt;- "CA"
+msd$State[msd$State %in% c("Florida")] &lt;- "FL"
+msd$State[msd$State %in% c("Illinois")] &lt;- "IL"
+msd$State[msd$State %in% c("Ny")] &lt;- "NY"
+msd$State[msd$State %in% c("Texas", "Texs")] &lt;- "TX"
+
+# 2. Check the State Variable
+table(msd$State)
+```
+]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img61b-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Fix Parent_Consent and Lunch_Program
+
+```r
+# 1. Convert empty string to missing
+msd$Parent_Consent[msd$Parent_Consent == ""] &lt;- NA
+# 2. Convert all the values to upper case
+msd$Parent_Consent &lt;- toupper(msd$Parent_Consent)
+# 3. Check the Variable
+table(msd$Parent_Consent, useNA = "always")
+```
+
+--
+
+.font90[Same approach for the **Lunch_Program** variable:]
+
+&lt;img src="11-class_files/figure-html/img63-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+
+---
+### Fix Birth Year and Height
+
+.font90[Birth year should be **2005 instead of 2025** for the 11th grader:]
+
+&lt;img src="11-class_files/figure-html/img64-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+
+--
+
+.font90[**Check the height.** Let's sort it &amp;mdash; 25 inches seems a bit short; we don't know what it should be. We can either remove it (make it missing) or impute a mean value:]
+
+```r
+# Remove the smallest height
+msd$Height_in[msd$Height_in == 25] &lt;- NA
+
+# Impute height
+msd$Height_in[is.na(msd$Height_in)] &lt;- mean(msd$Height_in, na.rm = TRUE)
+
+# Check the summary
+summary(msd$Height_in)
+```
+
+---
+### Impute Weight and GPA
+
+```r
+# Impute weight and GPA
+msd$Weight_lb[is.na(msd$Weight_lb)] &lt;- mean(msd$Weight_lb, na.rm = TRUE)
+msd$GPA[is.na(msd$GPA)] &lt;- mean(msd$GPA, na.rm = TRUE)
+
+# Check the summary
+summary(msd)
+```
+
+--
+
+&lt;img src="11-class_files/figure-html/img67-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+### Log Record
+
+.font65[
+
+| Step | Activity | Description |
+|------|----------|-------------|
+| 1 | Import &amp;amp; Initial Inspection | Read "messy_school_data.csv" &amp;bull; Viewed `head()` and `summary()` &amp;bull; Ran frequency tables for Grade, Gender, State, Club, Parent_Consent, Lunch_Program |
+| 2 | Duplicate ID Check | Counted duplicated Student_ID &amp;bull; Identified repeated IDs &amp;bull; Reviewed rows for each duplicate |
+| 3 | Remove Duplicate Rows | Dropped rows 30, 32, 33 |
+| 4 | State Standardization | Replaced "Cali"&amp;rarr;"CA", "Florida"&amp;rarr;"FL", "Illinois"&amp;rarr;"IL", "Ny"&amp;rarr;"NY", "Texas"/"Texs"&amp;rarr;"TX" |
+| 5 | Parent_Consent Cleaning | Converted "" to NA &amp;bull; Upper-cased all entries |
+| 6 | Lunch_Program Cleaning | Converted "" to NA |
+| 7 | Birth_Year Correction | Changed erroneous "2025" entries to 2005 |
+| 8 | Height_in Outlier Handling | Detected low value 25&amp;Prime; as outlier &amp;bull; Replaced 25 with NA &amp;bull; Imputed missing with mean |
+| 9 | Weight_lb &amp;amp; GPA Imputation | Filled NA in Weight_lb and GPA with their respective column means |
+| 10 | Final Verification | Reviewed `summary()` on cleaned data &amp;bull; Checked frequency counts for key fields |
+
+]
+
+--
+
+.content-box-yellow[
+.font85[**Quick note:** there is no single way of cleaning data. You can write more sophisticated code and create functions to handle all the variables and many possible scenarios &amp;mdash; this example shows the step-by-step process.]
+]
+
+---
+### Group Activity Answer with Python
+
+&lt;img src="11-class_files/figure-html/img70-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+
+---
+class: segue-yellow
+
+# Chapter 6 Summary &lt;svg viewBox="0 0 512 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M243.2 189.9V258c26.1 5.9 49.3 15.6 73.6 22.3v-68.2c-26-5.8-49.4-15.5-73.6-22.2zm223.3-123c-34.3 15.9-76.5 31.9-117 31.9C296 98.8 251.7 64 184.3 64c-25 0-47.3 4.4-68 12 2.8-7.3 4.1-15.2 3.6-23.6C118.1 24 94.8 1.2 66.3 0 34.3-1.3 8 24.3 8 56c0 19 9.5 35.8 24 45.9V488c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24v-94.4c28.3-12.1 63.6-22.1 114.4-22.1 53.6 0 97.8 34.8 165.2 34.8 48.2 0 86.7-16.3 122.5-40.9 8.7-6 13.8-15.8 13.8-26.4V95.9c.1-23.3-24.2-38.8-45.4-29zM169.6 325.5c-25.8 2.7-50 8.2-73.6 16.6v-70.5c26.2-9.3 47.5-15 73.6-17.4zM464 191c-23.6 9.8-46.3 19.5-73.6 23.9V286c24.8-3.4 51.4-11.8 73.6-26v70.5c-25.1 16.1-48.5 24.7-73.6 27.1V286c-27 3.7-47.9 1.5-73.6-5.6v67.4c-23.9-7.4-47.3-16.7-73.6-21.3V258c-19.7-4.4-40.8-6.8-73.6-3.8v-70c-22.4 3.1-44.6 10.2-73.6 20.9v-70.5c33.2-12.2 50.1-19.8 73.6-22v71.6c27-3.7 48.4-1.3 73.6 5.7v-67.4c23.7 7.4 47.2 16.7 73.6 21.3v68.4c23.7 5.3 47.6 6.9 73.6 2.7V143c27-4.8 52.3-13.6 73.6-22.5z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Data Quality Importance Review
+
+.pull-left[
+.content-box-blue[
+.font150[&lt;strong style="color:#0148A4;"&gt;80%&lt;/strong&gt;] **Cleaning Time**
+
+Percentage of time data scientists typically spend on cleaning data.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M448 256A192 192 0 1 0 64 256a192 192 0 1 0 384 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 80a80 80 0 1 0 0-160 80 80 0 1 0 0 160zm0-224a144 144 0 1 1 0 288 144 144 0 1 1 0-288zM224 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> Fit-for-Purpose Accuracy**
+
+Data quality is contextual: financial transactions may require near-perfect accuracy; survey data tolerates 5% missingness. The goal is data that is *fit for the specific analytical purpose*.
+]
+
+.content-box-blue[
+.font150[&lt;strong style="color:#0148A4;"&gt;0&lt;/strong&gt;] **Tolerance**
+
+Amount of dirty data acceptable in critical applications like healthcare.
+]
+]
+
+.pull-right[
+&lt;img src="11-class_files/figure-html/img73-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Coding Tools Review
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"/></svg> Python (pandas)**
+
+- `df.isna()` &amp;mdash; Find missing values
+- `df.fillna()` &amp;mdash; Replace missing values
+- `df.drop_duplicates()` &amp;mdash; Remove duplicates
+- `df.replace()` &amp;mdash; Fix incorrect values
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 581 512" style="height:1em;width:1.13em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"/></svg> R**
+
+- `is.na()` &amp;mdash; Find missing values
+- `mean(x, na.rm=TRUE)` &amp;mdash; Calculate mean ignoring NA
+- `unique()` &amp;mdash; Find unique values
+- `gsub()` &amp;mdash; Replace text patterns
+]
+]
+
+---
+### From Detective to Storyteller
+
+.font85[
+&lt;div class="chev-flow"&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1.6em;width:1.2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M192 0c-41.8 0-77.4 26.7-90.5 64H64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H282.5C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;1. Collect Data&lt;/strong&gt;&lt;br&gt;
+    Gather information through surveys, experiments, or existing sources.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1.6em;width:1.8em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M566.6 54.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192-34.7-34.7c-4.2-4.2-10-6.6-16-6.6c-12.5 0-22.6 10.1-22.6 22.6v29.1L364.3 320h29.1c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16l-34.7-34.7 192-192zM341.1 353.4L222.6 234.9c-42.7-3.7-85.2 11.7-115.8 42.3l-8 8C76.5 307.5 64 337.7 64 369.2c0 6.8 7.1 11.2 13.2 8.2l51.1-25.5c5-2.5 9.5 4.1 5.4 7.9L7.3 473.4C2.7 477.6 0 483.6 0 489.9C0 502.1 9.9 512 22.1 512l173.3 0c38.8 0 75.9-15.4 103.4-42.8c30.6-30.6 45.9-73.1 42.3-115.8z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;2. Clean Data&lt;/strong&gt;&lt;br&gt;
+    Ensure data quality by fixing errors and inconsistencies.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;3. Analyze Data&lt;/strong&gt;&lt;br&gt;
+    Apply statistical methods and visualizations to find patterns.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1.6em;width:2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M88.2 309.1c9.8-18.3 6.8-40.8-7.5-55.8C59.4 230.9 48 204 48 176c0-63.5 63.8-128 160-128s160 64.5 160 128s-63.8 128-160 128c-13.1 0-25.8-1.3-37.8-3.6c-10.4-2-21.2-.6-30.7 4.2c-4.1 2.1-8.3 4.1-12.6 6c-16 7.2-32.9 13.5-49.9 18c2.8-4.6 5.4-9.1 7.9-13.6c1.1-1.9 2.2-3.9 3.2-5.9zM0 176c0 41.8 17.2 80.1 45.9 110.3c-.9 1.7-1.9 3.5-2.8 5.1c-10.3 18.4-22.3 36.5-36.6 52.1c-6.6 7-8.3 17.2-4.6 25.9C5.8 378.3 14.4 384 24 384c43 0 86.5-13.3 122.7-29.7c4.8-2.2 9.6-4.5 14.2-6.8c15.1 3 30.9 4.5 47.1 4.5c114.9 0 208-78.8 208-176S322.9 0 208 0S0 78.8 0 176zM432 480c16.2 0 31.9-1.6 47.1-4.5c4.6 2.3 9.4 4.6 14.2 6.8C529.5 498.7 573 512 616 512c9.6 0 18.2-5.7 22-14.5c3.8-8.8 2-19-4.6-25.9c-14.2-15.6-26.2-33.7-36.6-52.1c-.9-1.7-1.9-3.4-2.8-5.1C622.8 384.1 640 345.8 640 304c0-94.4-87.9-171.5-198.2-175.8c4.1 15.2 6.2 31.2 6.2 47.8l0 .6c87.2 6.7 144 67.5 144 127.4c0 28-11.4 54.9-32.7 77.2c-14.3 15-17.3 37.6-7.5 55.8c1.1 2 2.2 4 3.2 5.9c2.5 4.5 5.2 9 7.9 13.6c-17-4.5-33.9-10.7-49.9-18c-4.3-1.9-8.5-3.9-12.6-6c-9.5-4.8-20.3-6.2-30.7-4.2c-12.1 2.4-24.7 3.6-37.8 3.6c-61.7 0-110-26.5-136.8-62.3c-16 5.4-32.8 9.4-50 11.8C279 439.8 350 480 432 480z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;4. Tell the Story&lt;/strong&gt;&lt;br&gt;
+    Communicate insights in a compelling, understandable way.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+class: segue-green
+
+# Coding Agents for &lt;br&gt; Data Quality &amp; Cleaning &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M32,224H64V416H32A31.96166,31.96166,0,0,1,0,384V256A31.96166,31.96166,0,0,1,32,224Zm512-48V448a64.06328,64.06328,0,0,1-64,64H160a64.06328,64.06328,0,0,1-64-64V176a79.974,79.974,0,0,1,80-80H288V32a32,32,0,0,1,64,0V96H464A79.974,79.974,0,0,1,544,176ZM264,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,264,256Zm-8,128H192v32h64Zm96,0H288v32h64ZM456,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,456,256Zm-8,128H384v32h64ZM640,256V384a31.96166,31.96166,0,0,1-32,32H576V224h32A31.96166,31.96166,0,0,1,640,256Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Using a Coding Agent for Data Auditing
+
+.font80[A coding agent can automate your entire data audit &amp;mdash; **but you must interpret the results**:]
+
+.pull-left[
+.content-box-yellow[
+.font80[**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg> Weak:** "Clean this CSV." &amp;rarr; Agent guesses at issues without domain context.]
+]
+]
+
+.pull-right[
+.content-box-green[
+.font80[**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#009E73;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Strong:** "Load messy_school_data.csv. For each column: (1) report dtype, (2) count missing values and compute missing rate, (3) list all unique values for categorical columns, (4) report min/max/mean/std for numerical columns. Flag any column where the missing rate exceeds 5% or the max value is implausible given the column name."]
+]
+]
+
+&lt;div style="clear: both;"&gt;&lt;/div&gt;
+
+.font80[
+**Key verification steps after the agent runs:**
+
+- Check that `df.shape` before and after cleaning match your expectations. Did the agent drop rows you wanted to keep?
+- Ask: "How many rows were removed? What was the original row count vs. cleaned row count? Were any columns modified? Print a before/after comparison for each changed column."
+- Always run the cleaning log prompt: "Produce a numbered step-by-step log of every change made to the dataset, including the old value, new value, and the reason."
+]
+
+---
+### Automated Outlier Detection with a Coding Agent
+
+.font85[**Ask for all three outlier detection methods simultaneously:**]
+
+.content-box-blue[
+.font80["For each numerical column in the dataset, apply three outlier detection methods: (1) domain threshold (flag Age&amp;gt;100, GPA&amp;gt;4.0, Height_in&amp;lt;40 or &amp;gt;90), (2) IQR rule (Q1&amp;minus;1.5&amp;times;IQR, Q3+1.5&amp;times;IQR), and (3) z-score |z|&amp;gt;3. For each flagged value, print the row, the column, and which method(s) flagged it."]
+]
+
+.font80[
+- The agent will produce a table of suspicious values across all methods. **Your job:** evaluate each one using domain knowledge. Is Age=150 a typo or a data entry error? Is Height_in=25 an infant or a measurement error?
+
+- **The critical question you must answer (not the agent):** for each outlier &amp;mdash; is it a *data error* (fix it), a *legitimate extreme value* (keep it and note it), or *ambiguous* (make it missing and document the decision)?
+]
+
+--
+
+.content-box-green[
+.font85[**Pro tip:** ask the agent to plot a box plot and histogram for each flagged column. Visual confirmation prevents you from acting on a false positive from a single detection method.]
+]
+
+---
+### Hands-On: Agent-Assisted Cleaning of messy_school_data.csv
+
+.font90[**Activity (pairs, 25 minutes):**]
+
+.font80[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Audit:&lt;/strong&gt; Prompt the agent to produce a full data quality report (dtypes, missing rates, unique values, min/max). Review every output before proceeding. Flag anything that looks wrong.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Detect:&lt;/strong&gt; Ask the agent to apply IQR outlier detection to all numerical columns and list all unique values for all categorical columns. Identify at least 3 issues beyond what the original slides showed.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Clean:&lt;/strong&gt; Direct the agent to fix each issue one at a time. After each fix, verify with &lt;code&gt;df.describe()&lt;/code&gt; or &lt;code&gt;value_counts()&lt;/code&gt; that the fix worked correctly and didn't introduce new problems.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Log:&lt;/strong&gt; Ask the agent to produce a numbered cleaning log in the professional format. Compare your log to the example answer.&lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.font90[**Challenge:** find one issue the original example answer missed. Use the agent to detect it and fix it.]
+
+---
+### Chapter 6: What You Can Do Now
+
+.font75[
+**Dirty data recognition:**
+
+- Identify the six dirty data types (missing MCAR/MAR/MNAR, outliers, typos, format inconsistencies, duplicates, integration errors) and explain how each distorts analysis differently.
+
+**Data cleaning skills:**
+
+- Clean a real dataset in Python using `df.isnull().sum()`, `.str.strip()`, `.str.lower()`, `fillna()`, IQR outlier detection, and `drop_duplicates()`. Produce a professional cleaning log.
+- Clean the same dataset in R using `is.na()`, `mean(na.rm=TRUE)`, `toupper()`, and `duplicated()`. Understand equivalent operations across both languages.
+
+**Data quality thinking:**
+
+- Apply a data quality checklist before any analysis. Report cleaning decisions transparently including row counts, missing rates, and imputation methods used.
+- Direct a coding agent to automate data auditing and outlier detection, verify its outputs, and catch cases where the agent made a plausible-but-wrong cleaning decision.
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/remark-zoom.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9",
+  "navigation": {
+    "scroll": false
+  }
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
