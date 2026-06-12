@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Research Methods</title>
+    <meta charset="utf-8" />
+    <script src="13-class_files/header-attrs/header-attrs.js"></script>
+    <link href="13-class_files/remark-css/default.css" rel="stylesheet" />
+    <link href="13-class_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="13-class_files/panelset/panelset.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/tulane-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tulane.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Research Methods
+]
+.subtitle[
+## Day 13: Exploring the Clues — Intro to Exploratory Data Analysis (EDA)
+]
+
+---
+
+layout: true
+&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | Research Methods | 12 June 2026&lt;/div&gt;
+
+&lt;!--- Day 13: Exploring the Clues — Intro to Exploratory Data Analysis (EDA) | 12 June 2026--&gt;
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.72em !important;
+    }
+
+&lt;/style&gt;
+
+# .text-shadow[.white[Outline for Today]]
+
+&lt;ol&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;What Is Exploratory Data Analysis (EDA)?&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Basic Tools: Sorting, Filtering &amp; Grouping&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Univariate Exploration: One Variable at a Time&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Bivariate Exploration: Relationships Between Variables&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Visual Tools for EDA &amp; the EDA Process&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Meet Your Coding Agent + Correlation &amp;ne; Causation&lt;/h4&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+---
+class: segue-yellow
+
+# Chapter 8: Exploring the Clues — &lt;br&gt; Intro to Exploratory Data Analysis &lt;svg viewBox="0 0 512 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+### .white[From Raw Numbers to Real Insights — The Art of Asking the Right Questions]
+
+---
+### Exploring the Clues: Intro to Exploratory Data Analysis
+
+.pull-left[
+&lt;br&gt;
+
+.content-box-blue[
+Welcome to the world of **data detective work**! In this chapter, we'll learn how to explore and understand data *before* jumping to conclusions.
+]
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img02-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### What Is Exploratory Data Analysis?
+
+.pull-left[.font90[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> Detective Work**
+
+EDA is like using a magnifying glass to inspect data and understand its story.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> Visual Methods**
+
+We use charts and graphs to see patterns that might be hidden in numbers.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M565.6 36.2C572.1 40.7 576 48.1 576 56V392c0 10-6.2 18.9-15.5 22.4l-168 64c-5.2 2-10.9 2.1-16.1 .3L192.5 417.5l-160 61c-7.4 2.8-15.7 1.8-22.2-2.7S0 463.9 0 456V120c0-10 6.1-18.9 15.5-22.4l168-64c5.2-2 10.9-2.1 16.1-.3L383.5 94.5l160-61c7.4-2.8 15.7-1.8 22.2 2.7zM48 136.5V421.2l120-45.7V90.8L48 136.5zM360 422.7V137.3l-144-48V374.7l144 48zm48-1.5l120-45.7V90.8L408 136.5V421.2z"/></svg> Creating a Map**
+
+EDA gives us a "map" of the data landscape before we dive deeper.
+]
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img03-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### The Purpose of EDA
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/></svg> Understand Variables**
+
+What data do we have and what does it represent?
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"/></svg> Examine Distributions**
+
+How are values spread out? Are scores mostly high, low, or even?
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg> Find Relationships**
+
+Do students who study more tend to have higher grades?
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Spot Errors**
+
+Is a student's age listed as 200? That's clearly wrong!
+]
+]
+
+---
+class: segue-green
+
+# Getting Started: Sorting, &lt;br&gt; Filtering, and Grouping Data &lt;svg viewBox="0 0 512 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M487.976 0H24.028C2.71 0-8.047 25.866 7.058 40.971L192 225.941V432c0 7.831 3.821 15.17 10.237 19.662l80 55.98C298.02 518.69 320 507.493 320 487.98V225.941l184.947-184.97C520.021 25.896 509.338 0 487.976 0z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Let's Sort It Out!
+
+.pull-left[
+**Here is the data:**
+
+| Name   | Class | Exam Score |
+|--------|-------|------------|
+| Alice  | A     | 88         |
+| Brian  | B     | 72         |
+| Carlos | A     | 95         |
+| Diana  | B     | 85         |
+| Eva    | A     | 91         |
+| Frank  | B     | 78         |
+]
+
+.pull-right[
+&lt;br&gt;
+
+.content-box-blue[
+**Use R and Python to sort by Exam Scores.**
+]
+]
+
+---
+### Sort It with R
+
+.pull-left[
+```r
+# Create the data
+df &lt;- data.frame(
+  Name = c("Alice", "Brian", "Carlos",
+           "Diana", "Eva", "Frank"),
+  Class = c("A", "B", "A", "B", "A", "B"),
+  Exam_Score = c(88, 72, 95, 85, 91, 78)
+)
+
+# Option 1
+df[order(df$Exam_Score, decreasing=TRUE), ]
+
+# Option 2
+library(dplyr)
+df %&gt;% arrange(desc(Exam_Score))
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img11-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Sort It with Python
+
+.pull-left[
+```python
+import pandas as pd
+students = [
+    {"Name": "Alice",  "Class": "A", "Score": 88},
+    {"Name": "Brian",  "Class": "B", "Score": 72},
+    {"Name": "Carlos", "Class": "A", "Score": 95},
+    {"Name": "Diana",  "Class": "B", "Score": 85},
+    {"Name": "Eva",    "Class": "A", "Score": 91},
+    {"Name": "Frank",  "Class": "B", "Score": 78}
+]
+df = pd.DataFrame(students)
+print("Not Sorted Data")
+print(df)
+
+# Sort by Score in descending order
+sorted_df = df.sort_values(by="Score",
+                           ascending=False)
+print("Sorted Data")
+print(sorted_df)
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img12-1.png" alt="" width="58%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Basic Tools: Filtering
+
+.pull-left[.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"/></svg> &amp;nbsp; What is Filtering?
+Selecting only rows that meet certain conditions.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M448 256A192 192 0 1 0 64 256a192 192 0 1 0 384 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 80a80 80 0 1 0 0-160 80 80 0 1 0 0 160zm0-224a144 144 0 1 1 0 288 144 144 0 1 1 0-288zM224 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> &amp;nbsp; Why Filter?
+Focus on relevant subsets of data (e.g., only Class A students).
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg> &amp;nbsp; Example Uses
+Show only failing grades that need attention; focus on responses from a specific time period.
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img13-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Let's Filter with R
+
+.pull-left[
+.font90[You can use either `subset` or `filter` (under the dplyr package):]
+
+```r
+# Option 1
+subset(df, Class == "A")
+
+# Option 2
+df %&gt;% filter(Class == "A")
+```
+
+.font90[You can also filter based on **multiple conditions**:]
+
+```r
+# Option 1
+subset(df, Class == "A" &amp; Exam_Score &gt; 90)
+
+# Option 2
+df %&gt;% filter(Class == "A", Exam_Score &gt; 90)
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img15-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Let's Filter with Python
+
+```python
+class_a_df = df[df["Class"] == "A"]
+print(class_a_df)
+```
+
+&lt;img src="13-class_files/figure-html/img16a-1.png" alt="" width="40%" style="display: block; margin: auto;" /&gt;
+
+```python
+class_a_df_over90 = df[(df["Class"]=="A") &amp; (df["Score"] &gt; 90)]
+print(class_a_df_over90)
+```
+
+&lt;img src="13-class_files/figure-html/img16b-1.png" alt="" width="42%" style="display: block; margin: auto;" /&gt;
+
+---
+### Basic Tools: Grouping &amp;amp; Summarizing
+
+.font85[
+&lt;div class="chev-flow"&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1.6em;width:1.8em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;1. Group&lt;/strong&gt;&lt;br&gt;
+    Split data into categories.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1.6em;width:1.2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;2. Summarize&lt;/strong&gt;&lt;br&gt;
+    Calculate statistics for each group.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1.6em;width:2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M384 32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H398.4c-5.2 25.8-22.9 47.1-46.4 57.3V448H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 128c-17.7 0-32-14.3-32-32s14.3-32 32-32H288V153.3c-23.5-10.3-41.2-31.6-46.4-57.3H128c-17.7 0-32-14.3-32-32s14.3-32 32-32H256c14.6-19.4 37.8-32 64-32s49.4 12.6 64 32zm55.6 288H584.4L512 195.8 439.6 320zM512 416c-62.9 0-115.2-34-126-78.9c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C627.2 382 574.9 416 512 416zM126.8 195.8L54.4 320H199.3L126.8 195.8zM.9 337.1c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C242 382 189.7 416 126.8 416S11.7 382 .9 337.1z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;3. Compare&lt;/strong&gt;&lt;br&gt;
+    See differences between groups.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1.6em;width:1.2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;4. Insight&lt;/strong&gt;&lt;br&gt;
+    Draw conclusions from patterns.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Let's Get Averages by Class &amp;mdash; R
+
+.pull-left[
+.font90[Use `group_by` within dplyr to group, then `summarize` to get the mean scores:]
+
+```r
+# Group and Summarize
+df %&gt;%
+  group_by(Class) %&gt;%
+  summarize(mean_score = mean(Exam_Score),
+            count = n())
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img19-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Let's Get Averages by Class &amp;mdash; Python
+
+**Option 1**
+
+```python
+# Group by Class and calculate mean Score
+mean_scores = df.groupby("Class")["Score"].mean()
+print(mean_scores)
+```
+
+**Option 2**
+
+```python
+# Group by Class and calculate mean Score using agg()
+mean_scores = df.groupby("Class").agg({"Score": "mean"})
+print(mean_scores)
+```
+
+&lt;img src="13-class_files/figure-html/img20a-1.png" alt="" width="40%" style="display: block; margin: auto;" /&gt;
+
+---
+### Your Turn!
+
+.font85[Use the **`student_community_service.csv`** data:]
+
+.font85[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Sort by service hours:&lt;/strong&gt; Which student has the highest hours? Which has the lowest?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Filter by grade:&lt;/strong&gt; How many seniors are there in the dataset? What is the range of service hours among seniors?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Group by grade and summarize:&lt;/strong&gt; Calculate the average service hours for each grade (9, 10, 11, 12). Which grade level, on average, has done the most community service?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Challenge:&lt;/strong&gt; Can you find a variable that might explain the pattern you see? Write a hypothesis: "I think [X] is associated with higher service hours because..." How would you test it?&lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.content-box-blue[
+.font85[**Check your answers:** R &amp;rarr; `Ch8_HandsOnActivitySortingFiltering.R`; Python &amp;rarr; `Ch8_HandsOnActivitySortingFiltering.ipynb`]
+]
+
+---
+class: segue-yellow
+
+# Univariate Exploration: &lt;br&gt; Looking at One Variable at a Time &lt;svg viewBox="0 0 512 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M396.8 352h22.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-192 0h22.4c6.4 0 12.8-6.4 12.8-12.8V140.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h22.4c6.4 0 12.8-6.4 12.8-12.8V204.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zM496 400H48V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zm-387.2-48h22.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Univariate Analysis: One Variable at a Time
+
+.pull-left[.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> &amp;nbsp; Examine One Clue
+Look at one variable in isolation.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"/></svg> &amp;nbsp; Understand Distribution
+See how values are spread out.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"/></svg> &amp;nbsp; Calculate Statistics
+Find center, spread, shape, outliers.
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img24-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Key Questions for One Variable
+
+.pull-left[.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z"/></svg> &amp;nbsp; What values are most common?
+Which categories appear most often? Where do most numeric values fall?
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 0c17.7 0 32 14.3 32 32V42.4c93.7 13.9 167.7 88 181.6 181.6H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H469.6c-13.9 93.7-88 167.7-181.6 181.6V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V469.6C130.3 455.7 56.3 381.7 42.4 288H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H42.4C56.3 130.3 130.3 56.3 224 42.4V32c0-17.7 14.3-32 32-32zM107.4 288c12.5 58.3 58.4 104.1 116.6 116.6V384c0-17.7 14.3-32 32-32s32 14.3 32 32v20.6c58.3-12.5 104.1-58.4 116.6-116.6H384c-17.7 0-32-14.3-32-32s14.3-32 32-32h20.6C392.1 165.7 346.3 119.9 288 107.4V128c0 17.7-14.3 32-32 32s-32-14.3-32-32V107.4C165.7 119.9 119.9 165.7 107.4 224H128c17.7 0 32 14.3 32 32s-14.3 32-32 32H107.4zM256 224a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> &amp;nbsp; Where is the center?
+What's the average or median value? What's typical?
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M406.6 374.6l96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224l-293.5 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288l293.5 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"/></svg> &amp;nbsp; How spread out is the data?
+Are values clustered together or widely scattered?
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> &amp;nbsp; Any unusual values?
+Are there outliers that stand far from the rest?
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img25-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Categorical vs. Numerical Variables
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5V80C0 53.5 21.5 32 48 32H197.5c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Categorical**
+
+Groups or labels (favorite music genre, club membership).
+
+**Explore with:** frequency tables, bar charts, and proportions &amp;mdash; *count how many fall in each category*.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"/></svg> Numerical**
+
+Quantities you can measure (scores, hours, height).
+
+**Explore with:** summary statistics, histograms, and boxplots &amp;mdash; *describe center, spread, and shape*.
+]
+]
+
+--
+
+.content-box-yellow[
+.font90[**Example:** suppose we surveyed 30 students on their favorite type of music. A bar chart of the counts shows **Pop is the most popular** genre in this sample, and **Classical the least**.]
+]
+
+---
+### Exploring Numerical Data: Summary Statistics
+
+.pull-left[.font80[
+**Measures of Center**
+
+- **Mean** (average): sum divided by count &amp;mdash; *sensitive to outliers*
+- **Median:** middle value when ordered &amp;mdash; *robust to outliers (use for skewed data)*
+- **Mode:** most common value
+
+**Measures of Spread**
+
+- **Range:** maximum &amp;minus; minimum
+- **Standard deviation (SD):** avg distance from mean &amp;mdash; ~68% of data falls within 1 SD
+- **Interquartile range (IQR):** middle 50% spread
+
+**Example: Exam Scores**
+
+- Mean: 83 &amp;bull; Median: 82.5 &amp;bull; Range: 25 (max 94 &amp;minus; min 69) &amp;bull; SD: ~10 (most scores within 73&amp;ndash;93)
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img29-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Exploring Numerical Data: Histogram
+
+.pull-left[.font90[
+A histogram shows the **distribution** of numeric data by dividing it into bins (ranges) and counting how many values fall in each bin.
+
+.content-box-blue[
+**Bell-shaped** &amp;mdash; symmetric around the middle (normal distribution)
+]
+
+.content-box-blue[
+**Right-skewed** &amp;mdash; tail extends to the right (most values low, few high values)
+]
+
+.content-box-blue[
+**Left-skewed** &amp;mdash; tail extends to the left (most values high, few low values)
+]
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img30-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Histogram in R
+
+.pull-left[
+```r
+scores &lt;- c(83, 77, 84, 93, 76, 76, 94, 86,
+            73, 83, 73, 73, 80, 59, 61, 72,
+            68, 81, 69, 64, 93, 76, 79, 64,
+            73, 79, 66, 82, 72, 75)
+
+hist(scores, breaks=10,
+     main="Distribution of Exam Scores",
+     xlab="Score",
+     ylab="Number of Students",
+     col = "lightblue",
+     border = "black")
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img32-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Histogram in Python
+
+.pull-left[
+```python
+import matplotlib.pyplot as plt
+
+scores = [83, 77, 84, 93, 76, 76, 94, 86,
+          73, 83, 73, 73, 80, 59, 61, 72,
+          68, 81, 69, 64, 93, 76, 79, 64,
+          73, 79, 66, 82, 72, 75]
+plt.hist(scores, bins=10, edgecolor='black')
+plt.title("Distribution of Exam Scores")
+plt.xlabel("Score")
+plt.ylabel("Number of Students")
+plt.show()
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img33-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Interpreting a Histogram
+
+.font85[
+- **Histogram Summary:** Most students scored between 70 and 90, forming a clear cluster.
+
+- **Peak Performance:** The highest bar (mode) is around 80&amp;ndash;85, showing the most common scores.
+
+- **Shape of the Distribution:** The data is roughly symmetric around 80 &amp;mdash; meaning no major skew.
+
+- **Outlier Alert:** One student scored much lower, in the 50&amp;ndash;60 range &amp;mdash; an example of an outlier.
+
+- **What It Suggests:** Most students performed reasonably well, but one student may have struggled.
+]
+
+--
+
+.content-box-blue[
+.font90[**Takeaway:** A histogram helps tell the story of the data &amp;mdash; where most students are, and who stands out.]
+]
+
+---
+### Exploring Numerical Data: Boxplot
+
+.pull-left[.font90[
+.content-box-blue[
+**Box** &amp;mdash; shows the middle 50% of data (interquartile range)
+]
+
+.content-box-blue[
+**Line in Box** &amp;mdash; represents the median (middle value)
+]
+
+.content-box-blue[
+**Whiskers** &amp;mdash; extend to show the range of typical values
+]
+
+.content-box-yellow[
+**Dots** &amp;mdash; individual points show outliers (unusual values)
+]
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img35-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Hands-On Activity: Univariate Exploration
+
+.content-box-blue[
+**Objective:** Develop skills in summarizing and visualizing one variable at a time.
+]
+
+.font90[
+- Use the **`combined_class.csv`** data from the previous session.
+
+- Pick the **Club** column. Tally the frequencies of each category. Create a bar chart.
+
+- Write a sentence about which category was most common and which was least.
+]
+
+---
+### Solution &amp;mdash; R
+
+.pull-left[
+```r
+# Hands-on Activity
+combined_class &lt;- read.csv("combined_class.csv")
+# Convert to factor
+club &lt;- factor(combined_class$Club)
+
+# Use table to count frequencies
+club_table &lt;- table(club)
+club_table
+
+# Plot using barplot
+# (not hist — hist is for numeric data)
+barplot(club_table,
+        col = "skyblue",
+        border = "black",
+        main = "Favorite Clubs Students",
+        xlab = "Club",
+        ylab = "Number of Students")
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img38-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Solution &amp;mdash; Python
+
+.pull-left[
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Read the CSV file
+combined_class = pd.read_csv("combined_class.csv")
+
+# Count frequencies of the 'Club' column
+club_counts = combined_class['Club'].value_counts()
+
+# Plot the bar chart
+club_counts.plot(kind='bar', color='skyblue',
+                 edgecolor='black')
+
+# Add labels and title
+plt.title("Favorite Clubs Students")
+plt.xlabel("Club")
+plt.ylabel("Number of Students")
+plt.tight_layout()
+plt.show()
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img39-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Hands-On Activity: Univariate Exploration &amp;mdash; 2
+
+.content-box-blue[
+Use **`students_scores.csv`** and explore the **Math_Score** column:
+
+1. Calculate the mean, median, and range.
+2. Create a histogram.
+3. Does the data look symmetric or skewed? Identify any outliers.
+]
+
+---
+### Solution &amp;mdash; R and Python
+
+.pull-left[
+```r
+students_scores &lt;- read.csv("students_scores.csv")
+
+cat("Mean Score:", mean(students_scores$Math_Score))
+cat("Median Score:", median(students_scores$Math_Score))
+cat("Score Range:",
+    max(students_scores$Math_Score) -
+    min(students_scores$Math_Score))
+
+hist(students_scores$Math_Score, breaks=10,
+     main="Distribution of Math Scores",
+     xlab="Score", ylab="Number of Students",
+     col = "lightblue", border = "black")
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img41-1.png" alt="" width="92%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: segue-green
+
+# Bivariate Exploration: Investigating &lt;br&gt; Relationships Between Two Variables &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M384 320H256c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V352c0-17.67-14.33-32-32-32zM192 32c0-17.67-14.33-32-32-32H32C14.33 0 0 14.33 0 32v128c0 17.67 14.33 32 32 32h95.72l73.16 128.04C211.98 300.98 232.4 288 256 288h.28L192 175.51V128h224V64H192V32zM608 0H480c-17.67 0-32 14.33-32 32v128c0 17.67 14.33 32 32 32h128c17.67 0 32-14.33 32-32V32c0-17.67-14.33-32-32-32z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Bivariate Analysis: Relationships Between Variables
+
+.pull-left[.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg> &amp;nbsp; Connections
+How two variables relate to each other.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg> &amp;nbsp; Patterns
+Trends, correlations, or groupings.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M384 32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H398.4c-5.2 25.8-22.9 47.1-46.4 57.3V448H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 128c-17.7 0-32-14.3-32-32s14.3-32 32-32H288V153.3c-23.5-10.3-41.2-31.6-46.4-57.3H128c-17.7 0-32-14.3-32-32s14.3-32 32-32H256c14.6-19.4 37.8-32 64-32s49.4 12.6 64 32zm55.6 288H584.4L512 195.8 439.6 320zM512 416c-62.9 0-115.2-34-126-78.9c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C627.2 382 574.9 416 512 416zM126.8 195.8L54.4 320H199.3L126.8 195.8zM.9 337.1c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C242 382 189.7 416 126.8 416S11.7 382 .9 337.1z"/></svg> &amp;nbsp; Comparisons
+Differences between groups.
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img44-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Types of Bivariate Analysis
+
+.three-col[
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2.5em;width:2.5em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg>
+
+**Numeric vs. Numeric**
+
+.font85[Study hours vs. exam score.&lt;br&gt;**Use:** scatterplots, correlation.]
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2.5em;width:2.5em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 256V160H224v96H64zm0 64H224v96H64V320zm224 96V320H448v96H288zM448 256H288V160H448v96zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/></svg>
+
+**Categorical vs. Categorical**
+
+.font85[Gender vs. club preference.&lt;br&gt;**Use:** contingency tables, bar charts.]
+]
+.col[
+<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:2.5em;width:2.5em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg>
+
+**Categorical vs. Numeric**
+
+.font85[Class (A/B) vs. test score.&lt;br&gt;**Use:** side-by-side boxplots, group means.]
+]
+]
+
+---
+### Numeric vs. Numeric: Scatterplots
+
+.pull-left[.font90[
+.content-box-blue[
+**Each Point** &amp;mdash; represents one observation with two values (x, y).
+]
+
+.content-box-blue[
+**Trend** &amp;mdash; upward trend shows positive correlation, downward shows negative.
+]
+
+.content-box-blue[
+**Strength** &amp;mdash; tight cluster around a line = strong relationship; scattered = weak.
+]
+
+.content-box-yellow[
+**Outliers** &amp;mdash; points that don't follow the general pattern.
+]
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img46-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Correlation
+
+.pull-left[.font90[
+.content-box-green[
+.font120[**+1.0**] **Perfect Positive**
+
+As one variable increases, the other increases exactly proportionally.
+]
+
+.content-box-blue[
+.font120[**0**] **No Correlation**
+
+No linear relationship between the variables.
+]
+
+.content-box-yellow[
+.font120[**&amp;minus;1.0**] **Perfect Negative**
+
+As one variable increases, the other decreases exactly proportionally.
+]
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img47-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Reading a Scatterplot
+
+.font80[
+- **What is a Scatterplot?** A graph where each point represents one observation with two values &amp;mdash; one on the x-axis and one on the y-axis (e.g., Hours Studied vs. Exam Score).
+
+- **Trend / Correlation:** Upward trend = positive correlation (more study, higher score). Downward trend = negative correlation. No trend = no clear relationship.
+
+- **Strength of Relationship:** Points tightly packed = strong relationship. Points widely scattered = weak relationship.
+
+- **Outliers:** Look for students who don't fit the pattern &amp;mdash; like studying a lot but scoring low (or the opposite).
+
+- **Shape of Relationship:** Linear = points form a straight line. Non-linear = relationship curves or flattens (e.g., diminishing returns on study time).
+]
+
+---
+### Let's Try It! &amp;mdash; R
+
+.pull-left[
+.content-box-blue[
+Read **`Student_Data_Ch8.csv`** and create a scatterplot for Study Hours and Exam Score.
+]
+
+```r
+# Scatterplot
+df &lt;- read.csv("Student_Data_Ch8.csv")
+plot(df$Study_Hours, df$Exam_Score,
+     xlab="Hours Studied",
+     ylab="Exam Score",
+     main="Study Time vs Exam Score")
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img49-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Try with Python!
+
+.pull-left[
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the dataset
+df = pd.read_csv("Student_Data_Ch8.csv")
+
+# Create scatterplot
+plt.figure(figsize=(8, 6))
+plt.scatter(df["Study_Hours"], df["Exam_Score"])
+plt.xlabel("Hours Studied")
+plt.ylabel("Exam Score")
+plt.title("Study Time vs Exam Score")
+plt.grid(True)
+plt.show()
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img50-1.png" alt="" width="92%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Categorical vs. Categorical
+
+.pull-left[
+.font90[This is often explored via **contingency tables** or bar charts:]
+
+| | Sports | Arts | Academic |
+|--------|--------|------|----------|
+| Male   | 15     | 5    | 10       |
+| Female | 8      | 12   | 10       |
+
+.font90[To visualize, a **grouped bar chart, stacked bar chart, or mosaic plot** could be used.]
+]
+
+.pull-right[
+&lt;div class="img-row"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/52a-img.png"&gt;&lt;p&gt;.font80[**Bar Chart**]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/52b-img.png"&gt;&lt;p&gt;.font80[**Stacked Bar Chart**]&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Categorical vs. Numeric
+
+.pull-left[.font90[
+**Examples:**
+
+- Compare test scores (numeric) between two classes A and B (categorical).
+- Compare heights between boys and girls.
+- Compare some measurement across different categories (like income across different education levels).
+
+.content-box-blue[
+A **side-by-side boxplot** is the preferred choice.
+]
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img53-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Let's Try! &amp;mdash; R
+
+.pull-left[
+.content-box-blue[
+Read **`Student_Data_Ch8.csv`** and create a side-by-side box plot for Grade and Exam Scores.
+]
+
+```r
+# Read the data
+df &lt;- read.csv("Student_Data_Ch8.csv")
+
+# Boxplot: Exam Score by Grade
+boxplot(Exam_Score ~ Grade, data = df,
+        xlab = "Grade",
+        ylab = "Exam Score",
+        main = "Exam Scores by Grade",
+        col = c("lightblue","blue",
+                "darkgreen","purple"))
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img54-1.png" alt="" width="92%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Let's Try! &amp;mdash; Python
+
+.pull-left[
+```python
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the dataset
+df = pd.read_csv("Student_Data_Ch8.csv")
+
+plt.figure(figsize=(8, 6))
+sns.boxplot(x="Grade", y="Exam_Score",
+            hue="Grade", data=df,
+            palette="pastel", legend=False)
+plt.xlabel("Grade")
+plt.ylabel("Exam Score")
+plt.title("Exam Scores by Grade")
+plt.grid(True)
+plt.show()
+```
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img55-1.png" alt="" width="92%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Patterns in Bivariate Analysis
+
+.pull-left[.font85[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M384 160c-17.7 0-32-14.3-32-32s14.3-32 32-32H544c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32s-32-14.3-32-32V205.3L342.6 374.6c-12.5 12.5-32.8 12.5-45.3 0L192 269.3 54.6 406.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160c12.5-12.5 32.8-12.5 45.3 0L320 306.7 466.7 160H384z"/></svg> Positive Association**
+
+As one variable increases, the other tends to increase (more study time, higher scores).
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M384 352c-17.7 0-32 14.3-32 32s14.3 32 32 32H544c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32s-32 14.3-32 32v82.7L342.6 137.4c-12.5-12.5-32.8-12.5-45.3 0L192 242.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0L320 205.3 466.7 352H384z"/></svg> Negative Association**
+
+As one variable increases, the other tends to decrease (more absences, lower grades).
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M403.8 34.4c12-5 25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V160H352c-10.1 0-19.6 4.7-25.6 12.8L284 229.3 244 176l31.2-41.6C293.3 110.2 321.8 96 352 96h32V64c0-12.9 7.8-24.6 19.8-29.6zM164 282.7L204 336l-31.2 41.6C154.7 401.8 126.2 416 96 416H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96c10.1 0 19.6-4.7 25.6-12.8L164 282.7zm274.6 188c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V416H352c-30.2 0-58.7-14.2-76.8-38.4L121.6 172.8c-6-8.1-15.5-12.8-25.6-12.8H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96c30.2 0 58.7 14.2 76.8 38.4L326.4 339.2c6 8.1 15.5 12.8 25.6 12.8h32V320c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64z"/></svg> No Association**
+
+No clear relationship between variables (random cloud in scatterplot).
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M72 88a56 56 0 1 1 112 0A56 56 0 1 1 72 88zM64 245.7C54 256.9 48 271.8 48 288s6 31.1 16 42.3V245.7zm144.4-49.3C178.7 222.7 160 261.2 160 304c0 34.3 12 65.8 32 90.5V416c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V389.2C26.2 371.2 0 332.7 0 288c0-61.9 50.1-112 112-112h32c24 0 46.2 7.5 64.4 20.3zM448 416V394.5c20-24.7 32-56.2 32-90.5c0-42.8-18.7-81.3-48.4-107.7C449.8 183.5 472 176 496 176h32c61.9 0 112 50.1 112 112c0 44.7-26.2 83.2-64 101.2V416c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32zm8-328a56 56 0 1 1 112 0A56 56 0 1 1 456 88zM576 245.7v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM320 32a64 64 0 1 1 0 128 64 64 0 1 1 0-128zM240 304c0 16.2 6 31 16 42.3V261.7c-10 11.3-16 26.1-16 42.3zm144-42.3v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM448 304c0 44.7-26.2 83.2-64 101.2V448c0 17.7-14.3 32-32 32H288c-17.7 0-32-14.3-32-32V405.2c-37.8-18-64-56.5-64-101.2c0-61.9 50.1-112 112-112h32c61.9 0 112 50.1 112 112z"/></svg> Group Differences**
+
+One category consistently has higher/lower values than another.
+]
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img56-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Your Turn!
+
+.content-box-blue[
+Explore the **`Student_Data_Ch8.csv`** dataset with the bivariate tools you just learned &amp;mdash; scatterplots, contingency tables, and side-by-side boxplots.
+]
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/></svg> &amp;nbsp; Example code is under **`Ch8.R`** and **`Ch8.ipynb`**
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg> &amp;nbsp; For each exploration, write a brief summary of what you found
+
+---
+class: segue-yellow
+
+# Visual Tools for EDA: &lt;br&gt; Charts that Tell a Story &lt;svg viewBox="0 0 544 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M527.79 288H290.5l158.03 158.03c6.04 6.04 15.98 6.53 22.19.68 38.7-36.46 65.32-85.61 73.13-140.86 1.34-9.46-6.51-17.85-16.06-17.85zm-15.83-64.8C503.72 103.74 408.26 8.28 288.8.04 279.68-.59 272 7.1 272 16.24V240h223.77c9.14 0 16.82-7.68 16.19-16.8zM224 288V50.71c0-9.55-8.39-17.4-17.84-16.06C86.99 51.49-4.1 155.6.14 280.37 4.5 408.51 114.83 513.59 243.03 511.98c50.4-.63 96.97-16.87 135.26-44.03 7.9-5.6 8.42-17.23 1.57-24.08L224 288z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Visual Tools for EDA
+
+.font95[Different charts help us see different aspects of our data. **Choose the right visual for your data type and question.**]
+
+&lt;div class="img-row" style="max-width: 95%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/62a-img.png"&gt;&lt;p&gt;.font80[**Bar Chart**]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/62b-img.png"&gt;&lt;p&gt;.font80[**Histogram**]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/62c-img.png"&gt;&lt;p&gt;.font80[**Boxplot**]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/62d-img.png"&gt;&lt;p&gt;.font80[**Scatterplot**]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/62e-img.png"&gt;&lt;p&gt;.font80[**Line Chart**]&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Bar Chart
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> When to Use**
+
+- For categorical data
+- To show frequencies or counts
+- To compare categories
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> Tips**
+
+- Label categories clearly
+- Consider sorting by height
+- Use grouped bars for multiple categories
+]
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img63-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Histogram
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> When to Use**
+
+- For numerical data
+- To show distribution
+- To see shape, center, spread
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> Tips**
+
+- Choose appropriate bin width
+- Label axes clearly
+- Look for patterns in shape
+]
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img64-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Boxplot
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> When to Use**
+
+- For numerical data
+- To show distribution summary
+- To compare groups
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> Tips**
+
+- Note the median (middle line)
+- Check for outliers (dots)
+- Compare box sizes for spread
+]
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img65-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Scatterplot
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> When to Use**
+
+- For two numerical variables
+- To show relationships
+- To identify correlation
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> Tips**
+
+- Look for trends (up/down)
+- Check for outliers
+- Consider adding a trend line
+]
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img66-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Line Chart
+
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> When to Use**
+
+- For data over time or sequence
+- To show trends
+- To track changes
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> Tips**
+
+- Only use when x-axis has natural order
+- Label time points clearly
+- Consider multiple lines for comparison
+]
+]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img67-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Visualization Best Practices
+
+.pull-left[.font90[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 80V229.5c0 17 6.7 33.3 18.7 45.3l176 176c25 25 65.5 25 90.5 0L418.7 317.3c25-25 25-65.5 0-90.5l-176-176c-12-12-28.3-18.7-45.3-18.7H48C21.5 32 0 53.5 0 80zm112 32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> &amp;nbsp; Label Everything
+Include clear titles, axis labels, and legends.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M456 224H312c-13.3 0-24-10.7-24-24V56c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2l40 40L442.3 5.7C446 2 450.9 0 456 0s10 2 13.7 5.7l36.7 36.7C510 46 512 50.9 512 56s-2 10-5.7 13.7L433 143l40 40c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8zm0 64c9.7 0 18.5 5.8 22.2 14.8s1.7 19.3-5.2 26.2l-40 40 73.4 73.4c3.6 3.6 5.7 8.5 5.7 13.7s-2 10-5.7 13.7l-36.7 36.7C466 510 461.1 512 456 512s-10-2-13.7-5.7L369 433l-40 40c-6.9 6.9-17.2 8.9-26.2 5.2s-14.8-12.5-14.8-22.2V312c0-13.3 10.7-24 24-24H456zm-256 0c13.3 0 24 10.7 24 24V456c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-40-40L69.7 506.3C66 510 61.1 512 56 512s-10-2-13.7-5.7L5.7 469.7C2 466 0 461.1 0 456s2-10 5.7-13.7L79 369 39 329c-6.9-6.9-8.9-17.2-5.2-26.2s12.5-14.8 22.2-14.8H200zM56 224c-9.7 0-18.5-5.8-22.2-14.8s-1.7-19.3 5.2-26.2l40-40L5.7 69.7C2 66 0 61.1 0 56s2-10 5.7-13.7L42.3 5.7C46 2 50.9 0 56 0s10 2 13.7 5.7L143 79l40-40c6.9-6.9 17.2-8.9 26.2-5.2s14.8 12.5 14.8 22.2V200c0 13.3-10.7 24-24 24H56z"/></svg> &amp;nbsp; Keep It Simple
+Don't overload one chart with too much information.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M512 256c0 .9 0 1.8 0 2.7c-.4 36.5-33.6 61.3-70.1 61.3H344c-26.5 0-48 21.5-48 48c0 3.4 .4 6.7 1 9.9c2.1 10.2 6.5 20 10.8 29.9c6.1 13.8 12.1 27.5 12.1 42c0 31.8-21.6 60.7-53.4 62c-3.5 .1-7 .2-10.6 .2C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm96 96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg> &amp;nbsp; Use Color Wisely
+Colors should enhance understanding, not confuse.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> &amp;nbsp; Double-Check
+If something looks odd, verify the data.
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img68-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: segue-green
+
+# Case Study: EDA in Action &lt;svg viewBox="0 0 384 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M336 64h-80c0-35.3-28.7-64-64-64s-64 28.7-64 64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM192 40c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm121.2 231.8l-143 141.8c-4.7 4.7-12.3 4.6-17-.1l-82.6-83.3c-4.7-4.7-4.6-12.3.1-17L99.1 285c4.7-4.7 12.3-4.6 17 .1l46 46.4 106-105.2c4.7-4.7 12.3-4.6 17 .1l28.2 28.4c4.7 4.8 4.6 12.3-.1 17z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### The Four Steps of an EDA Case Study
+
+.font85[
+&lt;div class="chev-flow"&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;1. Overview &amp;amp; Quality Check&lt;/strong&gt;&lt;br&gt;
+    Read in the data, check the head, calculate basic summary stats for numeric columns and frequencies for categorical ones. Report/adjust if you see any weird values.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;2. Univariate EDA&lt;/strong&gt;&lt;br&gt;
+    Explore each variable on its own: histograms, boxplots, bar charts, summary statistics.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1.6em;width:1.8em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48V96H384V80c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H432c-26.5 0-48-21.5-48-48V160H192v16c0 1.7-.1 3.4-.3 5L272 288h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H272c-26.5 0-48-21.5-48-48V336c0-1.7 .1-3.4 .3-5L144 224H48c-26.5 0-48-21.5-48-48V80z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;3. Bivariate EDA&lt;/strong&gt;&lt;br&gt;
+    Explore relationships between pairs of variables: scatterplots, grouped boxplots, contingency tables.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1.6em;width:1.2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;4. Patterns &amp;amp; Anomalies&lt;/strong&gt;&lt;br&gt;
+    Note trends, clusters, outliers, gaps, and anything unexpected &amp;mdash; then form your story.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Form Your Story!
+
+.content-box-blue[
+.font85[**Example:**
+
+*"It appears that as students progress through grades, their homework load increases. Despite spending more time, their sleep tends to decrease slightly by senior year. We found that those involved in extracurricular activities tended to maintain slightly higher GPAs on average, though the causal relationship isn't clear. Most students have moderate sleep (~7 hours), but a few are getting dangerously low amounts of sleep which is a concern. We also saw that study habits vary widely &amp;mdash; even among those with similar GPAs, homework hours ranged a lot, suggesting different work strategies or course loads."*
+]
+]
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg> &amp;nbsp; Write down YOUR story from the data you explored.
+
+---
+### Common Patterns to Look For
+
+&lt;div class="img-row" style="max-width: 85%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/75a-img.png"&gt;&lt;p&gt;.font85[**Trends**&lt;br&gt;General direction in data]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/75b-img.png"&gt;&lt;p&gt;.font85[**Clusters**&lt;br&gt;Groupings of observations]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/75c-img.png"&gt;&lt;p&gt;.font85[**Cycles**&lt;br&gt;Repeating patterns]&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/75d-img.png"&gt;&lt;p&gt;.font85[**Outliers**&lt;br&gt;Points that stand apart]&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+---
+background-image: url("assets/76-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### Common Anomalies to Watch For
+
+.font85[
+.pull-left[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Outliers**
+
+Values far from the rest. Could be errors or interesting exceptions.
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 192 512" style="height:1em;width:0.38em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V448c0 17.7 14.3 32 32 32s32-14.3 32-32V64zm128 0c0-17.7-14.3-32-32-32s-32 14.3-32 32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V64z"/></svg> Gaps**
+
+Ranges where no observations fall. Might indicate an interesting divide.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> Unexpected Patterns**
+
+Relationships that don't match what you'd expect based on theory.
+]
+
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 0c53 0 96 43 96 96v3.6c0 15.7-12.7 28.4-28.4 28.4H188.4c-15.7 0-28.4-12.7-28.4-28.4V96c0-53 43-96 96-96zM41.4 105.4c12.5-12.5 32.8-12.5 45.3 0l64 64c.7 .7 1.3 1.4 1.9 2.1c14.2-7.3 30.4-11.4 47.5-11.4H312c17.1 0 33.2 4.1 47.5 11.4c.6-.7 1.2-1.4 1.9-2.1l64-64c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-64 64c-.7 .7-1.4 1.3-2.1 1.9c6.2 12 10.1 25.3 11.1 39.5H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H416c0 24.6-5.5 47.8-15.4 68.6c2.2 1.3 4.2 2.9 6 4.8l64 64c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-63.1-63.1c-24.5 21.8-55.8 36.2-90.3 39.6V240c0-8.8-7.2-16-16-16s-16 7.2-16 16V479.2c-34.5-3.4-65.8-17.8-90.3-39.6L86.6 502.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l64-64c1.9-1.9 3.9-3.4 6-4.8C101.5 367.8 96 344.6 96 320H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96.3c1.1-14.1 5-27.5 11.1-39.5c-.7-.6-1.4-1.2-2.1-1.9l-64-64c-12.5-12.5-12.5-32.8 0-45.3z"/></svg> Data Errors**
+
+Impossible values (negative heights) or duplicate records that don't make sense.
+]
+]
+]
+
+---
+### The EDA Process
+
+.font85[
+&lt;div class="chev-flow"&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;1. Ask Questions&lt;/strong&gt;&lt;br&gt;
+    What do I want to know?&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;2. Explore&lt;/strong&gt;&lt;br&gt;
+    Look at variables and relationships.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1.6em;width:1.2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;3. Discover&lt;/strong&gt;&lt;br&gt;
+    Find patterns and anomalies.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;4. Refine&lt;/strong&gt;&lt;br&gt;
+    Adjust and ask new questions.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.content-box-blue[
+.font95[**EDA is iterative** &amp;mdash; one finding often leads to new questions and further exploration.]
+]
+
+---
+### Key Takeaways
+
+.pull-left[.font85[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;EDA is Essential&lt;/strong&gt;&lt;br&gt;
+  Always explore your data before jumping to conclusions or complex models.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Use Basic Operations&lt;/strong&gt;&lt;br&gt;
+  Sorting, filtering, and grouping help answer simple but important questions.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Examine One Variable at a Time&lt;/strong&gt;&lt;br&gt;
+  Understand distributions using summary statistics and visualizations.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Look for Relationships&lt;/strong&gt;&lt;br&gt;
+  Explore how pairs of variables relate to each other.&lt;/div&gt;
+&lt;/div&gt;
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img78-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+background-image: url("assets/79-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### More Key Takeaways
+
+.font85[
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Visualize&lt;/strong&gt; &amp;mdash; a well-chosen plot can reveal insights at a glance that might be buried in numbers.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Watch for Patterns and Anomalies&lt;/strong&gt; &amp;mdash; look for trends, clusters, outliers, and other interesting features.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Be Iterative&lt;/strong&gt; &amp;mdash; EDA is not a strict recipe but an exploration that follows your curiosity.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Document Findings&lt;/strong&gt; &amp;mdash; keep track of what you discover to inform later analysis.&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+class: segue-yellow
+
+# Meet Your Coding Agent — &lt;br&gt; AI-Assisted Data Analysis &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M32,224H64V416H32A31.96166,31.96166,0,0,1,0,384V256A31.96166,31.96166,0,0,1,32,224Zm512-48V448a64.06328,64.06328,0,0,1-64,64H160a64.06328,64.06328,0,0,1-64-64V176a79.974,79.974,0,0,1,80-80H288V32a32,32,0,0,1,64,0V96H464A79.974,79.974,0,0,1,544,176ZM264,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,264,256Zm-8,128H192v32h64Zm96,0H288v32h64ZM456,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,456,256Zm-8,128H384v32h64ZM640,256V384a31.96166,31.96166,0,0,1-32,32H576V224h32A31.96166,31.96166,0,0,1,640,256Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### What is a Coding Agent?
+
+.pull-left[.font80[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"/></svg> An AI Programming Partner**
+
+A coding agent is an AI (like Claude, GitHub Copilot, or ChatGPT) that understands your data goal, writes code, and explains results &amp;mdash; like having a knowledgeable teammate.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"/></svg> What Can It Do?**
+
+- Generate R or Python code from plain English
+- Explain what code does, line by line
+- Debug errors when things go wrong
+- Suggest which charts to use and why
+- Summarize findings in plain language
+]
+]]
+
+.pull-right[.font80[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> What It Is NOT**
+
+Not a replacement for your thinking! You still need to understand the data, ask good questions, and critically evaluate the output. **Agents make mistakes &amp;mdash; you are the expert.**
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"/></svg> Real Examples**
+
+- **Claude.ai** &amp;mdash; conversational, explains concepts
+- **GitHub Copilot** &amp;mdash; autocompletes in VS Code
+- **ChatGPT / Gemini** &amp;mdash; general-purpose assistants
+
+All can write and explain data analysis code when given clear, specific instructions.
+]
+]]
+
+---
+### How Coding Agents Help Your EDA
+
+.pull-left[.font85[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"/></svg> &amp;nbsp; Instant Code Generation
+Describe your goal in plain English: *"Plot a histogram of Math scores colored by grade."* The agent writes the code instantly.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 0c53 0 96 43 96 96v3.6c0 15.7-12.7 28.4-28.4 28.4H188.4c-15.7 0-28.4-12.7-28.4-28.4V96c0-53 43-96 96-96zM41.4 105.4c12.5-12.5 32.8-12.5 45.3 0l64 64c.7 .7 1.3 1.4 1.9 2.1c14.2-7.3 30.4-11.4 47.5-11.4H312c17.1 0 33.2 4.1 47.5 11.4c.6-.7 1.2-1.4 1.9-2.1l64-64c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-64 64c-.7 .7-1.4 1.3-2.1 1.9c6.2 12 10.1 25.3 11.1 39.5H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H416c0 24.6-5.5 47.8-15.4 68.6c2.2 1.3 4.2 2.9 6 4.8l64 64c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0l-63.1-63.1c-24.5 21.8-55.8 36.2-90.3 39.6V240c0-8.8-7.2-16-16-16s-16 7.2-16 16V479.2c-34.5-3.4-65.8-17.8-90.3-39.6L86.6 502.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l64-64c1.9-1.9 3.9-3.4 6-4.8C101.5 367.8 96 344.6 96 320H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96.3c1.1-14.1 5-27.5 11.1-39.5c-.7-.6-1.4-1.2-2.1-1.9l-64-64c-12.5-12.5-12.5-32.8 0-45.3z"/></svg> &amp;nbsp; Error Debugging
+Paste an error message and the agent explains what went wrong and how to fix it.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> &amp;nbsp; Chart Recommendations
+Ask *"What chart should I use to compare GPA across grade levels?"* and get a justified answer.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M88.2 309.1c9.8-18.3 6.8-40.8-7.5-55.8C59.4 230.9 48 204 48 176c0-63.5 63.8-128 160-128s160 64.5 160 128s-63.8 128-160 128c-13.1 0-25.8-1.3-37.8-3.6c-10.4-2-21.2-.6-30.7 4.2c-4.1 2.1-8.3 4.1-12.6 6c-16 7.2-32.9 13.5-49.9 18c2.8-4.6 5.4-9.1 7.9-13.6c1.1-1.9 2.2-3.9 3.2-5.9zM0 176c0 41.8 17.2 80.1 45.9 110.3c-.9 1.7-1.9 3.5-2.8 5.1c-10.3 18.4-22.3 36.5-36.6 52.1c-6.6 7-8.3 17.2-4.6 25.9C5.8 378.3 14.4 384 24 384c43 0 86.5-13.3 122.7-29.7c4.8-2.2 9.6-4.5 14.2-6.8c15.1 3 30.9 4.5 47.1 4.5c114.9 0 208-78.8 208-176S322.9 0 208 0S0 78.8 0 176zM432 480c16.2 0 31.9-1.6 47.1-4.5c4.6 2.3 9.4 4.6 14.2 6.8C529.5 498.7 573 512 616 512c9.6 0 18.2-5.7 22-14.5c3.8-8.8 2-19-4.6-25.9c-14.2-15.6-26.2-33.7-36.6-52.1c-.9-1.7-1.9-3.4-2.8-5.1C622.8 384.1 640 345.8 640 304c0-94.4-87.9-171.5-198.2-175.8c4.1 15.2 6.2 31.2 6.2 47.8l0 .6c87.2 6.7 144 67.5 144 127.4c0 28-11.4 54.9-32.7 77.2c-14.3 15-17.3 37.6-7.5 55.8c1.1 2 2.2 4 3.2 5.9c2.5 4.5 5.2 9 7.9 13.6c-17-4.5-33.9-10.7-49.9-18c-4.3-1.9-8.5-3.9-12.6-6c-9.5-4.8-20.3-6.2-30.7-4.2c-12.1 2.4-24.7 3.6-37.8 3.6c-61.7 0-110-26.5-136.8-62.3c-16 5.4-32.8 9.4-50 11.8C279 439.8 350 480 432 480z"/></svg> &amp;nbsp; Interpretation Help
+Share output or a plot description and ask *"What does this pattern tell us about the data?"*
+]]
+
+.pull-right[
+&lt;img src="13-class_files/figure-html/img25b-1.png" alt="" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Prompting a Coding Agent: The Art of Good Instructions
+
+.pull-left[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg> Weak Prompt (Vague)**
+
+*"Plot my data"*
+
+**Problems:** No file mentioned. No column names. No chart type. No goal. The agent has to guess &amp;mdash; and usually guesses wrong.
+]
+
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#009E73;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Strong Prompt (Specific)**
+
+*"I have students.csv with columns Grade (9&amp;ndash;12), Math_Score, and Sleep_Hours. Using Python, create a boxplot comparing Math_Score distributions for each grade level. Use seaborn and label axes clearly."*
+]
+]
+
+.pull-right[.font85[
+**Prompt Recipe (4 Ingredients):**
+
+1. **Data:** Name the file and key columns
+2. **Language:** Specify R or Python
+3. **Goal:** Say exactly what you want to see or compute
+4. **Format:** Mention chart type, labels, colors if needed
+
+.content-box-blue[
+**Pro tip:** If the code fails, paste the error back and say "I got this error &amp;mdash; can you fix it?"
+]
+
+.content-box-yellow[
+**Critical rule:** Always read and understand the code before running it. *Never paste blindly!*
+]
+]]
+
+---
+### Working WITH a Coding Agent (Not FOR It)
+
+.font85[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> &amp;nbsp; You Bring the Questions
+Agents are powerful, but YOU decide what to investigate. Formulate your own hypotheses first, then ask the agent to help test them.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> &amp;nbsp; Verify Every Output
+Check that results are plausible &amp;mdash; do the numbers match what `summary()` told you? Is the sample size right?
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg> &amp;nbsp; Iterate and Refine
+Good EDA is a conversation: run code, look at output, ask a follow-up. *"The histogram is right-skewed &amp;mdash; what might explain this?"*
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M448 296c0 66.3-53.7 120-120 120h-8c-17.7 0-32-14.3-32-32s14.3-32 32-32h8c30.9 0 56-25.1 56-56v-8H320c-35.3 0-64-28.7-64-64V160c0-35.3 28.7-64 64-64h64c35.3 0 64 28.7 64 64v32 32 72zm-256 0c0 66.3-53.7 120-120 120H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h8c30.9 0 56-25.1 56-56v-8H64c-35.3 0-64-28.7-64-64V160c0-35.3 28.7-64 64-64h64c35.3 0 64 28.7 64 64v32 32 72z"/></svg> &amp;nbsp; Cite Your Work
+When you use agent-generated code in a project, note it. Understand it well enough to explain every line if asked.
+]
+
+---
+### Hands-On: Use a Coding Agent to Analyze Data
+
+.font90[Open **Claude.ai** (or GitHub Copilot). Use `Student_Data_Ch8.csv` as your dataset for this activity.]
+
+.font85[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Write a prompt:&lt;/strong&gt; Ask the agent to calculate summary statistics for Math_Score and Study_Hours. Run the code, check if results make sense.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Visualize:&lt;/strong&gt; Prompt the agent to create a scatterplot of Study_Hours vs. Math_Score, colored by Grade. Describe what you see.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Dig deeper:&lt;/strong&gt; Ask: "Does the relationship between study hours and scores look different for different grades?" Prompt the agent to help investigate.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Reflect:&lt;/strong&gt; Write 3&amp;ndash;5 sentences summarizing your findings. What did the agent do well? What did you have to correct or clarify? What would you ask next?&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Correlation &amp;ne; Causation: The Detective's Most Important Warning
+
+.content-box-yellow[
+.font95[**Just because two variables move together does NOT mean one causes the other!**]
+]
+
+.pull-left[.font80[
+**Classic "Spurious" Correlations:**
+
+- 🍨 **Ice cream sales &amp;amp; shark attacks** &amp;mdash; both rise in summer, but eating ice cream doesn't attract sharks. The hidden cause is *hot weather*.
+
+- 🎬 **Nicolas Cage films &amp;amp; pool drownings** &amp;mdash; a real statistical correlation, and completely meaningless. Pure coincidence.
+
+- 👟 **Shoe size &amp;amp; reading ability in children** &amp;mdash; both increase with age; *age* is the real driver.
+]]
+
+.pull-right[.font80[
+**How to Think About It:**
+
+- Ask: **Could there be a lurking variable?** A hidden third variable that drives both (like "age" or "season").
+
+- Ask: **Does the direction make sense?** Causation requires a plausible mechanism &amp;mdash; can you explain *how* A actually causes B?
+
+- In EDA, always say **"associated with"** not "causes" unless you ran a controlled experiment.
+]]
+
+--
+
+.content-box-blue[
+.font85[**Discussion:** In our student data, study hours and exam scores are correlated. Does studying *cause* higher scores? How would you test this?]
+]
+
+---
+### Chapter 8 Complete &amp;mdash; You Are Now an EDA Detective!
+
+.font85[
+**Skills you've mastered in Chapter 8:**
+
+- Sorting, filtering, and grouping data with R and Python
+- Univariate analysis: histograms, boxplots, summary statistics
+- Bivariate analysis: scatterplots, correlation, grouped boxplots
+- Correlation &amp;ne; causation &amp;mdash; thinking critically about relationships
+- Using a coding agent as a helper &amp;mdash; prompting, verifying, and iterating
+]
+
+--
+
+.content-box-green[
+.font90[**Coming Up:** Making Inferences (from Sample to Population) &amp;mdash; we'll go beyond describing data to making conclusions: confidence intervals, hypothesis testing, and statistical significance.]
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/remark-zoom.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9",
+  "navigation": {
+    "scroll": false
+  }
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
