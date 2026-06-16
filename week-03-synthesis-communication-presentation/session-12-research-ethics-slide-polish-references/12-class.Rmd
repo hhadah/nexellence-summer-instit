@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 12: Data Wrangling in Action"
+subtitle: "Day 8 · Chapter 7: Data Wrangling in Action"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

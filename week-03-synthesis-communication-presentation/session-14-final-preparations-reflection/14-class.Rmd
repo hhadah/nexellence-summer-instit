@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 14: Making Inferences — From Sample to Population"
+subtitle: "Day 7 · Chapter 9: Making Inferences — From Sample to Population"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

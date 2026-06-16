@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 6: Understanding Data — Types, Biases, Recording & Visualization"
+subtitle: "Day 8: Understanding Data — Types, Biases, Recording & Visualization"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 8: Building Your Presentation — Methods, Results & Citations"
+subtitle: "Day 10: Building Your Presentation — Methods, Results & Citations"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

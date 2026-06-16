@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 15: Solving a Data Mystery — Capstone Project"
+subtitle: "Day 10 · Chapter 10: Solving a Data Mystery — Capstone Project"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

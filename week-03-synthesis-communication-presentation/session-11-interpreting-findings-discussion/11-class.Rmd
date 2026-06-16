@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 11: Dirty Data — Detecting Data Issues and Ensuring Quality"
+subtitle: "Day 5 · Chapter 6: Dirty Data — Detecting Data Issues and Ensuring Quality"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

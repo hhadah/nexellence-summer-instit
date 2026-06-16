@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 9: Data Analysis in Python"
+subtitle: "Day 3 · Chapter 4: Data Analysis in Python"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

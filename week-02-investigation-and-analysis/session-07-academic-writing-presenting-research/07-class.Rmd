@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 7: Introduction to Python & Data 101 — Types, Formats, and Basic Statistics"
+subtitle: "Day 2 · Chapter 2: Introduction to Python & Data 101 — Types, Formats, and Basic Statistics"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

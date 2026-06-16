@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 13: Exploring the Clues — Intro to Exploratory Data Analysis (EDA)"
+subtitle: "Day 6 · Chapter 8: Exploring the Clues — Intro to Exploratory Data Analysis (EDA)"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

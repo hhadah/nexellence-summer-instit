@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 10: Collecting Data — Surveys, Experiments, and Samples"
+subtitle: "Chapter 5: Collecting Data — Surveys, Experiments, and Samples"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

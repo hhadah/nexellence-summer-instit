@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 6: Introduction — Thinking Like a Data Detective"
+subtitle: "Day 1 · Chapter 1: Introduction — Thinking Like a Data Detective"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:

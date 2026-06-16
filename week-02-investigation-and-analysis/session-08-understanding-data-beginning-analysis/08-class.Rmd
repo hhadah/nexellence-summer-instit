@@ -1,6 +1,6 @@
 ---
 title: "Research Methods"
-subtitle: "Day 8: Introduction to R — Your First Data Analysis"
+subtitle: "Chapter 3: Introduction to R — Your First Data Analysis"
 # author: "Hussain Hadah (he/him)"
 # date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
