@@ -4,11 +4,11 @@ subtitle: "Exploring Data with Code"
 # author: "Hussain Hadah (he/him)"
 output:
   xaringan::moon_reader:
-    css: ["default", "../assets/tulane-fonts.css", "../assets/tulane.css"]
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
     self_contained: false
     seal: true
     nature:
-      beforeInit: ["../assets/remark-zoom.js"]
+      beforeInit: ["assets/remark-zoom.js"]
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
@@ -290,3 +290,12 @@ Use **precise language** &mdash; exact numbers, clear comparison.
 ]
 
 .font80[`r fontawesome::fa("people-arrows", fill = "#4a7fb5")` &nbsp; Read your caption to your **partner**. Is every number specific and correct?]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/pm/01-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/pm/01-pm-datacore.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/pm/01-pm-datacore.html")
+```
