@@ -1,0 +1,292 @@
+---
+title: "DataCORE"
+subtitle: "Exploring Data with Code"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "../assets/tulane-fonts.css", "../assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["../assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE)
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Orientation &mdash; Tools & Environment</h4></li>
+    <li><h4>Exploring Your First Dataset &mdash; NBA Home Advantage</h4></li>
+    <li><h4>AI as a Coding Assistant</h4></li>
+    <li><h4>Scientific Storytelling &mdash; Data Captions</h4></li>
+</ol>
+
+.font90[*DataCORE isn't about software &mdash; it's about asking questions and finding answers in data.*]
+
+---
+class: segue-green
+
+# 1:00 &ndash; 1:20 &middot; Orientation
+## Tools & Environment
+
+---
+### `r fontawesome::fa("laptop-code", height = "1em", fill = "#2e8b57")` DataCORE Orientation
+
+.pull-left[
+.font90[
+- Everything runs in **Google Colab**, in your browser &mdash; **no installation**.
+
+- You'll **open a notebook**, **run a cell**, and see output instantly.
+
+- Today's first cell just says hello `r fontawesome::fa("arrow-right", fill = "#4a7fb5")`
+]
+
+.content-box-blue[
+.font90[**Big idea:** DataCORE is *not* about software. It's about **asking questions and finding answers in data**.]
+]
+]
+
+.pull-right[
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+print("Hello, Research!")   #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+print("Hello, Research!")   #<<
+```
+]
+]
+]
+
+---
+class: segue-green
+
+# 1:20 &ndash; 2:20 &middot; Exploring Your First Dataset
+## NBA Home Advantage
+
+---
+### `r fontawesome::fa("table", height = "1em", fill = "#2e8b57")` Step 1 &middot; Load & peek at the data
+
+.font90[Open the shared notebook, then **look before you leap** &mdash; preview the rows and the shape.]
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+import pandas as pd
+df = pd.read_csv("nba_home_away.csv")
+print(df.head())       # first 5 rows   #<<
+```
+
+```{python}
+df.shape        # rows = games, cols = fields   #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+library(tidyverse)
+df <- read_csv("nba_home_away.csv")
+head(df)        # first 5 rows   #<<
+```
+
+```{r}
+dim(df)         # rows = games, cols = fields   #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-question", fill = "#4a7fb5")` &nbsp; How many games are in the data? How many teams?]
+
+---
+### `r fontawesome::fa("calculator", height = "1em", fill = "#2e8b57")` Step 2 &middot; Basic statistics at a glance
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+print(df.describe().round(2))    # summary stats per column   #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+summary(df)      # min, median, mean, max for every column   #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; One line gives you the **shape of the whole dataset** &mdash; means, spread, and extremes.]
+
+---
+### `r fontawesome::fa("percent", height = "1em", fill = "#2e8b57")` Step 3 &middot; Calculate the home win rate
+
+.font90[`home_wins` is **1** when the home team won and **0** when it lost &mdash; so its **average is the win rate**.]
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+df["home_wins"].mean()    # share of games won by the home team   #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+mean(df$home_wins)        # share of games won by the home team   #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("basketball", fill = "#4a7fb5")` &nbsp; Is it above 0.50? By how much? That's the **home advantage** in one number.]
+
+---
+### `r fontawesome::fa("chart-column", height = "1em", fill = "#2e8b57")` Step 4 &middot; Make a bar chart
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, out.width="58%"}
+import matplotlib.pyplot as plt
+
+home = df["home_wins"].mean()
+away = 1 - home
+
+plt.figure(figsize=(6, 2.4))
+plt.bar(["Home", "Away"], [home, away],
+        color=["#0148A4", "#9bc3e6"])    # color the bars   #<<
+plt.ylabel("Win rate")
+plt.title("NBA: Home vs. Away Win Rate")  # title & labels   #<<
+plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5, fig.height=2.0, out.width="44%"}
+rates <- tibble(
+  side = c("Home", "Away"),
+  rate = c(mean(df$home_wins), 1 - mean(df$home_wins))
+)
+
+ggplot(rates, aes(side, rate, fill = side)) +
+  geom_col() +                            # the bars       #<<
+  scale_fill_manual(values = c("#9bc3e6", "#0148A4")) +
+  labs(y = "Win rate",
+       title = "NBA: Home vs. Away Win Rate")  # title & labels   #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("pen", fill = "#4a7fb5")` &nbsp; On your **Mission Sheet:** *What surprised me in the data?*]
+
+---
+class: segue-green
+
+# 2:20 &ndash; 2:45 &middot; AI as a Coding Assistant
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` You asked the AI for a "win percentage" column...
+
+.font90[It instantly wrote this. You run it &mdash; and the numbers look **way too high** (over 100%!). Can you spot the bug?]
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+# AI: "what % of games did the home team win?"
+home_win_pct = df["home_wins"].sum() / df["away_wins"].sum() * 100   # ÷ away wins   #<<
+home_win_pct
+```
+]
+.panel[.panel-name[R]
+```{r}
+# AI: "what % of games did the home team win?"
+home_win_pct <- sum(df$home_wins) / sum(df$away_wins) * 100   # / away wins   #<<
+home_win_pct
+```
+]
+]
+
+.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; That gives **139.8%** &mdash; home wins should be divided by **total games**, not away wins.]
+
+---
+### `r fontawesome::fa("circle-check", height = "1em", fill = "#2e8b57")` Fix it: divide by total games
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+home_win_pct = df["home_wins"].sum() / len(df) * 100   #<<
+home_win_pct
+```
+]
+.panel[.panel-name[R]
+```{r}
+home_win_pct <- sum(df$home_wins) / nrow(df) * 100   #<<
+home_win_pct
+```
+]
+]
+
+.content-box-blue[
+.font110[**Key lesson:** AI *writes* code &mdash; **humans verify it**. You have to understand what the code does.]
+]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## Data Captions
+
+---
+### `r fontawesome::fa("comment-dots", height = "1em", fill = "#2e8b57")` Write a 2-sentence caption for your chart
+
+.pull-left[
+.font90[
+**1.** What does the chart **show**?
+
+**2.** What is **surprising** or notable?
+
+<br>
+
+Use **precise language** &mdash; exact numbers, clear comparison.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font90[*"Home teams won **58.3%** of games in our dataset, compared to **41.7%** for away teams. The edge is real, but smaller than the roar of a home crowd on TV might suggest."*]
+]
+]
+
+.font80[`r fontawesome::fa("people-arrows", fill = "#4a7fb5")` &nbsp; Read your caption to your **partner**. Is every number specific and correct?]

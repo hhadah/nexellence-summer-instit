@@ -1,0 +1,1410 @@
+---
+title: "Research Methods"
+subtitle: "Day 1: Introduction to Research & The Research Apprenticeship"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE, 
+           bib.style = "authoryear", 
+           cite.style = 'authoryear', 
+           style = "markdown",
+           hyperlink = FALSE, 
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",  
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+# devtools::install_github("thomasp85/patchwork")
+#remotes::install_github("mitchelloharawild/icons")
+#remotes::install_github("ROpenSci/bibtex")
+
+# devtools::install_github("ajdamico/lodown")
+## My preferred ggplot2 plotting theme (optional)
+## https://github.com/hrbrmstr/hrbrthemes
+# scale_fill_ipsum()
+# scale_color_ipsum()
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold', 
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+# theme_set(theme_minimal() + theme_customs)
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+## Set master directory where all sub-directories are located
+mdir <- "/Users/hhadah/Documents/GiT/urban-econ/slides/01-week1/tue"
+
+## Set working directory
+
+# COLOR PALLETES
+library(paletteer) 
+# paletteer_d("awtools::a_palette")
+# paletteer_d("suffrager::CarolMan")
+
+### COLOR BLIND PALLETES
+#paletteer_d("colorblindr::OkabeIto")
+#paletteer_d("colorblindr::OkabeIto_black")
+# paletteer_d("colorBlindness::paletteMartin")
+# paletteer_d("colorBlindness::Blue2DarkRed18Steps")
+# paletteer_d("colorBlindness::SteppedSequential5Steps")
+# paletteer_d("colorBlindness::PairedColor12Steps")
+# paletteer_d("colorBlindness::ModifiedSpectralScheme11Steps")
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# scale_colour_paletteer_d("colorBlindness::ModifiedSpectralScheme11Steps", dynamic = FALSE)
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+  #<a><button>[Click me](#sources)</button></a>
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+```
+
+```{css, echo=F}
+/* ---- Tabler icon webfont for the embedded timeline widgets ---- */
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css');
+
+/* ---- Color tokens the embedded HTML expects, mapped to the deck palette ---- */
+:root{
+  --color-background-primary:#ffffff;
+  --color-background-secondary:#eef4fb;
+  --color-background-info:#dcebf9;
+  --color-border-secondary:#9bc3e6;
+  --color-border-tertiary:#cfe0f1;
+  --color-border-info:#7fb0dd;
+  --color-text-primary:#10243b;
+  --color-text-secondary:#46586a;
+  --color-text-info:#0148A4;
+  --font-serif:'Fira Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== Horizontal timeline (case studies + research cycle) ===== */
+.rcx{max-width:1000px;margin:0 auto;padding:14px 0 2px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.rcx .track{position:relative;display:flex;align-items:flex-start;justify-content:space-between}
+.rcx .line{position:absolute;top:39px;left:10%;right:10%;height:3px;background:var(--color-border-secondary);z-index:0;border-radius:2px}
+.rcx .step{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 10px}
+.rcx .icw{position:relative}
+.rcx .ic{width:78px;height:78px;border-radius:19px;background:var(--color-background-info);color:var(--color-text-info);display:flex;align-items:center;justify-content:center;font-size:39px}
+.rcx .badge{position:absolute;top:-7px;right:-7px;width:28px;height:28px;border-radius:50%;background:var(--color-text-info);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.rcx .ttl{font-family:var(--font-serif);font-weight:600;font-size:22px;color:var(--color-text-primary);margin:15px 0 8px;line-height:1.2}
+.rcx .dsc{font-size:16px;line-height:1.5;color:var(--color-text-secondary);margin:0}
+.rcx .tag{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:13px;padding:4px 11px;border-radius:7px;background:var(--color-background-info);color:var(--color-text-info)}
+.rcx .footer{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px;padding:15px 22px;border-radius:16px;background:var(--color-background-info);border:1px solid var(--color-border-info)}
+.rcx .footer .fic{flex:none;width:54px;height:54px;border-radius:14px;background:var(--color-text-info);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px}
+.rcx .ftl{font-family:var(--font-serif);font-weight:600;font-size:21px;color:var(--color-text-primary);margin:0}
+.rcx .fds{font-size:15px;color:var(--color-text-secondary);margin:3px 0 0}
+.rcx .chips{display:inline-flex;flex-wrap:wrap;gap:7px;margin-left:6px}
+.rcx .chip{font-size:14px;padding:3px 11px;border-radius:6px;background:var(--color-background-primary);color:var(--color-text-info);border:1px solid var(--color-border-info)}
+
+/* ===== Casual-vs-systematic contrast panel ===== */
+.con{max-width:1080px;margin:0 auto;padding:30px 0 10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.con .contrast{display:flex;align-items:stretch;justify-content:center;gap:26px}
+.con .card{display:flex;align-items:center;gap:20px;flex:1;max-width:470px;padding:28px 30px;border-radius:18px;background:var(--color-background-info);border:1px solid var(--color-border-info)}
+.con .cic{flex:none;width:74px;height:74px;border-radius:18px;background:var(--color-text-info);color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px}
+.con .ctl{font-family:var(--font-serif);font-weight:600;font-size:27px;color:var(--color-text-primary);margin:0 0 7px;line-height:1.15}
+.con .cds{font-size:18px;line-height:1.5;color:var(--color-text-secondary);margin:0}
+.con .orsep{flex:none;align-self:center;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:var(--color-background-primary);border:1px solid var(--color-border-secondary);color:var(--color-text-secondary);font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:22px}
+.con .note{text-align:center;font-size:19px;color:var(--color-text-secondary);margin:32px auto 0;max-width:760px}
+.con .note b{color:var(--color-text-info);font-weight:600}
+
+.rcx .sr-only,.con .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Welcome & Bingo Icebreaker</h4></li>
+    <li><h4 class="white">What is Research? Opinion vs. Evidence</h4></li>
+    <li><h4 class="white">Global Challenges & Team Formation</h4></li>
+</ol>
+
+---
+## Welcome to **RESEARCH METHODS** by ResearchCORE!
+
+### Hands-on, fast-paced experience where you will be researchers tackling real-world problems.
+
+---
+### Journey Ahead: Your Very Own Research Process
+
+.pull-left[
+```{r img18, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="62%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/18-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("earth-americas", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Pick a Global Challenge</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("circle-question", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Ask a Question</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("magnifying-glass", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Gather Information</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("chart-line", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Analyze the Information</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("lightbulb", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Draw Conclusions</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("share-nodes", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Share Findings</strong></div>
+</div>
+
+**The final deliverables:** A research proposal by Day 9 and a formal presentation by Day 10.
+]]
+
+---
+## Our approach
+
+
+```{r img1, echo=FALSE, warning=FALSE, out.width="70%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/01-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+---
+### Not only to learn how to conduct research, but to learn how to think like a researcher to
+
+.pull-left[
+```{r img2, echo=FALSE, warning=FALSE, out.width="100%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/02-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+ #### - Solve problems
+ #### - Challenge assumptions
+ #### - Make smart decisions
+
+#### As you understand how the world works, you can change it for better! 
+
+]
+
+---
+class: segue-green
+
+# Opinion vs. Research
+
+---
+### The Difference Between Opinion and Research
+
+.pull-left[
+.content-box-yellow[
+### `r fontawesome::fa("comment", height = "1em")` Opinion
+
+What you think or feel about something, based on personal perspective.
+
+- **Subjective**
+- Based on personal belief
+- May lack supporting evidence
+]
+]
+
+.pull-right[
+.content-box-blue[
+### `r fontawesome::fa("flask", height = "1em", fill = "#4a7fb5")` Research
+
+Systematic investigation that produces evidence-based conclusions.
+
+- **Objective**
+- Based on data and evidence
+- Follows methodical processes
+]
+]
+
+---
+### Examples of Opinion
+
+.font110[
+- `r fontawesome::fa("comment", fill = "#FFC520")` Everyone should stop using social media completely.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` It's better to study late at night than early in the morning.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` Recycling doesn't make much of a difference to the planet.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` Fast food should be banned in school cafeterias.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` Climate change is too big of a problem for individuals to make a difference.
+]
+
+---
+### Examples of Research Statements
+
+.font80[
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` According to the **CDC's 2021 Youth Risk Behavior Survey**, which surveyed over 14,000 U.S. high school students, nearly **30% reported feeling persistently sad or hopeless** during the past year.
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` A 2020 global survey by **Pew Research Center** involving more than 13,000 adults in 13 countries found that 73% saw climate change as a major threat to their country.
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` A **randomized controlled sleep study at UC Berkeley** found that **teens who slept at least 8 hours** performed significantly better on memory tasks than those with less sleep. The study involved **105 adolescents aged 13&ndash;17**. *(Lopez et al., Sleep Research Journal, 2018)*
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` The **World Health Organization**, based on data from dozens of national health agencies, estimates that **air pollution causes 7 million premature deaths worldwide each year**. *(WHO, 2021)*
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` In a **Common Sense Media survey** of 1,306 teens aged 13&ndash;17, 25% reported that social media had a mostly negative impact on their mental health. *(Common Sense Media, 2021)*
+]
+
+---
+class: segue-yellow
+
+# Let's Play a Game: <br> MYTH or FINDING? `r top_icon("gamepad")`
+
+---
+class: center, middle
+
+.font130[A **University of Chicago study** found that when people were forced to interact with strangers on their morning commute, they reported a significantly more positive experience than those told to sit in silence.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **FINDING**]
+
+---
+class: center, middle
+
+.font130[A viral TikTok trend claims that listening to brown noise "instantly cures" ADHD brain fog by calming overactive thoughts.]
+
+--
+
+.font150[`r fontawesome::fa("ghost", fill = "#FFC520")` **MYTH**]
+
+---
+class: center, middle
+
+.font130[Eating sugar causes children to become hyperactive and experience "sugar rushes" after consuming candy.]
+
+--
+
+.font150[`r fontawesome::fa("ghost", fill = "#FFC520")` **MYTH**]
+
+---
+class: center, middle
+
+.font130[A study in **Psychology of Music** tracked students studying with different background audio and found that listening to music with lyrics significantly impairs reading comprehension compared to instrumental music or silence.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **FINDING**]
+
+---
+class: center, middle
+
+.font130[A **Current Biology study** analyzed video footage of humans and chimpanzees and confirmed that contagious yawning is directly linked to higher levels of social empathy.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **FINDING**]
+
+---
+class: center, middle
+
+.font130[You can accurately detect if someone is lying by watching if they look up and to the left when they are speaking.]
+
+--
+
+.font150[`r fontawesome::fa("ghost", fill = "#FFC520")` **MYTH**]
+
+---
+class: center, middle
+
+.font130[A **Nature study** found that action video game players show a 20% to 30% increase in spatial attention and visual processing speeds compared to non-gamers.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **FINDING**]
+
+---
+class: segue-green
+
+# Let's take a 15 mins pre-assessment 
+
+```{r first-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 15, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+---
+class: segue-green
+
+# Research 
+
+---
+## What is research? 
+
+.pull-left[
+  .font120[Let’s explore the fundamental concepts of research, distinguish between opinions and evidence-based conclusions, and examine the research process across disciplines.]
+]
+
+.pull-right[
+```{r img4, echo=FALSE, warning=FALSE, out.width="100%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/04-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+## Systematic Research vs. Everyday Curiosity
+
+```{r kc-contrast, echo=FALSE, cache=FALSE}
+htmltools::includeHTML("assets/key_concepts_casual_vs_systematic_horizontal.html")
+```
+
+---
+## The Research Cycle
+
+```{r kc-cycle, echo=FALSE, cache=FALSE}
+htmltools::includeHTML("assets/key_concepts_research_cycle_horizontal.html")
+```
+
+---
+background-image: url("assets/06-img.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### What is Research?
+
+.three-col[
+.col[
+`r fontawesome::fa("compass", height = "2.5em", fill = "#4a7fb5")`
+
+**A Journey of Discovery**
+
+Research is a systematic investigation to establish facts and reach new conclusions.
+]
+.col[
+`r fontawesome::fa("circle-question", height = "2.5em", fill = "#4a7fb5")`
+
+**Question-Driven**
+
+Every great discovery begins with a well-framed question that guides your direction.
+]
+.col[
+`r fontawesome::fa("lightbulb", height = "2.5em", fill = "#4a7fb5")`
+
+**Evidence-Based**
+
+Research relies on gathering and analyzing evidence rather than opinions or assumptions.
+]
+]
+
+
+---
+class: center, middle
+
+<br>
+
+## Sports Analytics: Do Home Teams Really Win More?
+
+.font130[**Do home teams have a real advantage in the NBA &mdash; and if so, _why_?**]
+
+--
+
+.three-col[
+.col[
+.content-box-blue[
+**The Fan's Opinion**
+
+"Of course they do! The home crowd fires up the players and rattles the visitors."
+]
+]
+.col[
+.content-box-blue[
+**An Analyst's Hypothesis**
+
+Maybe it isn't the crowd at all &mdash; it could be travel fatigue, familiar rims, or favorable refereeing.
+]
+]
+.col[
+.content-box-blue[
+**A Research Approach**
+
+Pull every NBA game from basketball-reference.com, compare home vs. away win rates, then test _which_ story the evidence supports.
+]
+]
+]
+
+---
+## What the NBA Data Shows
+
+.pull-left[
+```{r nba-home, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE, out.width="100%", out.height="430px", fig.width=8, fig.height=6, fig.show='hold', fig.align='center'}
+# Real NBA regular-season home win % (basketball-reference.com / NBA.com)
+nba_home <- tibble::tribble(
+  ~season,        ~home_win_pct,
+  "2000–13 avg",  60,
+  "2014–19 avg",  58,
+  "2020–21",      54,
+  "2022–23",      58,
+  "2023–25 avg",  54
+)
+nba_home$season <- factor(nba_home$season, levels = nba_home$season)
+
+ggplot(nba_home, aes(x = season, y = home_win_pct)) +
+  geom_col(fill = "#0148A4", width = 0.7) +
+  geom_hline(yintercept = 50, linetype = "dashed", colour = "#D55E00", linewidth = 1) +
+  geom_text(aes(label = paste0(home_win_pct, "%")), vjust = -0.6, size = 6,
+            family = "firasans") +
+  annotate("text", x = 0.6, y = 51.5, label = "50% = no advantage",
+           hjust = 0, colour = "#D55E00", size = 5, family = "firasans") +
+  coord_cartesian(ylim = c(0, 68)) +
+  labs(x = NULL, y = "Home team win %",
+       title = "Home teams win more than half their games") +
+  theme(axis.text.x = element_text(size = 13))
+```
+]
+
+.pull-right[
+.font110[Across two decades, NBA home teams have won **well above 50%** of regular-season games &mdash; but the edge has **shrunk over time**.]
+
+#### `r fontawesome::fa("trophy", height = "1em", fill = "#4a7fb5")` &nbsp; ~60% home wins in 2000&ndash;2013
+
+#### `r fontawesome::fa("arrow-trend-down", height = "1em", fill = "#4a7fb5")` &nbsp; Down to ~54% in recent seasons
+
+#### `r fontawesome::fa("user-slash", height = "1em", fill = "#4a7fb5")` &nbsp; Lowest (54%) in 2020&ndash;21 &mdash; **empty arenas**
+]
+
+---
+## So... is this a research question?
+
+.three-col[
+.col[
+`r fontawesome::fa("circle-question", height = "2.5em", fill = "#4a7fb5")`
+
+**Is this a research question?**
+
+"Home teams win more" is a _fact_. "_Why_ do they win more?" is the research question.
+]
+.col[
+`r fontawesome::fa("magnifying-glass-chart", height = "2.5em", fill = "#4a7fb5")`
+
+**What evidence would we need?**
+
+Crowd size, travel distance, rest days, referee calls &mdash; data that can separate the competing explanations.
+]
+.col[
+`r fontawesome::fa("scale-balanced", height = "2.5em", fill = "#4a7fb5")`
+
+**What would 'prove' it?**
+
+We don't "prove" &mdash; we build evidence. The **empty-arena 2020&ndash;21 season** acts like a natural experiment on the crowd effect.
+]
+]
+
+---
+### From Curiosity to Focused Questions
+
+.three-col[
+.col[
+`r fontawesome::fa("bolt", height = "2.5em", fill = "#4a7fb5")`
+
+**Curiosity Spark**
+
+The urge to know more about something that intrigues you.
+]
+.col[
+`r fontawesome::fa("cloud", height = "2.5em", fill = "#4a7fb5")`
+
+**Wonder**
+
+Asking yourself "Why is this happening?" or "How does this work?"
+]
+.col[
+`r fontawesome::fa("magnifying-glass", height = "2.5em", fill = "#4a7fb5")`
+
+**Research Question**
+
+Transforming curiosity into a clear, specific question to explore.
+]
+]
+
+--
+
+<br>
+
+.center[.font150[<strong style="color:#0148A4;">WHAT ARE YOU CURIOUS ABOUT?</strong>]]
+
+---
+class: segue-green
+
+# Opinion vs. Research
+
+---
+### The Difference Between Opinion and Research
+
+.pull-left[
+.content-box-yellow[
+### `r fontawesome::fa("comment", height = "1em")` Opinion
+
+What you think or feel about something, based on personal perspective.
+
+- **Subjective**
+- Based on personal belief
+- May lack supporting evidence
+]
+]
+
+.pull-right[
+.content-box-blue[
+### `r fontawesome::fa("flask", height = "1em", fill = "#4a7fb5")` Research
+
+Systematic investigation that produces evidence-based conclusions.
+
+- **Objective**
+- Based on data and evidence
+- Follows methodical processes
+]
+]
+
+---
+### Examples of Opinion
+
+.font110[
+- `r fontawesome::fa("comment", fill = "#FFC520")` Everyone should stop using social media completely.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` It's better to study late at night than early in the morning.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` Recycling doesn't make much of a difference to the planet.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` Fast food should be banned in school cafeterias.
+
+- `r fontawesome::fa("comment", fill = "#FFC520")` Climate change is too big of a problem for individuals to make a difference.
+]
+
+---
+### Examples of Research Statements
+
+.font80[
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` According to the **CDC's 2021 Youth Risk Behavior Survey**, which surveyed over 14,000 U.S. high school students, nearly **30% reported feeling persistently sad or hopeless** during the past year.
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` A 2020 global survey by **Pew Research Center** involving more than 13,000 adults in 13 countries found that 73% saw climate change as a major threat to their country.
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` A **randomized controlled sleep study at UC Berkeley** found that **teens who slept at least 8 hours** performed significantly better on memory tasks than those with less sleep. The study involved **105 adolescents aged 13&ndash;17**. *(Lopez et al., Sleep Research Journal, 2018)*
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` The **World Health Organization**, based on data from dozens of national health agencies, estimates that **air pollution causes 7 million premature deaths worldwide each year**. *(WHO, 2021)*
+
+- `r fontawesome::fa("flask", fill = "#4a7fb5")` In a **Common Sense Media survey** of 1,306 teens aged 13&ndash;17, 25% reported that social media had a mostly negative impact on their mental health. *(Common Sense Media, 2021)*
+]
+
+---
+### A Key Attitude of a Researcher: Inquisition
+
+<br>
+
+.pull-left[
+.content-box-blue[**"How do I know that?"**]
+
+.content-box-blue[**"What information is this opinion based on?"**]
+
+.content-box-blue[**"What's that claim based on?"**]
+]
+
+.pull-right[
+.content-box-blue[**"Has anyone actually tested it?"**]
+
+.content-box-blue[**"Where is the evidence?"**]
+]
+
+
+---
+background-image: url("assets/10-img.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Why Evidence Matters
+
+.three-col[
+.col[
+.font200[<strong style="color:#0148A4;">47%</strong>]
+
+**Misinformation**
+
+Percentage of online content containing inaccurate claims.
+]
+.col[
+.font200[<strong style="color:#0148A4;">73%</strong>]
+
+**Better Decisions**
+
+Improved outcomes when using evidence-based approaches.
+]
+.col[
+.font200[<strong style="color:#0148A4;">5X</strong>]
+
+**Problem-Solving**
+
+More effective solutions when based on research.
+]
+]
+
+---
+## The Research Process
+
+```{r kc-cycle-2, echo=FALSE, cache=FALSE}
+htmltools::includeHTML("assets/key_concepts_research_cycle_horizontal.html")
+```
+
+---
+## Case Study: How We Learned Smoking Causes Cancer
+
+```{r case-smoking, echo=FALSE, cache=FALSE}
+htmltools::includeHTML("assets/smoking_lung_cancer_case_walkthrough_horizontal.html")
+```
+
+---
+## Case Study: Research Behind a Taylor Swift Concert
+
+```{r case-taylor, echo=FALSE, cache=FALSE}
+htmltools::includeHTML("assets/taylor_swift_concert_case_walkthrough_horizontal.html")
+```
+
+---
+class: segue-green
+
+# Small Group Activity: Research in Daily Life
+
+---
+## Group Activity
+
+### Form 2 to 3 groups
+
+### 3 to 4 members per group
+
+
+```{r second-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 15, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+---
+## Scenario 1: The Medical Trial
+
+.font90[Dr. Lopez wants to know if a new blood pressure medication, **CardioPure**, is more effective than the current standard treatment. She tracks **200 patients** for six months. Half receive the standard drug, the other half receive CardioPure. At the end, she records the average drop in systolic blood pressure: the standard group dropped **8 mmHg**, while the CardioPure group dropped **14 mmHg** with no major side effects.]
+
+.three-col[
+.col[
+.content-box-blue[
+**Research Question:**
+]
+]
+.col[
+.content-box-blue[
+**Data Collected:**
+]
+]
+.col[
+.content-box-blue[
+**Conclusion:**
+]
+]
+]
+
+```{r timer-s1, echo=FALSE, message=FALSE, cache=FALSE}
+countdown(minutes = 6, seconds = 0, top = 0, play_sound = FALSE)
+```
+
+---
+## Scenario 2: Urban Planning
+
+.font90[The **City of Springfield** wants to increase bike commuting and reduce traffic congestion, but only has budget to build **one** new protected bike lane. They consider two streets: **Oak Street** and **Maple Avenue**. For two weeks, electronic sensors count cyclists currently using both streets, and an online survey asks **1,000 residents** which route they prefer. The data: Maple Avenue has **300% more** daily cyclists than Oak Street, and **75%** of residents prefer Maple Avenue. The council votes to build the lane on Maple Avenue.]
+
+.three-col[
+.col[
+.content-box-blue[
+**Research Question:**
+]
+]
+.col[
+.content-box-blue[
+**Data Collected:**
+]
+]
+.col[
+.content-box-blue[
+**Conclusion:**
+]
+]
+]
+
+```{r timer-s2, echo=FALSE, message=FALSE, cache=FALSE}
+countdown(minutes = 6, seconds = 0, top = 0, play_sound = FALSE)
+```
+
+---
+## Scenario 3: Tech & E-Commerce
+
+.font90[A popular clothing app, **TrendThread**, wants to see if changing their "Buy Now" button from blue to bright green will increase purchases. They run an **A/B test** for one week. Half of users randomly see the original blue button (**Group A**), the other half see the new green button (**Group B**). Analytics track clicks and completed checkouts. **Group A** had a **2.1%** checkout rate, while **Group B** had a **3.5%** checkout rate. The company permanently switches the button to green.]
+
+.three-col[
+.col[
+.content-box-blue[
+**Research Question:**
+]
+]
+.col[
+.content-box-blue[
+**Data Collected:**
+]
+]
+.col[
+.content-box-blue[
+**Conclusion:**
+]
+]
+]
+
+```{r timer-s3, echo=FALSE, message=FALSE, cache=FALSE}
+countdown(minutes = 6, seconds = 0, top = 0, play_sound = FALSE)
+```
+
+---
+## Scenario 4: Education & Teaching
+
+.font90[**Mr. Harrison** wants to know whether interactive digital educational games help his 9th-grade algebra students understand quadratic equations better than traditional textbook worksheets. His **morning class** is taught using only the digital app; his **afternoon class** uses standard textbook worksheets. After two weeks, both classes take the **exact same** unit exam. The morning class (digital app) scores an average of **84%**, while the afternoon class (textbook) scores **76%**. Mr. Harrison decides to use the digital app in all his algebra classes next semester.]
+
+.three-col[
+.col[
+.content-box-blue[
+**Research Question:**
+]
+]
+.col[
+.content-box-blue[
+**Data Collected:**
+]
+]
+.col[
+.content-box-blue[
+**Conclusion:**
+]
+]
+]
+
+```{r timer-s4, echo=FALSE, message=FALSE, cache=FALSE}
+countdown(minutes = 6, seconds = 0, top = 0, play_sound = FALSE)
+```
+
+---
+## Scenario 5: Public Health Tracking
+
+.font80[During a seasonal outbreak of a new COVID-19 variant, county health officials want to determine if the virus spreads faster in **indoor dining spaces** compared to **outdoor public areas**. They track positive case reports over a month, interviewing **500 infected residents** about recent locations, and collect **wastewater samples** to measure viral load. The interviews reveal **82%** of infected individuals had visited crowded indoor restaurants, compared to only **12%** who attended outdoor-only events. Wastewater data confirms massive spikes in areas dense with indoor venues. The government issues a temporary indoor mask advisory for restaurants.]
+
+.three-col[
+.col[
+.content-box-blue[
+**Research Question:**
+]
+]
+.col[
+.content-box-blue[
+**Data Collected:**
+]
+]
+.col[
+.content-box-blue[
+**Conclusion:**
+]
+]
+]
+
+```{r timer-s5, echo=FALSE, message=FALSE, cache=FALSE}
+countdown(minutes = 6, seconds = 0, top = 0, play_sound = FALSE)
+```
+
+---
+class: segue-green
+
+# GLOBAL CHALLENGES <br> & TEAM FORMATION `r top_icon("globe-americas")`
+
+### Journey Ahead: Your Very Own Research Process
+
+.font90[
+<div class="chev-row-sm" style="background-color: #FFF3CD; border-radius: 6px; padding: 4px 8px;">
+<div class="chev-sm">`r fontawesome::fa("earth-americas", height = "1.3em", fill = "#E6A817")`</div>
+<div class="chev-text" style="color: #B07D00;"><strong>Pick a Global Challenge</strong></div>
+</div>
+
+<div class="chev-row-sm">
+<div class="chev-sm">`r fontawesome::fa("circle-question", height = "1.3em", fill = "#0148A4")`</div>
+<div class="chev-text"><strong>Ask a Question</strong></div>
+</div>
+
+<div class="chev-row-sm">
+<div class="chev-sm">`r fontawesome::fa("magnifying-glass", height = "1.3em", fill = "#0148A4")`</div>
+<div class="chev-text"><strong>Gather Information</strong></div>
+</div>
+
+<div class="chev-row-sm">
+<div class="chev-sm">`r fontawesome::fa("chart-line", height = "1.3em", fill = "#0148A4")`</div>
+<div class="chev-text"><strong>Analyze the Information</strong></div>
+</div>
+
+<div class="chev-row-sm">
+<div class="chev-sm">`r fontawesome::fa("lightbulb", height = "1.3em", fill = "#0148A4")`</div>
+<div class="chev-text"><strong>Draw Conclusions</strong></div>
+</div>
+
+<div class="chev-row-sm">
+<div class="chev-sm">`r fontawesome::fa("share-nodes", height = "1.3em", fill = "#0148A4")`</div>
+<div class="chev-text"><strong>Share Findings</strong></div>
+</div>
+
+**The final deliverables:** A research proposal by Day 9 and a formal presentation by Day 10.
+]
+
+---
+### `r fontawesome::fa("temperature-high", height = "1em", fill = "#4a7fb5")` Climate Change
+
+.pull-left[
+#### What it's about:
+.font90[The planet you'll spend your whole life on is heating up. Burning fossil fuels traps heat, fueling the record heat waves, wildfire-smoke days, and flooding many of you have already lived through.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- The global average temperature has already increased by **1.1&deg;C (2&deg;F)** since the late 1800s *(NASA, 2024)*.
+
+- **2023 was the hottest year on record**, with ocean temperatures hitting record highs *(Copernicus Climate Change Service, 2024)*.
+
+- Nearly **6 in 10 young people (ages 16&ndash;25)** say they are very or extremely worried about climate change *(Lancet, 2021)*.
+]
+]
+
+---
+### `r fontawesome::fa("solar-panel", height = "1em", fill = "#4a7fb5")` Renewable Energy
+
+.pull-left[
+#### What it's about:
+.font90[The switch from fossil fuels to clean energy&mdash;solar, wind, hydro&mdash;is already showing up in your life: the EVs on your street, solar panels on rooftops, and how your future home and phone get powered.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- In 2023, **30% of global electricity** came from renewable sources *(IEA)*.
+
+- Solar power is now **cheaper than coal** in many countries *(BloombergNEF, 2023)*.
+
+- **Nearly 1 in 5 new cars** sold worldwide in 2023 was electric&mdash;up from almost none a decade ago *(IEA, 2024)*.
+]
+]
+
+---
+### `r fontawesome::fa("virus", height = "1em", fill = "#4a7fb5")` Public Health Pandemics
+
+.pull-left[
+#### What it's about:
+.font90[You lived through one. COVID-19 closed schools, moved class to a screen, and canceled sports, concerts, and graduations&mdash;showing how fast a virus can upend everyday life.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- COVID-19 led to over **770 million confirmed cases** globally by 2024 *(WHO)*.
+
+- Global vaccine distribution exposed **serious inequalities**: only 26% of people in low-income countries received at least one vaccine dose by late 2022 *(Our World in Data)*.
+
+- At the peak in 2020, schools closed for **about 1.6 billion students** across **190+ countries**&mdash;likely including yours *(UNESCO, 2020)*.
+]
+]
+
+---
+### `r fontawesome::fa("scale-unbalanced", height = "1em", fill = "#4a7fb5")` Poverty and Inequality
+
+.pull-left[
+#### What it's about:
+.font90[Two students with the same talent can face completely different futures based on family income&mdash;shaping whether they can afford a laptop, internet, tutoring, or college.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- Over **700 million people**&mdash;about 1 in 11 globally&mdash;live on **less than $2.15 a day** *(World Bank, 2024)*.
+
+- The **richest 1%** of the world's population owns almost **half of all global wealth** *(Oxfam, 2023)*.
+
+- About **2.6 billion people are still offline**, making online schoolwork and opportunities far harder to reach *(ITU, 2023)*.
+]
+]
+
+---
+### `r fontawesome::fa("graduation-cap", height = "1em", fill = "#4a7fb5")` Educational Access
+
+.pull-left[
+#### What it's about:
+.font90[Imagine not being able to finish high school. For millions of teens, school isn't a given&mdash;it's blocked by cost, conflict, or simply being a girl.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- **244 million children and youth** are out of school worldwide *(UNESCO, 2023)*.
+
+- Girls are **more likely to be excluded** from school in low-income countries, especially during crises like war or pandemics.
+
+- About **160 million children**&mdash;many of them teens&mdash;are in child labor instead of school *(ILO &amp; UNICEF, 2021)*.
+]
+]
+
+---
+### `r fontawesome::fa("user-shield", height = "1em", fill = "#4a7fb5")` Digital Privacy
+
+.pull-left[
+#### What it's about:
+.font90[Every app you scroll&mdash;TikTok, Instagram, Snapchat&mdash;collects data about you: what you watch, where you go, and who you talk to. Who owns that data, and how it's used, is a growing fight.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- US teens spend an average of **4.8 hours a day** on social media&mdash;nearly **6 hours** for 17-year-olds&mdash;every minute feeding data to apps *(Gallup, 2023)*.
+
+- In 2023, **over 7 billion data records** were exposed in breaches *(IT Governance, 2024)*.
+
+- Over **60% of teens don't understand** how their online data is collected, shared, or used *(Harvard Kennedy School, 2023)*.
+]
+]
+
+---
+### `r fontawesome::fa("brain", height = "1em", fill = "#4a7fb5")` Mental Health
+
+.pull-left[
+#### What it's about:
+.font90[The pressure you feel&mdash;school, grades, social media, the future&mdash;is part of a real and growing crisis in how young people are doing emotionally.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- Globally, about **1 in 7 teens (ages 10&ndash;19)** lives with a mental health disorder *(WHO, 2024)*.
+
+- In 2023, **about 40% of US high school students** felt persistently sad or hopeless *(CDC, 2023)*.
+
+- Suicide is one of the **leading causes of death** for people aged 15&ndash;29 worldwide *(WHO, 2024)*.
+]
+]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#4a7fb5")` Artificial Intelligence
+
+.pull-left[
+#### What it's about:
+.font90[From the feeds that pick your videos to chatbots that write essays, AI is reshaping how you learn, create, and&mdash;eventually&mdash;work. It also raises big questions about fairness and truth.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- **ChatGPT reached 100 million users in about 2 months**&mdash;the fastest-growing consumer app at the time *(UBS / Reuters, 2023)*.
+
+- **About 1 in 4 US teens** have used ChatGPT for schoolwork&mdash;**double** the share a year earlier *(Pew Research, 2025)*.
+
+- The IMF estimates **~40% of jobs worldwide** are exposed to AI, reshaping the careers you're heading into *(IMF, 2024)*.
+]
+]
+
+---
+### `r fontawesome::fa("circle-exclamation", height = "1em", fill = "#4a7fb5")` Misinformation
+
+.pull-left[
+#### What it's about:
+.font90[Half of what you scroll past could be misleading. Telling real news from rumors, ads, and AI-generated fakes is becoming a basic survival skill online.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- On social media, **false news spreads about 6&times; faster** than the truth *(MIT, Science, 2018)*.
+
+- Falsehoods are **70% more likely to be shared** than true stories *(MIT, Science, 2018)*.
+
+- The World Economic Forum ranked **misinformation the #1 short-term global risk** for 2024, driven largely by AI *(WEF, 2024)*.
+]
+]
+
+---
+### `r fontawesome::fa("droplet", height = "1em", fill = "#4a7fb5")` Clean Water & Sanitation
+
+.pull-left[
+#### What it's about:
+.font90[You turn on a tap without thinking&mdash;but billions of people can't. Access to safe water and a working toilet still shapes health, school, and daily life around the world.]
+]
+
+.pull-right[
+#### Key Facts:
+.font80[
+- **2.2 billion people** still lack safely managed drinking water *(WHO/UNICEF, 2023)*.
+
+- **3.5 billion people** lack safely managed sanitation, like a safe toilet *(WHO/UNICEF, 2023)*.
+
+- In homes without water on tap, **women and girls** do most of the water-collecting&mdash;time that could be spent in school *(WHO/UNICEF, 2023)*.
+]
+]
+
+---
+## What are you most curious about?
+
+### Write on a card: "I am most curious about _______________."
+
+### Share with others: Discuss your curiosity with classmates to spark ideas and collaboration.
+
+### Form teams of two or work individually if you prefer.
+
+---
+### Looking Ahead: Tomorrow &mdash; Curiosity, Variables & Scientific Thinking
+
+.font90[A **full day**: separating evidence from opinion, learning the building blocks of research, and meeting your team's real data.]
+
+.pull-left[
+#### `r fontawesome::fa("flask", height = "1em", fill = "#0148A4")` &nbsp; Morning &middot; ResearchCORE
+
+.font90[
+- `r fontawesome::fa("traffic-light", fill = "#4a7fb5")` &nbsp; **Research or Opinion?** &mdash; a fast red-card / green-card game
+
+- `r fontawesome::fa("sliders", fill = "#4a7fb5")` &nbsp; **Variables 101:** what you *change*, what you *measure*, and the sneaky *confounder*
+
+- `r fontawesome::fa("people-group", fill = "#4a7fb5")` &nbsp; **Curiosities United:** sharpen your team's wonder into one focused question
+]
+]
+
+.pull-right[
+#### `r fontawesome::fa("laptop-code", height = "1em", fill = "#2e8b57")` &nbsp; Afternoon &middot; DataCORE
+
+.font90[
+- `r fontawesome::fa("python", fill = "#4a7fb5")` &nbsp; **Python basics:** storing variables & data types in Colab
+
+- `r fontawesome::fa("table", fill = "#4a7fb5")` &nbsp; **Meet your dataset:** load & explore it with `pandas`
+
+- `r fontawesome::fa("quote-right", fill = "#4a7fb5")` &nbsp; **Cite it right:** define your IV & DV with a source
+]
+]
+
+---
+### Homework
+
+.pull-left[
+#### `r fontawesome::fa("file-lines", height = "1em", fill = "#4a7fb5")` &nbsp; Handout 1: Introduction to Research
+#### `r fontawesome::fa("users", height = "1em", fill = "#4a7fb5")` &nbsp; Finalize teams
+#### `r fontawesome::fa("database", height = "1em", fill = "#4a7fb5")` &nbsp; Explore data-sets
+#### `r fontawesome::fa("earth-americas", height = "1em", fill = "#4a7fb5")` &nbsp; Decide on your "Global Challenge"
+]
+
+.pull-right[.font80[
+.pull-left[
+- `r fontawesome::fa("temperature-high", fill = "#4a7fb5")` Climate Change
+- `r fontawesome::fa("solar-panel", fill = "#4a7fb5")` Renewable Energy
+- `r fontawesome::fa("virus", fill = "#4a7fb5")` Public Health Pandemics
+- `r fontawesome::fa("scale-unbalanced", fill = "#4a7fb5")` Poverty and Inequality
+- `r fontawesome::fa("graduation-cap", fill = "#4a7fb5")` Educational Access
+]
+.pull-right[
+- `r fontawesome::fa("user-shield", fill = "#4a7fb5")` Digital Privacy
+- `r fontawesome::fa("brain", fill = "#4a7fb5")` Mental Health
+- `r fontawesome::fa("robot", fill = "#4a7fb5")` Artificial Intelligence
+- `r fontawesome::fa("circle-exclamation", fill = "#4a7fb5")` Misinformation
+- `r fontawesome::fa("droplet", fill = "#4a7fb5")` Clean Water & Sanitation
+]
+]]
+
+---
+### Tonight: Keep the Momentum Going
+
+.pull-left[
+#### `r fontawesome::fa("gears", height = "1em", fill = "#0148A4")` &nbsp; After-Class Team Session
+.font80[*3:15 &ndash; 5:15 PM &middot; with your TA / peer mentor &mdash; produce a real output before dinner. Not free time.*
+
+- `r fontawesome::fa("users", fill = "#4a7fb5")` &nbsp; **Team meeting (3:15):** agree on your global challenge by consensus &mdash; each member ranks their top 3, pick the highest total
+
+- `r fontawesome::fa("clipboard-list", fill = "#4a7fb5")` &nbsp; **Mission Sheet Part 1** together &mdash; compare answers, discuss differences
+
+- `r fontawesome::fa("basketball", fill = "#4a7fb5")` &nbsp; **DataCORE:** each member runs the **NBA dataset** notebook and logs **2 observations**
+
+- `r fontawesome::fa("circle-check", fill = "#0148A4")` &nbsp; **Due before dinner:** team name, topic, and a one-sentence research-interest statement in the shared doc
+]
+]
+
+.pull-right[
+#### `r fontawesome::fa("book-open", height = "1em", fill = "#2e8b57")` &nbsp; Evening Work Period
+.font80[*7:00 &ndash; 9:00 PM &middot; individual + partner work during study hours. TA on call.*
+
+- `r fontawesome::fa("table-list", fill = "#4a7fb5")` &nbsp; **Mission Sheet Part 2:** a **KWL table** for your chosen topic
+
+- `r fontawesome::fa("file-lines", fill = "#4a7fb5")` &nbsp; Re-read the **"What is Research?"** one-pager from class
+
+- `r fontawesome::fa("pen", fill = "#4a7fb5")` &nbsp; *(RcS)* write a **200-word** research-project pitch &mdash; question, data source, expected finding
+
+- `r fontawesome::fa("basketball", fill = "#4a7fb5")` &nbsp; **DataCORE Journal:** add one NBA-dataset observation that **surprised you**
+]
+]
+
+---
+## `r fontawesome::fa("book-open", height = "1em", fill = "#4a7fb5")` Scientific Storytelling: The Research Story Spine
+
+.font90[Every good presentation tells a **story** &mdash; with a beginning, a middle, and an end.]
+
+.three-col[
+.col[
+.content-box-blue[
+`r fontawesome::fa("play", height = "1.4em", fill = "#0148A4")`
+
+**Beginning**
+
+Why does this matter? What did we ask?
+]
+]
+.col[
+.content-box-blue[
+`r fontawesome::fa("gears", height = "1.4em", fill = "#0148A4")`
+
+**Middle**
+
+What did we do? What did we find?
+]
+]
+.col[
+.content-box-blue[
+`r fontawesome::fa("flag-checkered", height = "1.4em", fill = "#0148A4")`
+
+**End**
+
+What does it mean? What comes next?
+]
+]
+]
+
+.font90[`r fontawesome::fa("comments", fill = "#4a7fb5")` &nbsp; **In pairs:** take one of your topic interests and tell a **60-second story spine** of a research project you'd want to do.]
+
+```{r timer-spine, echo=FALSE, message=FALSE, cache=FALSE}
+countdown(minutes = 15, seconds = 0, top = 0, play_sound = FALSE)
+```
+
+---
+background-image: url("assets/17-img.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+## Let's wrap up this session!
+
+### Questions? Final thoughts?
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/02-class.html
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/am/01-class.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/am/01-class.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/am/01-class.html")
+```

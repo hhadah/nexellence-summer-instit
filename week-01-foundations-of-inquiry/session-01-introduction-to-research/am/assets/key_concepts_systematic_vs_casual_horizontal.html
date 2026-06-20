@@ -1,0 +1,99 @@
+<style>
+.kcx{max-width:1040px;margin:0 auto;padding:6px 0 2px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+
+/* --- contrast band --- */
+.kcx .contrast{display:flex;align-items:stretch;justify-content:center;gap:16px;margin-bottom:14px}
+.kcx .card{display:flex;align-items:center;gap:13px;flex:1;max-width:400px;padding:13px 16px;border-radius:14px;text-align:left}
+.kcx .card{background:var(--color-background-info);border:1px solid var(--color-border-info)}
+.kcx .card .cic{flex:none;width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:27px;background:var(--color-text-info);color:#fff}
+.kcx .card .ctl{font-family:var(--font-serif);font-weight:600;font-size:20px;color:var(--color-text-primary);margin:0 0 3px}
+.kcx .card .cds{font-size:15px;line-height:1.4;color:var(--color-text-secondary);margin:0}
+.kcx .orsep{flex:none;align-self:center;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:var(--color-background-primary);border:1px solid var(--color-border-secondary);color:var(--color-text-secondary);font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:17px}
+
+/* --- cycle pill --- */
+.kcx .pill{display:flex;justify-content:center;margin:0 0 10px}
+.kcx .pill span{display:inline-flex;align-items:center;gap:8px;background:var(--color-background-info);color:var(--color-text-info);font-size:16px;font-weight:600;padding:6px 18px;border-radius:9px}
+
+/* --- horizontal cycle --- */
+.kcx .track{position:relative;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.kcx .line{position:absolute;top:29px;left:9%;right:9%;height:3px;background:var(--color-border-secondary);z-index:0;border-radius:2px}
+.kcx .step{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 8px}
+.kcx .icw{position:relative}
+.kcx .ic{width:58px;height:58px;border-radius:15px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:1px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;font-size:28px}
+.kcx .badge{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--color-text-info);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.kcx .ttl{font-family:var(--font-serif);font-weight:600;font-size:18px;color:var(--color-text-primary);margin:11px 0 5px;line-height:1.2}
+.kcx .dsc{font-size:14px;line-height:1.4;color:var(--color-text-secondary);margin:0}
+.kcx .tag{display:inline-block;margin-top:8px;font-size:12px;padding:2px 9px;border-radius:6px;background:var(--color-background-secondary);color:var(--color-text-secondary)}
+
+/* --- footer --- */
+.kcx .footer{display:flex;align-items:center;justify-content:center;gap:14px;padding:11px 18px;border-radius:14px;background:var(--color-background-info);border:1px solid var(--color-border-info)}
+.kcx .footer .fic{flex:none;width:48px;height:48px;border-radius:12px;background:var(--color-text-info);color:#fff;display:flex;align-items:center;justify-content:center;font-size:25px}
+.kcx .ftl{font-family:var(--font-serif);font-weight:600;font-size:19px;color:var(--color-text-primary);margin:0}
+.kcx .fds{font-size:14px;color:var(--color-text-secondary);margin:2px 0 0}
+.kcx .chips{display:inline-flex;flex-wrap:wrap;gap:6px;margin-left:4px}
+.kcx .chip{font-size:13px;padding:2px 10px;border-radius:6px;background:var(--color-background-primary);color:var(--color-text-info);border:1px solid var(--color-border-info)}
+.kcx .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+<div class="kcx">
+<h2 class="sr-only">A horizontal layout contrasting casual observation with the systematic research process, then the five-stage research cycle, ending with the idea that research happens all around us.</h2>
+
+<div class="contrast">
+<div class="card muted">
+<div class="cic"><i class="ti ti-eye" aria-hidden="true"></i></div>
+<div><p class="ctl">Casual observation</p><p class="cds">Everyday noticing &mdash; informal, unplanned, and easy to be fooled by.</p></div>
+</div>
+<div class="orsep">or</div>
+<div class="card key">
+<div class="cic"><i class="ti ti-route" aria-hidden="true"></i></div>
+<div><p class="ctl">Systematic process</p><p class="cds">The same curiosity made rigorous &mdash; planned, repeatable, and built on evidence.</p></div>
+</div>
+</div>
+
+<div class="pill"><span><i class="ti ti-refresh" aria-hidden="true"></i> The research cycle</span></div>
+
+<div class="track">
+<div class="line"></div>
+
+<div class="step">
+<div class="icw"><div class="ic"><i class="ti ti-help" aria-hidden="true"></i></div><div class="badge">1</div></div>
+<p class="ttl">Ask a question</p>
+<p class="dsc">Start with a clear, focused question worth investigating.</p>
+</div>
+
+<div class="step">
+<div class="icw"><div class="ic"><i class="ti ti-books" aria-hidden="true"></i></div><div class="badge">2</div></div>
+<p class="ttl">Review the literature</p>
+<p class="dsc">Find out what's already known before adding to it.</p>
+</div>
+
+<div class="step">
+<div class="icw"><div class="ic"><i class="ti ti-ruler-measure" aria-hidden="true"></i></div><div class="badge">3</div></div>
+<p class="ttl">Design the study</p>
+<p class="dsc">Plan a method that can actually answer the question.</p>
+</div>
+
+<div class="step">
+<div class="icw"><div class="ic"><i class="ti ti-chart-dots" aria-hidden="true"></i></div><div class="badge">4</div></div>
+<p class="ttl">Collect &amp; analyze data</p>
+<p class="dsc">Gather evidence systematically and make sense of it.</p>
+</div>
+
+<div class="step">
+<div class="icw"><div class="ic"><i class="ti ti-speakerphone" aria-hidden="true"></i></div><div class="badge">5</div></div>
+<p class="ttl">Communicate findings</p>
+<p class="dsc">Share results so others can build on or challenge them.</p>
+<span class="tag">&#8635; sparks new questions</span>
+</div>
+
+</div>
+
+<div class="footer">
+<div class="fic"><i class="ti ti-world" aria-hidden="true"></i></div>
+<div>
+<p class="ftl">Research is all around us</p>
+<p class="fds">Not just labs &mdash; it happens in kitchens, gyms, classrooms, and on our phones.</p>
+</div>
+<div class="chips"><span class="chip">best study playlist?</span><span class="chip">fastest route home?</span><span class="chip">why did my bread flop?</span></div>
+</div>
+
+</div>
