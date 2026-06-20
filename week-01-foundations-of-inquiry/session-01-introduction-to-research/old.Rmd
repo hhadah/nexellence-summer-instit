@@ -1,0 +1,1289 @@
+---
+title: "Research Methods"
+subtitle: "Day 1: Introduction to Research & The Research Apprenticeship"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE, 
+           bib.style = "authoryear", 
+           cite.style = 'authoryear', 
+           style = "markdown",
+           hyperlink = FALSE, 
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",  
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+# devtools::install_github("thomasp85/patchwork")
+#remotes::install_github("mitchelloharawild/icons")
+#remotes::install_github("ROpenSci/bibtex")
+
+# devtools::install_github("ajdamico/lodown")
+## My preferred ggplot2 plotting theme (optional)
+## https://github.com/hrbrmstr/hrbrthemes
+# scale_fill_ipsum()
+# scale_color_ipsum()
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold', 
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+# theme_set(theme_minimal() + theme_customs)
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+## Set master directory where all sub-directories are located
+mdir <- "/Users/hhadah/Documents/GiT/urban-econ/slides/01-week1/tue"
+
+## Set working directory
+
+# COLOR PALLETES
+library(paletteer) 
+# paletteer_d("awtools::a_palette")
+# paletteer_d("suffrager::CarolMan")
+
+### COLOR BLIND PALLETES
+#paletteer_d("colorblindr::OkabeIto")
+#paletteer_d("colorblindr::OkabeIto_black")
+# paletteer_d("colorBlindness::paletteMartin")
+# paletteer_d("colorBlindness::Blue2DarkRed18Steps")
+# paletteer_d("colorBlindness::SteppedSequential5Steps")
+# paletteer_d("colorBlindness::PairedColor12Steps")
+# paletteer_d("colorBlindness::ModifiedSpectralScheme11Steps")
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# scale_colour_paletteer_d("colorBlindness::ModifiedSpectralScheme11Steps", dynamic = FALSE)
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+  #<a><button>[Click me](#sources)</button></a>
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Welcome & Bingo Icebreaker</h4></li>
+    <li><h4 class="white">What is Research? Opinion vs. Evidence</h4></li>
+    <li><h4 class="white">Global Challenges & Team Formation</h4></li>
+</ol>
+
+---
+## Welcome to **RESEARCH METHODS** by ResearchCORE!
+
+### Hands-on, fast-paced experience where you will be researchers tackling real-world problems.
+
+---
+### Journey Ahead: Your Very Own Research Process
+
+.pull-left[
+```{r img18, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="62%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/18-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("earth-americas", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Pick a Global Challenge</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("circle-question", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Ask a Question</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("magnifying-glass", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Gather Information</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("chart-line", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Analyze the Information</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("lightbulb", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Draw Conclusions</strong></div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">`r fontawesome::fa("share-nodes", height = "1.3em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Share Findings</strong></div>
+</div>
+
+**The final deliverables:** A research proposal by Day 9 and a formal presentation by Day 10.
+]]
+
+---
+## Our approach
+
+
+```{r img1, echo=FALSE, warning=FALSE, out.width="70%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/01-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+---
+### Not only to learn how to conduct research, but to learn how to think like a researcher to
+
+.pull-left[
+```{r img2, echo=FALSE, warning=FALSE, out.width="100%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/02-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+ #### - Solve problems
+ #### - Challenge assumptions
+ #### - Make smart decisions
+
+#### As you understand how the world works, you can change it for better! 
+
+]
+
+---
+class: segue-yellow
+
+# Let's Play a Game: <br> OPINION or RESEARCH? `r top_icon("gamepad")`
+
+---
+class: center, middle
+
+.font130[A **Stanford University longitudinal study (2019)** followed 200 middle school students over two years and found that those practicing daily mindfulness showed lower stress and anxiety levels.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **RESEARCH**]
+
+---
+class: center, middle
+
+.font130[Social media is ruining real-life friendships.]
+
+--
+
+.font150[`r fontawesome::fa("comment", fill = "#FFC520")` **OPINION**]
+
+---
+class: center, middle
+
+.font130[The **2023 IPCC report**, drawing from thousands of peer-reviewed climate studies and global temperature data, concluded with high confidence that human activities are the dominant cause of recent climate change. *(Intergovernmental Panel on Climate Change, 2023)*]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **RESEARCH**]
+
+---
+class: center, middle
+
+.font130[You can't be truly successful without going to college.]
+
+--
+
+.font150[`r fontawesome::fa("comment", fill = "#FFC520")` **OPINION**]
+
+---
+class: center, middle
+
+.font130[Homework should be optional for high school students.]
+
+--
+
+.font150[`r fontawesome::fa("comment", fill = "#FFC520")` **OPINION**]
+
+---
+class: center, middle
+
+.font130[A **JAMA Pediatrics study (2019)** analyzed data from over 6,000 U.S. children aged 8&ndash;11 and found that those with more than 2 hours of recreational screen time daily had lower language and thinking skills.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **RESEARCH**]
+
+---
+class: center, middle
+
+.font130[In the **APA's 2023 "Stress in America" survey**, conducted with 3,185 teens and adults, over 70% of teenagers said they felt overwhelmed by responsibilities in the past month.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **RESEARCH**]
+
+---
+class: center, middle
+
+.font130[Reading printed books is more enjoyable than reading on a screen.]
+
+--
+
+.font150[`r fontawesome::fa("comment", fill = "#FFC520")` **OPINION**]
+
+---
+class: center, middle
+
+.font130[According to a **National Sleep Foundation (2020) poll** of 1,006 U.S. teens, 87% of high schoolers get less than the recommended 8&ndash;10 hours of sleep on school nights.]
+
+--
+
+.font150[`r fontawesome::fa("flask", fill = "#4a7fb5")` **RESEARCH**]
+
+---
+class: segue-green
+
+# Let's take a 15 mins pre-assessment 
+
+```{r first-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 15, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+---
+## What is research? 
+
+.pull-left[
+  .font120[Let’s explore the fundamental concepts of research, distinguish between opinions and evidence-based conclusions, and examine the research process across disciplines.]
+]
+
+.pull-right[
+```{r img4, echo=FALSE, warning=FALSE, out.width="100%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/04-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+## Chapter roadmap
+
+
+```{r img5, echo=FALSE, warning=FALSE, out.width="70%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/05-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+
+---
+background-image: url("assets/06-img.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### What is Research?
+
+.three-col[
+.col[
+`r fontawesome::fa("compass", height = "2.5em", fill = "#4a7fb5")`
+
+**A Journey of Discovery**
+
+Research is a systematic investigation to establish facts and reach new conclusions.
+]
+.col[
+`r fontawesome::fa("circle-question", height = "2.5em", fill = "#4a7fb5")`
+
+**Question-Driven**
+
+Every great discovery begins with a well-framed question that guides your direction.
+]
+.col[
+`r fontawesome::fa("lightbulb", height = "2.5em", fill = "#4a7fb5")`
+
+**Evidence-Based**
+
+Research relies on gathering and analyzing evidence rather than opinions or assumptions.
+]
+]
+
+
+---
+class: center, middle
+
+<br>
+
+## Sports Analytics: Do Home Teams Really Win More?
+
+.font130[**Do home teams have a real advantage in the NBA &mdash; and if so, _why_?**]
+
+--
+
+.three-col[
+.col[
+.content-box-blue[
+**The Fan's Opinion**
+
+"Of course they do! The home crowd fires up the players and rattles the visitors."
+]
+]
+.col[
+.content-box-blue[
+**An Analyst's Hypothesis**
+
+Maybe it isn't the crowd at all &mdash; it could be travel fatigue, familiar rims, or favorable refereeing.
+]
+]
+.col[
+.content-box-blue[
+**A Research Approach**
+
+Pull every NBA game from basketball-reference.com, compare home vs. away win rates, then test _which_ story the evidence supports.
+]
+]
+]
+
+---
+## What the NBA Data Shows
+
+.pull-left[
+```{r nba-home, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE, out.width="100%", out.height="430px", fig.width=8, fig.height=6, fig.show='hold', fig.align='center'}
+# Real NBA regular-season home win % (basketball-reference.com / NBA.com)
+nba_home <- tibble::tribble(
+  ~season,        ~home_win_pct,
+  "2000–13 avg",  60,
+  "2014–19 avg",  58,
+  "2020–21",      54,
+  "2022–23",      58,
+  "2023–25 avg",  54
+)
+nba_home$season <- factor(nba_home$season, levels = nba_home$season)
+
+ggplot(nba_home, aes(x = season, y = home_win_pct)) +
+  geom_col(fill = "#0148A4", width = 0.7) +
+  geom_hline(yintercept = 50, linetype = "dashed", colour = "#D55E00", linewidth = 1) +
+  geom_text(aes(label = paste0(home_win_pct, "%")), vjust = -0.6, size = 6,
+            family = "firasans") +
+  annotate("text", x = 0.6, y = 51.5, label = "50% = no advantage",
+           hjust = 0, colour = "#D55E00", size = 5, family = "firasans") +
+  coord_cartesian(ylim = c(0, 68)) +
+  labs(x = NULL, y = "Home team win %",
+       title = "Home teams win more than half their games") +
+  theme(axis.text.x = element_text(size = 13))
+```
+]
+
+.pull-right[
+.font110[Across two decades, NBA home teams have won **well above 50%** of regular-season games &mdash; but the edge has **shrunk over time**.]
+
+#### `r fontawesome::fa("trophy", height = "1em", fill = "#4a7fb5")` &nbsp; ~60% home wins in 2000&ndash;2013
+
+#### `r fontawesome::fa("arrow-trend-down", height = "1em", fill = "#4a7fb5")` &nbsp; Down to ~54% in recent seasons
+
+#### `r fontawesome::fa("user-slash", height = "1em", fill = "#4a7fb5")` &nbsp; Lowest (54%) in 2020&ndash;21 &mdash; **empty arenas**
+]
+
+---
+## So... is this a research question?
+
+.three-col[
+.col[
+`r fontawesome::fa("circle-question", height = "2.5em", fill = "#4a7fb5")`
+
+**Is this a research question?**
+
+"Home teams win more" is a _fact_. "_Why_ do they win more?" is the research question.
+]
+.col[
+`r fontawesome::fa("magnifying-glass-chart", height = "2.5em", fill = "#4a7fb5")`
+
+**What evidence would we need?**
+
+Crowd size, travel distance, rest days, referee calls &mdash; data that can separate the competing explanations.
+]
+.col[
+`r fontawesome::fa("scale-balanced", height = "2.5em", fill = "#4a7fb5")`
+
+**What would 'prove' it?**
+
+We don't "prove" &mdash; we build evidence. The **empty-arena 2020&ndash;21 season** acts like a natural experiment on the crowd effect.
+]
+]
+
+---
+### From Curiosity to Focused Questions
+
+.three-col[
+.col[
+`r fontawesome::fa("bolt", height = "2.5em", fill = "#4a7fb5")`
+
+**Curiosity Spark**
+
+The urge to know more about something that intrigues you.
+]
+.col[
+`r fontawesome::fa("cloud", height = "2.5em", fill = "#4a7fb5")`
+
+**Wonder**
+
+Asking yourself "Why is this happening?" or "How does this work?"
+]
+.col[
+`r fontawesome::fa("magnifying-glass", height = "2.5em", fill = "#4a7fb5")`
+
+**Research Question**
+
+Transforming curiosity into a clear, specific question to explore.
+]
+]
+
+--
+
+<br>
+
+.center[.font150[<strong style="color:#0148A4;">WHAT ARE YOU CURIOUS ABOUT?</strong>]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+### A Key Attitude of a Researcher: Inquisition
+
+<br>
+
+.pull-left[
+.content-box-blue[**"How do I know that?"**]
+
+.content-box-blue[**"What information is this opinion based on?"**]
+
+.content-box-blue[**"What's that claim based on?"**]
+]
+
+.pull-right[
+.content-box-blue[**"Has anyone actually tested it?"**]
+
+.content-box-blue[**"Where is the evidence?"**]
+]
+
+
+
+
+
+
+
+
+
+
+---
+### SIX GLOBAL CHALLENGES
+
+.three-col[
+.col[
+`r fontawesome::fa("temperature-high", height = "2.5em", fill = "#4a7fb5")`
+
+**Climate Change**
+]
+.col[
+`r fontawesome::fa("solar-panel", height = "2.5em", fill = "#4a7fb5")`
+
+**Renewable Energy**
+]
+.col[
+`r fontawesome::fa("virus", height = "2.5em", fill = "#4a7fb5")`
+
+**Public Health Pandemics**
+]
+]
+
+.three-col[
+.col[
+`r fontawesome::fa("scale-unbalanced", height = "2.5em", fill = "#4a7fb5")`
+
+**Poverty and Inequality**
+]
+.col[
+`r fontawesome::fa("graduation-cap", height = "2.5em", fill = "#4a7fb5")`
+
+**Educational Access**
+]
+.col[
+`r fontawesome::fa("user-shield", height = "2.5em", fill = "#4a7fb5")`
+
+**Digital Privacy**
+]
+]
+
+
+---
+background-image: url("assets/11-img.png")
+background-position: 5% 10%
+background-size: 100% 20%
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+### Questioning Claims: The Mozart Effect
+
+.font80[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("quote-left", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>The Claim</strong><br>
+    "Listening to classical music while studying guarantees an A on the test."</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("question", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>The Inquiry</strong><br>
+    "What's that claim based on? Has anyone actually tested it?"</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("magnifying-glass", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>The Research</strong><br>
+    Find scientific studies or conduct a small experiment comparing study methods.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-line", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>The Evidence</strong><br>
+    Music may help mood or focus for some people, but doesn't "guarantee" success.</p>
+  </div>
+</div>
+]
+
+---
+class: segue-green
+
+# Types of Research: <br> A Multidisciplinary Approach `r top_icon("layer-group")`
+
+---
+### Types of Research: A Multidisciplinary Approach
+
+.font80[
+<div style="display:flex; align-items:center; gap:1.2em; margin-top:0.5em;">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; height:330px; text-align:right; padding:1.5em 0;">
+    <p><strong>`r fontawesome::fa("diagram-project", fill = "#0148A4")` Interdisciplinary Research</strong><br>
+    Combines multiple fields to address complex questions holistically.</p>
+    <p><strong>`r fontawesome::fa("landmark", fill = "#0148A4")` Historical Research</strong><br>
+    Investigates the past through primary sources and contextual interpretation.</p>
+  </div>
+  <div style="position:relative; width:320px; height:320px; flex:0 0 320px;">
+    <svg viewBox="0 0 320 320" width="320" height="320" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 63.6 45.1 A 150 150 0 0 1 239.5 32.8 L 238.8 66.2 L 210.4 79.4 A 95 95 0 0 0 98.9 87.2 Z" fill="#a8d4f0" transform="rotate(45 160 160)"/>
+      <path d="M 63.6 45.1 A 150 150 0 0 1 239.5 32.8 L 238.8 66.2 L 210.4 79.4 A 95 95 0 0 0 98.9 87.2 Z" fill="#c9e4f6" transform="rotate(135 160 160)"/>
+      <path d="M 63.6 45.1 A 150 150 0 0 1 239.5 32.8 L 238.8 66.2 L 210.4 79.4 A 95 95 0 0 0 98.9 87.2 Z" fill="#a8d4f0" transform="rotate(225 160 160)"/>
+      <path d="M 63.6 45.1 A 150 150 0 0 1 239.5 32.8 L 238.8 66.2 L 210.4 79.4 A 95 95 0 0 0 98.9 87.2 Z" fill="#c9e4f6" transform="rotate(315 160 160)"/>
+    </svg>
+    <div style="position:absolute; top:73px; left:247px; transform:translate(-50%,-50%);">`r fontawesome::fa("flask", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:247px; left:247px; transform:translate(-50%,-50%);">`r fontawesome::fa("users", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:247px; left:73px; transform:translate(-50%,-50%);">`r fontawesome::fa("landmark", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:73px; left:73px; transform:translate(-50%,-50%);">`r fontawesome::fa("diagram-project", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:160px; left:160px; transform:translate(-50%,-50%); text-align:center; color:#0148A4; font-weight:bold;">Types of<br>Research</div>
+  </div>
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; height:330px; padding:1.5em 0;">
+    <p><strong>`r fontawesome::fa("flask", fill = "#0148A4")` Scientific Research</strong><br>
+    Explores the natural world through experiments and systematic observation.</p>
+    <p><strong>`r fontawesome::fa("users", fill = "#0148A4")` Social Science Research</strong><br>
+    Examines human behavior and social systems through surveys and analyses.</p>
+  </div>
+</div>
+]
+
+---
+### Interdisciplinary Research
+
+.font80[
+<div style="display:flex; align-items:center; gap:1.2em; margin-top:0.5em;">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; height:330px; text-align:right; padding:1.5em 0;">
+    <p><strong>`r fontawesome::fa("scale-balanced", fill = "#0148A4")` Technology Ethics</strong><br>
+    Bridges computer science, philosophy, psychology, and law.</p>
+    <p><strong>`r fontawesome::fa("city", fill = "#0148A4")` Urban Planning</strong><br>
+    Merges architecture, sociology, economics, and environmental science.</p>
+  </div>
+  <div style="position:relative; width:320px; height:320px; flex:0 0 320px;">
+    <svg viewBox="0 0 320 320" width="320" height="320" xmlns="http://www.w3.org/2000/svg">
+      <line x1="160" y1="160" x2="255" y2="65" stroke="#a8d4f0" stroke-width="4"/>
+      <line x1="160" y1="160" x2="255" y2="255" stroke="#a8d4f0" stroke-width="4"/>
+      <line x1="160" y1="160" x2="65" y2="255" stroke="#a8d4f0" stroke-width="4"/>
+      <line x1="160" y1="160" x2="65" y2="65" stroke="#a8d4f0" stroke-width="4"/>
+      <circle cx="255" cy="65" r="40" fill="#c9e4f6"/>
+      <circle cx="255" cy="255" r="40" fill="#c9e4f6"/>
+      <circle cx="65" cy="255" r="40" fill="#c9e4f6"/>
+      <circle cx="65" cy="65" r="40" fill="#c9e4f6"/>
+      <circle cx="160" cy="160" r="58" fill="#0148A4"/>
+    </svg>
+    <div style="position:absolute; top:65px; left:255px; transform:translate(-50%,-50%);">`r fontawesome::fa("temperature-high", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:255px; left:255px; transform:translate(-50%,-50%);">`r fontawesome::fa("virus", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:255px; left:65px; transform:translate(-50%,-50%);">`r fontawesome::fa("city", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:65px; left:65px; transform:translate(-50%,-50%);">`r fontawesome::fa("scale-balanced", height = "1.8em", fill = "#0148A4")`</div>
+    <div style="position:absolute; top:160px; left:160px; transform:translate(-50%,-50%); text-align:center; color:#ffffff; font-weight:bold; line-height:1.2;">Inter-<br>disciplinary<br>Research</div>
+  </div>
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; height:330px; padding:1.5em 0;">
+    <p><strong>`r fontawesome::fa("temperature-high", fill = "#0148A4")` Climate Change Research</strong><br>
+    Combines natural science, economics, sociology, and policy studies.</p>
+    <p><strong>`r fontawesome::fa("virus", fill = "#0148A4")` Public Health Crisis</strong><br>
+    Integrates biology, medicine, psychology, and historical precedent.</p>
+  </div>
+</div>
+]
+
+---
+### Core Principles of Good Research
+
+#### <span style="color:#0148A4;">No matter what the field is</span>
+
+--
+
+<div style="position:relative; width:540px; height:380px; margin:0.2em auto 0 auto;">
+  <svg viewBox="0 0 420 330" width="540" height="380" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="210,0 280,110 140,110" fill="#0148A4"/>
+    <polygon points="143.8,116 276.2,116 340,216 80,216" fill="#7fb8e0"/>
+    <polygon points="83.5,222 336.5,222 405,330 15,330" fill="#c9e4f6"/>
+  </svg>
+  <div style="position:absolute; top:63px; left:270px; transform:translate(-50%,-50%);">`r fontawesome::fa("handshake", height = "1.4em", fill = "#ffffff")`</div>
+  <div style="position:absolute; top:104px; left:270px; transform:translate(-50%,-50%); color:#ffffff; font-weight:bold;">Be Honest</div>
+  <div style="position:absolute; top:173px; left:270px; transform:translate(-50%,-50%);">`r fontawesome::fa("list-check", height = "1.4em", fill = "#0148A4")`</div>
+  <div style="position:absolute; top:213px; left:270px; transform:translate(-50%,-50%); color:#0148A4; font-weight:bold;">Be Systematic</div>
+  <div style="position:absolute; top:297px; left:270px; transform:translate(-50%,-50%);">`r fontawesome::fa("magnifying-glass", height = "1.4em", fill = "#0148A4")`</div>
+  <div style="position:absolute; top:337px; left:270px; transform:translate(-50%,-50%); color:#0148A4; font-weight:bold;">Be Curious</div>
+</div>
+
+---
+### Principle 1: Be Curious
+
+.pull-left[
+```{r img12, echo=FALSE, warning=FALSE, out.width="75%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/12-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+#### `r fontawesome::fa("bolt", height = "1em", fill = "#4a7fb5")` &nbsp; The Starting Point
+Curiosity is where all research begins&mdash;the spark that ignites investigation.
+
+#### `r fontawesome::fa("circle-question", height = "1em", fill = "#4a7fb5")` &nbsp; Everyday Questions
+Major discoveries often begin with simple observations or moments of wonder.
+
+#### `r fontawesome::fa("door-open", height = "1em", fill = "#4a7fb5")` &nbsp; Embracing the Unknown
+Being comfortable asking "Why?" and "What if?" drives meaningful research.
+]
+
+---
+### Principle 2: Be Systematic
+
+.pull-left[
+#### `r fontawesome::fa("route", height = "1em", fill = "#4a7fb5")` &nbsp; Beyond Hunches
+Systematic research follows clear procedures rather than random exploration.
+
+#### `r fontawesome::fa("rotate", height = "1em", fill = "#4a7fb5")` &nbsp; Replicability
+Others should be able to follow your process and reach similar conclusions.
+
+#### `r fontawesome::fa("folder-open", height = "1em", fill = "#4a7fb5")` &nbsp; Organization
+Keeping careful records and following methodical steps builds credibility.
+]
+
+.pull-right[
+```{r img13, echo=FALSE, warning=FALSE, out.width="75%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/13-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+background-image: url("assets/13a-strip.png")
+background-position: 50% 80%
+background-size: 90%
+
+### Principle 3: Be Honest
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("file-lines", fill = "#4a7fb5")` Report All Findings**
+
+Include inconvenient results that don't match your expectations.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Accept Uncertainty**
+
+Acknowledge when the data doesn't show clear answers.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("quote-right", fill = "#4a7fb5")` Give Credit**
+
+Cite sources properly and acknowledge others' contributions.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("handshake", fill = "#4a7fb5")` Build Trust**
+
+Integrity makes your research valuable in school and beyond.
+]
+]
+
+---
+### The Value of Being Wrong
+
+.pull-left[
+```{r img14, echo=FALSE, warning=FALSE, out.width="100%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/14-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+#### `r fontawesome::fa("face-surprise", height = "1em", fill = "#4a7fb5")` &nbsp; Embrace Unexpected Results
+Surprising findings often lead to the most important discoveries in research.
+
+#### `r fontawesome::fa("graduation-cap", height = "1em", fill = "#4a7fb5")` &nbsp; Learning Opportunity
+When your hypothesis is wrong, you've learned something valuable about what isn't true.
+
+#### `r fontawesome::fa("shield-halved", height = "1em", fill = "#4a7fb5")` &nbsp; Intellectual Honesty
+Acknowledging incorrect assumptions demonstrates scientific integrity and builds credibility.
+]
+
+---
+### The Research Process
+
+.font110[The journey from question to insight follows these essential steps:]
+
+.font80[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("circle-question", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>1. Ask a Question</strong><br>
+    Formulate a clear, specific question worth investigating.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("magnifying-glass", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>2. Gather Information</strong><br>
+    Collect relevant data through appropriate methods.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-line", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>3. Analyze the Information</strong><br>
+    Examine data for patterns, trends, and meaning.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("lightbulb", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>4. Draw Conclusions</strong><br>
+    Develop evidence-based answers to your original question.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("share-nodes", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>5. Share Findings</strong><br>
+    Communicate results effectively to appropriate audiences.</p>
+  </div>
+</div>
+]
+
+---
+### Real Research Example: AI Art in Education
+
+.pull-left[
+```{r img14a, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/14a-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font80[
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Question**
+
+Could AI tools help more students feel empowered to create art?
+]
+
+.content-box-blue[
+**`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` Information Gathering**
+
+Surveys, teacher interviews, examples from other schools, literature review.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("chart-line", fill = "#4a7fb5")` Analysis**
+
+30% felt confident in drawing skills; 80% would try AI art tools.
+]
+
+.content-box-green[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Conclusion & Action**
+
+AI art competition could broaden creative access; school launched pilot program.
+]
+]]
+
+---
+### Case Study: School Lunch Research
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` The Question**
+
+Layla wondered: Are students getting nutritious lunches that support focus and learning?
+]
+
+.content-box-blue[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Hypothesis**
+
+Students avoid lunches due to taste, freshness, or variety issues&mdash;not lack of hunger.
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("clipboard-list", fill = "#4a7fb5")` Research Design**
+
+- **Quantitative:** Lunch program participation data
+- **Qualitative:** Student surveys and focus groups
+- **Observational:** Cafeteria behavior patterns
+- **Stakeholder:** Staff interviews
+]
+]
+
+---
+### Lunch Research: Findings and Impact
+
+.pull-left[
+```{r img15a, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/15a-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font80[
+.content-box-blue[
+**`r fontawesome::fa("magnifying-glass-chart", fill = "#4a7fb5")` Key Findings**
+
+Students wanted fresher options, menu variety, and customization.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Solutions Proposed**
+
+Student advisory panel, taste tests, nutritional labeling, diverse options.
+]
+
+.content-box-green[
+**`r fontawesome::fa("chart-line", fill = "#4a7fb5")` Results**
+
+School piloted ideas; lunch participation and satisfaction increased.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("graduation-cap", fill = "#4a7fb5")` Lesson**
+
+Research can solve real problems and improve everyday experiences.
+]
+]]
+
+---
+### Summary: Key Takeaways
+
+.pull-left[
+```{r img14b, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/14b-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font80[
+.content-box-blue[
+**`r fontawesome::fa("book", fill = "#4a7fb5")` Research Definition**
+
+Systematic investigation to answer questions using evidence.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("scale-balanced", fill = "#4a7fb5")` Opinion vs. Evidence**
+
+Research moves beyond personal beliefs to factual conclusions.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("layer-group", fill = "#4a7fb5")` Research Types**
+
+Scientific, social science, historical, and interdisciplinary approaches.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("route", fill = "#4a7fb5")` Research Process**
+
+Question, gather, analyze, conclude, and share findings.
+]
+]]
+
+---
+### Activity: Find the Research in Your Life
+
+.pull-left[
+```{r img15, echo=FALSE, warning=FALSE, out.width="75%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/15-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+`r fontawesome::fa("list", height = "1em", fill = "#4a7fb5")` &nbsp; **Identify Recent Decisions**<br>
+List questions or choices you've faced lately, small or significant.
+
+`r fontawesome::fa("map", height = "1em", fill = "#4a7fb5")` &nbsp; **Map Your Research Steps**<br>
+Note how you gathered information before deciding.
+
+`r fontawesome::fa("square-check", height = "1em", fill = "#4a7fb5")` &nbsp; **Evaluate Outcomes**<br>
+Record your decisions and whether research improved results.
+
+`r fontawesome::fa("comments", height = "1em", fill = "#4a7fb5")` &nbsp; **Share and Reflect**<br>
+Compare approaches with classmates or consider your research patterns.
+]]
+
+
+---
+class: segue
+
+# EXTRA SLIDES FOR DAY 1 <br> .font70[(DIDN'T HAVE TIME TO COVER)]
+
+---
+class: segue-yellow
+
+# Let's Play a Game: <br> FACT (research-supported) <br> or MYTH (misconception)? `r top_icon("gamepad")`
+
+---
+class: center, middle
+
+.font130["The current global warming trend is primarily caused by natural climate cycles, not human activity."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; Research shows over **97% of climate scientists** agree that human activities&mdash;mainly burning fossil fuels&mdash;are the primary cause of current global warming. *(NASA, 2024 &ndash; climate.nasa.gov/evidence)*]
+
+---
+class: center, middle
+
+.font130["As of 2024, more than half of the global population lives in urban areas rather than rural ones."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; Over 56% of people worldwide live in urban settings, a number projected to reach 70% by 2050. *(United Nations, 2024 &ndash; un.org/development/desa/publications)*]
+
+---
+class: center, middle
+
+.font130["Studies show that renewable sources like wind and solar could theoretically meet 100% of global energy needs."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; Research suggests a full transition to renewables is technically feasible, though it would require major investment and infrastructure changes. *(Jacobson et al., 2017 &ndash; Joule, 1(1), 108&ndash;121)*]
+
+---
+class: center, middle
+
+.font130["Mental health problems are mostly caused by personal weakness or a lack of willpower."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; Mental health conditions are caused by a mix of biological, psychological, and environmental factors, not personal failure. Willpower alone cannot prevent or cure mental illness. *(National Institute of Mental Health, 2024)*]
+
+---
+class: center, middle
+
+.font130["Most people without access to safely managed drinking water live in sub-Saharan Africa."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; Nearly 400 million people in sub-Saharan Africa lack safely managed water, making it the most affected region. *(WHO/UNICEF Joint Monitoring Programme, 2023 &ndash; washdata.org)*]
+
+---
+class: center, middle
+
+.font130["Biodiversity loss only affects wildlife and has little impact on human life."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; Biodiversity loss disrupts food systems, disease regulation, and clean air/water, directly impacting human survival. *(IPBES Global Assessment Report, 2019)*]
+
+---
+class: center, middle
+
+.font130["AI makes fair decisions because it doesn't have feelings or emotions like humans."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; AI systems can **reproduce bias** if the data or design reflects human inequality. Lack of emotion doesn't equal fairness. *(MIT Media Lab, 2019 &ndash; gender-shades.org; Nature, 2020)*]
+
+---
+class: center, middle
+
+.font130["Over half the world's school-aged children are out of school."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; In reality, about 244 million children and youth are out of school&mdash;roughly 12%, not over 50%. *(UNESCO, 2023)*]
+
+---
+class: center, middle
+
+.font130["Vaccines can help stop pandemics, but only if a large percentage of the population receives them."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; High vaccination coverage is needed for herd immunity to protect both individuals and communities. *(World Health Organization, 2022)*]
+
+---
+class: segue-green
+
+# NEXT: GOAL SETTING `r top_icon("bullseye")`
+
+---
+### Goal Setting
+
+.pull-left[
+.content-box-blue[
+## `r fontawesome::fa("book", fill = "#4a7fb5")` WHAT WE KNOW ABOUT THIS ISSUE
+]
+]
+
+.pull-right[
+.content-box-yellow[
+## `r fontawesome::fa("circle-question", fill = "#4a7fb5")` WHAT WE WANT TO KNOW
+]
+]
+
+---
+class: center, middle
+
+## WHAT ABOUT YOUR GOALS FOR THE CAMP?
+
+### `r fontawesome::fa("pen", fill = "#4a7fb5")` Each team write down 2 goals.
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/01-class.html
+
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/01-class.html", 
+       to = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/01-class.pdf")
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-01-introduction-to-research/01-class.html")
+```

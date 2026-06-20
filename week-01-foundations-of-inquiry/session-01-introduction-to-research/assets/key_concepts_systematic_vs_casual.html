@@ -1,0 +1,80 @@
+<style>
+.tl{position:relative;max-width:680px;margin:0 auto;padding:8px 0}
+.tl-line{position:absolute;left:50%;top:36px;bottom:36px;width:2px;background:var(--color-border-secondary);transform:translateX(-50%)}
+.row{position:relative;display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;min-height:108px}
+.rowk{min-height:140px}
+.mk{display:flex;justify-content:center}
+.ic{width:44px;height:44px;border-radius:11px;background:var(--color-background-info);color:var(--color-text-info);display:flex;align-items:center;justify-content:center;font-size:23px;position:relative;z-index:1}
+.icg{width:40px;height:40px;font-size:21px;border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:1px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.cell{display:flex;align-items:center}
+.cl{justify-content:flex-end;text-align:right}
+.cr{justify-content:flex-start;text-align:left}
+.stub{width:24px;height:2px;background:var(--color-border-secondary);flex:none}
+.txt{max-width:252px;padding:0 14px}
+.key{background:var(--color-background-info);border:1px solid var(--color-border-info);border-radius:12px;padding:13px 16px;max-width:244px}
+.muted{background:var(--color-background-secondary);border:1px solid var(--color-border-tertiary);border-radius:12px;padding:13px 16px;max-width:244px}
+.ttl{font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--color-text-primary);margin:0 0 4px}
+.ttlk{font-size:19px}
+.dsc{font-size:14px;line-height:1.5;color:var(--color-text-secondary);margin:0}
+.chips{margin-top:9px;display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--color-background-primary);color:var(--color-text-info);border:1px solid var(--color-border-info)}
+.tag{display:inline-block;margin-top:8px;font-size:12px;padding:2px 9px;border-radius:6px;background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.chead{display:flex;justify-content:center;margin:4px 0}
+.cpill{background:var(--color-background-info);color:var(--color-text-info);font-size:13px;font-weight:500;padding:5px 15px;border-radius:8px;display:flex;align-items:center;gap:7px;position:relative;z-index:1}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+<div class="tl">
+<h2 class="sr-only">A vertical timeline contrasting casual everyday observation with systematic research process, then the grouped five-stage research cycle, ending with the emphasized idea that research happens all around us, not just in labs.</h2>
+<div class="tl-line"></div>
+
+<div class="row rowk">
+<div class="cell cl"><div class="txt muted"><p class="ttl">Casual observation</p><p class="dsc">Everyday noticing — informal, unplanned, and easy to be fooled by.</p></div><div class="stub"></div></div>
+<div class="mk"><div class="icg"><i class="ti ti-eye" aria-hidden="true"></i></div></div>
+<div></div>
+</div>
+
+<div class="row rowk">
+<div></div>
+<div class="mk"><div class="ic"><i class="ti ti-route" aria-hidden="true"></i></div></div>
+<div class="cell cr"><div class="stub"></div><div class="txt key"><p class="ttl ttlk">Systematic process</p><p class="dsc">The same curiosity made rigorous — planned, repeatable, and built on evidence.</p></div></div>
+</div>
+
+<div class="chead"><div class="cpill"><i class="ti ti-refresh" aria-hidden="true"></i> The research cycle</div></div>
+
+<div class="row">
+<div class="cell cl"><div class="txt"><p class="ttl">Ask a question</p><p class="dsc">Start with a clear, focused question worth investigating.</p></div><div class="stub"></div></div>
+<div class="mk"><div class="icg"><i class="ti ti-help" aria-hidden="true"></i></div></div>
+<div></div>
+</div>
+
+<div class="row">
+<div></div>
+<div class="mk"><div class="icg"><i class="ti ti-books" aria-hidden="true"></i></div></div>
+<div class="cell cr"><div class="stub"></div><div class="txt"><p class="ttl">Review the literature</p><p class="dsc">Find out what's already known before adding to it.</p></div></div>
+</div>
+
+<div class="row">
+<div class="cell cl"><div class="txt"><p class="ttl">Design the study</p><p class="dsc">Plan a method that can actually answer the question.</p></div><div class="stub"></div></div>
+<div class="mk"><div class="icg"><i class="ti ti-ruler-measure" aria-hidden="true"></i></div></div>
+<div></div>
+</div>
+
+<div class="row">
+<div></div>
+<div class="mk"><div class="icg"><i class="ti ti-chart-dots" aria-hidden="true"></i></div></div>
+<div class="cell cr"><div class="stub"></div><div class="txt"><p class="ttl">Collect &amp; analyze data</p><p class="dsc">Gather evidence systematically and make sense of it.</p></div></div>
+</div>
+
+<div class="row">
+<div class="cell cl"><div class="txt"><p class="ttl">Communicate findings</p><p class="dsc">Share results so others can build on or challenge them.</p><span class="tag">↻ sparks new questions</span></div><div class="stub"></div></div>
+<div class="mk"><div class="icg"><i class="ti ti-speakerphone" aria-hidden="true"></i></div></div>
+<div></div>
+</div>
+
+<div class="row rowk">
+<div></div>
+<div class="mk"><div class="ic"><i class="ti ti-world" aria-hidden="true"></i></div></div>
+<div class="cell cr"><div class="stub"></div><div class="txt key"><p class="ttl ttlk">Research is all around us</p><p class="dsc">Not just labs — it happens in kitchens, gyms, classrooms, and on our phones.</p><div class="chips"><span class="chip">best study playlist?</span><span class="chip">fastest route home?</span><span class="chip">why did my bread flop?</span></div></div></div>
+</div>
+
+</div>
