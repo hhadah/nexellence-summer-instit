@@ -1,0 +1,347 @@
+---
+title: "DataCORE"
+subtitle: "Python, Pandas & Your Team Dataset"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE)
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Python Fundamentals &mdash; Variables & Data Types</h4></li>
+    <li><h4>Pandas &mdash; Loading & Describing Your Team Dataset</h4></li>
+    <li><h4>Scientific Storytelling &mdash; Variable Definitions</h4></li>
+</ol>
+
+.font90[*The same variables you defined on paper this morning &mdash; now we store them in code.*]
+
+---
+class: segue-green
+
+# 1:00 &ndash; 1:45 &middot; Python Fundamentals
+## .white[Variables & Data Types]
+
+---
+### `r fontawesome::fa("box-archive", height = "1em", fill = "#2e8b57")` Variables store information
+
+.pull-left[
+.font90[
+- A **variable** in research stores information &mdash; so does a **variable in Python**.
+
+- This morning: **IV** = `hours_of_sleep`, **DV** = `test_score`.
+
+- **PBL question:** how do we store these in Python? `r fontawesome::fa("arrow-right", fill = "#4a7fb5")`
+]
+
+.content-box-blue[
+.font90[**Big idea:** the **name** on the left holds the **value** on the right. Use it again just by typing its name.]
+]
+]
+
+.pull-right[
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+hours_of_sleep = 7.5   # our IV: how long a student slept   #<<
+test_score     = 88    # our DV: the outcome we measure      #<<
+
+print(hours_of_sleep, test_score)   # use them by name
+```
+]
+.panel[.panel-name[R]
+```{r}
+hours_of_sleep <- 7.5   # our IV: how long a student slept   #<<
+test_score     <- 88    # our DV: the outcome we measure      #<<
+
+cat(hours_of_sleep, test_score)     # use them by name
+```
+]
+]
+]
+
+---
+### `r fontawesome::fa("shapes", height = "1em", fill = "#2e8b57")` String vs. integer vs. float
+
+.font90[Every value has a **type**. Python tracks it for you &mdash; `type()` reveals it.]
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+student_name = "Maria"   # string  -> text in quotes          #<<
+grade_level  = 10        # integer -> a whole number          #<<
+hours_of_sleep = 7.5     # float   -> a number with a decimal #<<
+
+print(type(student_name), type(grade_level), type(hours_of_sleep))
+```
+]
+.panel[.panel-name[R]
+```{r}
+student_name <- "Maria"   # character -> text in quotes         #<<
+grade_level  <- 10L       # integer   -> a whole number (L)     #<<
+hours_of_sleep <- 7.5     # numeric   -> a number with decimals #<<
+
+c(class(student_name), class(grade_level), class(hours_of_sleep))
+```
+]
+]
+
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; Type matters: you can do **math** on numbers, but not on text.]
+
+---
+### `r fontawesome::fa("list-ol", height = "1em", fill = "#2e8b57")` Lists store many values
+
+.font90[One variable can hold a **whole column** of values &mdash; like every student's sleep.]
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+sleep_hours = [7.5, 6.0, 8.0, 5.5]   # a list of values        #<<
+
+print(len(sleep_hours))              # how many values?
+print(sum(sleep_hours) / len(sleep_hours))   # the average
+```
+]
+.panel[.panel-name[R]
+```{r}
+sleep_hours <- c(7.5, 6.0, 8.0, 5.5)   # a vector of values     #<<
+
+length(sleep_hours)                    # how many values?
+mean(sleep_hours)                      # the average
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-question", fill = "#4a7fb5")` &nbsp; A dataset is just **many lists side by side** &mdash; that's what Pandas gives us next.]
+
+---
+class: segue-green
+
+# 1:45 &ndash; 2:45 &middot; Pandas
+## .white[Loading & Describing Your Team Dataset]
+
+---
+### `r fontawesome::fa("database", height = "1em", fill = "#2e8b57")` Pick your team dataset
+
+.font90[Each team works with a **real dataset** from this pre-curated list:]
+
+.three-col[
+.col[
+.content-box-blue[.font80[
+**`r fontawesome::fa("heart-pulse", fill = "#4a7fb5")` CDC**
+
+Health & disease
+
+**`r fontawesome::fa("chart-line", fill = "#4a7fb5")` FRED**
+
+Economics & jobs
+]]
+]
+.col[
+.content-box-blue[.font80[
+**`r fontawesome::fa("cloud-sun-rain", fill = "#4a7fb5")` NOAA**
+
+Weather & climate
+
+**`r fontawesome::fa("earth-africa", fill = "#4a7fb5")` WHO**
+
+Global health
+]]
+]
+.col[
+.content-box-blue[.font80[
+**`r fontawesome::fa("medal", fill = "#4a7fb5")` Sports-Reference**
+
+Teams, players, stats
+]]
+]
+]
+
+.font80[`r fontawesome::fa("hand-point-right", fill = "#4a7fb5")` &nbsp; The examples below use a sample `study_habits.csv` &mdash; swap in **your** file.]
+
+---
+### `r fontawesome::fa("file-csv", height = "1em", fill = "#2e8b57")` Step 1 &middot; Load the file with `pd.read_csv()`
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+import pandas as pd
+df = pd.read_csv("study_habits.csv")   # load the CSV into a DataFrame   #<<
+print(df.head())                       # peek at the first 5 rows
+```
+]
+.panel[.panel-name[R]
+```{r}
+library(tidyverse)
+df <- read_csv("study_habits.csv")     # load the CSV into a tibble      #<<
+head(df)                               # peek at the first 5 rows
+```
+]
+]
+
+.font80[`r fontawesome::fa("table", fill = "#4a7fb5")` &nbsp; Each **row** is an observation; each **column** is a variable.]
+
+---
+### `r fontawesome::fa("circle-info", height = "1em", fill = "#2e8b57")` Step 2 &middot; `df.info()` &mdash; columns & data types
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+df.info()    # column names, non-null counts, and data types   #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+glimpse(df)  # column names, types, and a preview of values     #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; Which columns are **numbers**? Which are **text/categories**?]
+
+---
+### `r fontawesome::fa("triangle-exclamation", height = "1em", fill = "#2e8b57")` Step 3 &middot; `df.isnull().sum()` &mdash; spot missing data
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+df.isnull().sum()    # count missing values in each column   #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+colSums(is.na(df))   # count missing values in each column   #<<
+```
+]
+]
+
+.content-box-yellow[
+.font90[**Missing data is normal.** Knowing *where* it hides protects you from wrong conclusions later.]
+]
+
+---
+### `r fontawesome::fa("chart-simple", height = "1em", fill = "#2e8b57")` Step 4 &middot; `value_counts()` &mdash; frequency of categories
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+df["study_method"].value_counts()    # how often each category appears   #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+count(df, study_method)               # how often each category appears   #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; Great for **categorical** variables &mdash; grade level, method, region, team.]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI assist &mdash; then verify
+
+.pull-left[
+.font90[
+**1.** Paste your **column names** into ChatGPT.
+
+**2.** Ask: *"What does each column likely measure?"*
+
+**3.** **Verify** against the actual data with `info()` and `value_counts()`.
+
+**4.** **Discuss discrepancies** as a team.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font90[**AI is helpful &mdash; but not always right.** It *guesses* from names; only the **data** tells the truth. When they disagree, trust what you can check.]
+]
+]
+
+.font80[`r fontawesome::fa("people-group", fill = "#4a7fb5")` &nbsp; Did the AI misread any column? Note it on your **Mission Sheet.**]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Variable Definitions]
+
+---
+### `r fontawesome::fa("comment-dots", height = "1em", fill = "#2e8b57")` Define your IV & DV in one sentence each
+
+.pull-left[
+.font90[
+As a team, write a **one-sentence definition** of your **IV** and **DV** &mdash; and **cite one source.**
+
+**Class checks:**
+
+- Is it **specific**?
+- Is it **citable**?
+
+Practice in-text citation: **(Author, Year)**.
+]
+]
+
+.pull-right[
+.content-box-green[
+.font80[*"Our independent variable, **hours of sleep**, is the nightly time a student sleeps before a test, which prior work links to memory consolidation (Walker, 2017)."*]
+]
+
+.content-box-blue[
+.font80[*"Our dependent variable, **test score**, is the percentage correct on a standardized exam (College Board, 2022)."*]
+]
+]
+
+.font80[`r fontawesome::fa("people-arrows", fill = "#4a7fb5")` &nbsp; Read aloud. Is every definition **specific** and **citable**?]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/pm/02-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/pm/02-pm-datacore.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/pm/02-pm-datacore.html")
+```
