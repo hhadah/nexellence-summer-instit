@@ -1,0 +1,774 @@
+---
+title: "Research Methods"
+subtitle: "Day 2: From Curiosity to Research Questions"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+# devtools::install_github("thomasp85/patchwork")
+#remotes::install_github("mitchelloharawild/icons")
+#remotes::install_github("ROpenSci/bibtex")
+
+# devtools::install_github("ajdamico/lodown")
+## My preferred ggplot2 plotting theme (optional)
+## https://github.com/hrbrmstr/hrbrthemes
+# scale_fill_ipsum()
+# scale_color_ipsum()
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+# theme_set(theme_minimal() + theme_customs)
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+# paletteer_d("awtools::a_palette")
+# paletteer_d("suffrager::CarolMan")
+
+### COLOR BLIND PALLETES
+#paletteer_d("colorblindr::OkabeIto")
+#paletteer_d("colorblindr::OkabeIto_black")
+# paletteer_d("colorBlindness::paletteMartin")
+# paletteer_d("colorBlindness::Blue2DarkRed18Steps")
+# paletteer_d("colorBlindness::SteppedSequential5Steps")
+# paletteer_d("colorBlindness::PairedColor12Steps")
+# paletteer_d("colorBlindness::ModifiedSpectralScheme11Steps")
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# scale_colour_paletteer_d("colorBlindness::ModifiedSpectralScheme11Steps", dynamic = FALSE)
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+  #<a><button>[Click me](#sources)</button></a>
+```
+
+```{r xaringan-panelset, echo=FALSE, cache=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .rate-scale {
+      display: flex;
+      gap: 1em;
+      justify-content: center;
+      margin-top: 1em;
+    }
+    .rate-scale > div {
+      flex: 0 0 110px;
+    }
+    .rate-box {
+      width: 100%;
+      height: 58px;
+      background: #c9e4f6;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.4em;
+    }
+    .rate-label {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 0.3em;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Team Work & Day 1 Refresher</h4></li>
+    <li><h4 class="white">Your Research Question is a Compass</h4></li>
+    <li><h4 class="white">What Makes a Good Question? BRIC-FOR</h4></li>
+    <li><h4 class="white">Narrowing Topics with the 5 W's (and How)</h4></li>
+</ol>
+
+---
+## Welcome Back! Day 2
+
+.pull-left[
+
+<br>
+
+.font120[Let's start with a teamwork & a refresher.]
+
+.font120[Then we shall learn the very first step of the research process: **asking a good question!**]
+]
+
+.pull-right[
+```{r img1, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/01-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+class: segue-yellow
+
+# Let's Play a Game: <br> FACT (research-supported) <br> or MYTH (misconception)? `r top_icon("gamepad")`
+
+---
+class: center, middle
+
+.font130["The current global warming trend is primarily caused by natural climate cycles, not human activity."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; Research shows over **97% of climate scientists** agree that human activities&mdash;mainly burning fossil fuels&mdash;are the primary cause of current global warming. *(NASA, 2024 &ndash; climate.nasa.gov/evidence)*]
+
+---
+class: center, middle
+
+.font130["As of 2024, more than half of the global population lives in urban areas rather than rural ones."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; Over 56% of people worldwide live in urban settings, a number projected to reach 70% by 2050. *(United Nations, 2024 &ndash; un.org/development/desa/publications)*]
+
+---
+class: center, middle
+
+.font130["Studies show that renewable sources like wind and solar could theoretically meet 100% of global energy needs."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; Research suggests a full transition to renewables is technically feasible, though it would require major investment and infrastructure changes. *(Jacobson et al., 2017 &ndash; Joule, 1(1), 108&ndash;121)*]
+
+---
+class: center, middle
+
+.font130["Mental health problems are mostly caused by personal weakness or a lack of willpower."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; Mental health conditions are caused by a mix of biological, psychological, and environmental factors, not personal failure. Willpower alone cannot prevent or cure mental illness. *(National Institute of Mental Health, 2024)*]
+
+---
+class: center, middle
+
+.font130["Most people without access to safely managed drinking water live in sub-Saharan Africa."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; Nearly 400 million people in sub-Saharan Africa lack safely managed water, making it the most affected region. *(WHO/UNICEF Joint Monitoring Programme, 2023 &ndash; washdata.org)*]
+
+---
+class: center, middle
+
+.font130["Biodiversity loss only affects wildlife and has little impact on human life."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; Biodiversity loss disrupts food systems, disease regulation, and clean air/water, directly impacting human survival. *(IPBES Global Assessment Report, 2019)*]
+
+---
+class: center, middle
+
+.font130["AI makes fair decisions because it doesn't have feelings or emotions like humans."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; AI systems can **reproduce bias** if the data or design reflects human inequality. Lack of emotion doesn't equal fairness. *(MIT Media Lab, 2019 &ndash; gender-shades.org; Nature, 2020)*]
+
+---
+class: center, middle
+
+.font130["Over half the world's school-aged children are out of school."]
+
+--
+
+.font110[`r fontawesome::fa("xmark", fill = "#D55E00")` **MYTH** &mdash; In reality, about 244 million children and youth are out of school&mdash;roughly 12%, not over 50%. *(UNESCO, 2023)*]
+
+---
+class: center, middle
+
+.font130["Vaccines can help stop pandemics, but only if a large percentage of the population receives them."]
+
+--
+
+.font110[`r fontawesome::fa("check", fill = "#009E73")` **FACT** &mdash; High vaccination coverage is needed for herd immunity to protect both individuals and communities. *(World Health Organization, 2022)*]
+
+---
+### Variables in Research
+
+.pull-left[
+```{r img8, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/08-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("sliders", fill = "#4a7fb5")` Independent Variable**
+
+What you change or what differs between groups. The potential cause or input you're testing. *Example: amount of study time.*
+]
+
+.content-box-blue[
+**`r fontawesome::fa("gauge-high", fill = "#4a7fb5")` Dependent Variable**
+
+What you measure as the outcome. The effect that might change based on the independent variable. *Example: test scores.*
+]
+]]
+
+---
+### The Lurking Third Factor: Confounding Variables
+
+.pull-left[.font90[
+.content-box-blue[
+**`r fontawesome::fa("eye-low-vision", fill = "#4a7fb5")` Confounding Variable**
+
+A hidden, "lurking" third factor that affects **both** your variables &mdash; making it look like one causes the other.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` Why it matters**
+
+Ignore it, and you might claim a cause that isn't real. *Correlation is not causation!*
+]
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**`r fontawesome::fa("ice-cream", fill = "#4a7fb5")` Visual Analogy**
+
+Ice cream sales **and** drowning rates both rise in summer. Does ice cream cause drowning?
+]
+
+.content-box-blue[
+**`r fontawesome::fa("sun", fill = "#4a7fb5")` The Real Cause**
+
+No &mdash; **hot weather** is the confounder. It drives more ice cream *and* more swimming (and drowning) at the same time.
+]
+]]
+
+---
+### Seeing the Confound: Ice Cream & Drownings
+
+```{r confound_plot, echo=FALSE, warning=FALSE, message=FALSE, fig.width=9, fig.height=4.6, out.width="80%"}
+set.seed(42)
+
+# A seasonal "summer bump": peaks in July (month 7)
+season <- exp(-((1:12 - 7)^2) / 12)
+scale_fac <- 20  # drownings are ~20x smaller than ice cream sales
+
+confound_df <- tibble(
+  month_num         = 1:12,
+  `Ice cream sales` = round(120 + 380 * season + rnorm(12, 0, 12)),
+  `Drownings`       = round(2   + 22  * season + rnorm(12, 0, 1.2))
+)
+
+ggplot(confound_df, aes(x = month_num)) +
+  geom_line(aes(y = `Ice cream sales`, color = "Ice cream sales"), linewidth = 1.3) +
+  geom_point(aes(y = `Ice cream sales`, color = "Ice cream sales"), size = 2.6) +
+  geom_line(aes(y = `Drownings` * scale_fac, color = "Drownings"), linewidth = 1.3) +
+  geom_point(aes(y = `Drownings` * scale_fac, color = "Drownings"), size = 2.6) +
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+  scale_y_continuous(
+    name = "Ice cream sales",
+    sec.axis = sec_axis(~ . / scale_fac, name = "Drownings")
+  ) +
+  scale_color_manual(values = c("Ice cream sales" = "#E69F00",
+                                "Drownings"       = "#0072B2")) +
+  labs(
+    x = "Time of year", color = NULL,
+    title = "Both rise and fall together — but neither causes the other"
+  ) +
+  theme(legend.position = "top")
+```
+
+.center[.font80[*Simulated data. Both series track the summer heat &mdash; the lurking confounder.*]]
+
+---
+### Correlation Is Not Causation
+
+```{r spurious_neptune, echo=FALSE, warning=FALSE, fig.show='hold', fig.align='center', out.width="72%"}
+img <- readPNG("assets/1035_the-distance-between-neptune-and-the-sun_correlates-with_burglary-rates.png")
+grid.raster(img)
+```
+
+.center[.font80[*Two things can track each other almost perfectly and still have nothing to do with one another. (Source: tylervigen.com)*]]
+
+---
+### Example: Confounding Variable in Action
+
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` The Apparent Link**
+
+"Students who use tutoring services get lower grades. Does tutoring *cause* lower grades?"
+]
+]
+
+--
+
+.pull-right[
+<br>
+
+.content-box-green[
+**`r fontawesome::fa("sliders", fill = "#4a7fb5")` Independent variable:** Tutoring
+
+**`r fontawesome::fa("gauge-high", fill = "#4a7fb5")` Dependent variable:** Grades
+
+**`r fontawesome::fa("eye-low-vision", fill = "#4a7fb5")` Confounder:** Prior struggle &mdash; students who were *already* struggling are the ones who seek tutoring.
+]
+]
+
+---
+class: segue-green
+
+# Team Activity: Identify that Variable
+
+---
+## Instructions
+
+### Divide into Teams
+
+### Each team will be given summaries of 3 papers
+
+### Identify the independent variable (IV), the dependent variable (DV), and at least one potential confounder
+
+---
+### Paper Summaries
+
+.three-col[
+.col[
+.content-box-green[.font70[
+**`r fontawesome::fa("tree", fill = "#4a7fb5")` 1. Green Space**
+
+Astell-Burt & Feng (2019), *JAMA Network Open*
+
+Followed **46,786 adults** in 3 Australian cities for ~**6 years**, measuring **green space** near home (**tree canopy** vs. **grass**), then tracked later **psychological distress**.
+
+**Finding:** **30%+ tree canopy** &rarr; **31% lower odds** of distress; lots of **grass** &rarr; *higher* odds.
+]]
+]
+.col[
+.content-box-blue[.font70[
+**`r fontawesome::fa("utensils", fill = "#4a7fb5")` 2. School Meals**
+
+Anderson, Gallagher & Ramirez Ritchie (2018), *J. Health Economics*
+
+Used **all California public schools** over **5 years**. Vendors change often; some serve **healthier meals**. Compared **state test scores** before vs. after switching vendor.
+
+**Finding:** Schools with a **healthy meal vendor scored higher**. No effect on obesity.
+]]
+]
+.col[
+.content-box-yellow[.font70[
+**`r fontawesome::fa("mobile-screen", fill = "#4a7fb5")` 3. Screen Time**
+
+Twenge, Hisler & Krizan (2019), *Sleep Medicine*
+
+A **2016 survey** of caregivers for **43,755 U.S. children (0&ndash;17)** measured **screen time** (**portable** vs. **non-portable** devices) vs. **sleep duration**.
+
+**Finding:** More screen time &rarr; **shorter sleep**, driven mainly by **portable devices**.
+]]
+]
+]
+
+```{r first-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 25, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+
+---
+class: segue-green
+
+# Individual Activity: Topic Introduction
+
+---
+## Instructions
+
+### Each student will complete the mission statement sheet
+
+###  'The global challenge / topic I want to investigate is ___ . If I could ask one expert question about this, it would be ___.'
+
+### Each student will share their mission statement with the class in 30 seconds
+
+```{r second-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 20, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+---
+class: segue-yellow
+
+# Team Formation Activity: <br> 'Curiosities United' `r top_icon("users")`
+
+---
+### Instructions: Curiosities United
+
+.pull-left[.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Combine your teams</strong><br>
+  Teams that formed yesterday join up and merge their <strong>KWL tables</strong>.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Build a shared list</strong><br>
+  Using the <strong>Curiosities United Team Handout</strong>, list everything your team wants to know.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Narrow &amp; sharpen</strong><br>
+  The instructor visits each team to help turn a broad topic into a focused question.</div>
+</div>
+]]
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("arrows-down-to-line", fill = "#4a7fb5")` From broad to sharp**
+
+*We want to know everything about climate change.*
+]
+
+.center[`r fontawesome::fa("arrow-down", fill = "#4a7fb5")`]
+
+.content-box-green[
+**`r fontawesome::fa("bullseye", fill = "#4a7fb5")` A focused curiosity**
+
+*We're curious whether temperature increases are linked to wildfire frequency in western US states.*
+]
+]]
+
+```{r third-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 30, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+---
+class: segue-green
+
+# Scientific Storytelling: <br> Variable Sentence Practice `r top_icon("comment-dots")`
+
+---
+### Instructions: Variable Sentence Practice
+
+.pull-left[.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Write one sentence</strong><br>
+  As a team, fill in the formula below.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Read it aloud</strong><br>
+  Share your prediction with the class.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>One word of feedback</strong><br>
+  Each classmate responds with a single word.</div>
+</div>
+
+.content-box-blue[
+**`r fontawesome::fa("comments", fill = "#4a7fb5")` Feedback words:** *Specific &middot; Vague &middot; Interesting &middot; Testable*
+]
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**`r fontawesome::fa("pen-fancy", fill = "#4a7fb5")` The formula**
+
+"We predict that **[IV]** is associated with **[DV]** because **[rationale based on prior knowledge]**."
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Example**
+
+"We predict that **screen time before bed** is associated with **shorter sleep** because **blue light delays the body's release of melatonin**."
+]
+]]
+
+```{r fourth-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 10, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+---
+class: segue-yellow
+
+# After Class / Homework `r top_icon("home")`
+
+---
+### `r fontawesome::fa("gears", height = "1em", fill = "#4a7fb5")` After-Class Team Session &middot; 3:15&ndash;5:15 PM
+
+.font80[Teams work with a **TA / peer mentor** available. Produce a **tangible output before dinner** &mdash; this is *not* free time.]
+
+.font70[
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("people-group", fill = "#4a7fb5")` Team Mission Sheet &mdash; "Team Curiosity Unlocked"**
+
+Pool individual curiosity lists; identify the **top 5 shared questions** by group consensus.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("sliders", fill = "#4a7fb5")` Draft your IV & DV**
+
+As a team, draft your **independent** and **dependent** variables &mdash; test with AI: *"Is this a measurable variable?"*
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("table-columns", fill = "#4a7fb5")` DataCORE**
+
+Open your team dataset; document **all column names and data types** in a shared Google Doc.
+]
+
+.content-box-green[
+**`r fontawesome::fa("circle-check", fill = "#4a7fb5")` Output due before dinner**
+
+A shared **curiosity list (5+ items)** **+** a draft **IV/DV statement**.
+]
+]
+]
+
+---
+### `r fontawesome::fa("book", height = "1em", fill = "#4a7fb5")` Evening Work Period &middot; 7:00&ndash;9:00 PM
+
+.font80[**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.]
+
+.font75[
+.content-box-yellow[
+**`r fontawesome::fa("user-pen", fill = "#4a7fb5")` Individual &middot; DataCORE Journal**
+
+Describe your dataset in your own words: What does it measure? Who collected it? What is missing?
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` Research (RcS)**
+
+Find **2 academic sources** on your topic variables. For each: author, year, source, and one key finding &mdash; in **APA format**.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("pen-to-square", fill = "#4a7fb5")` Individual reflection**
+
+Write **3 sentences**: what you already know about your topic, and what you are most uncertain about.
+]
+]
+
+---
+background-image: url("assets/17-img.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+## Let's wrap up this session!
+
+### Questions? Final thoughts?
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/02-class.html
+
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/am/02-class.html",
+       to = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/am/02-class.pdf")
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/am/02-class.html")
+```

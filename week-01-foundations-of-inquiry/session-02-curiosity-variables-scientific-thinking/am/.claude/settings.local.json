@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/hhadah/Projects/GiT/nexellence-summer-instit && grep -rln -i \"Variables in Research\\\\|Add info about confounding\" --include=*.Rmd --include=*.html --include=*.md .)",
+      "Bash(grep -n \"first-timer\\\\|countdown\\\\|^### \\\\|^## \\\\|^---$\" /Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/am/02-class.Rmd)",
+      "Bash(grep -n 'opts_chunk$set\\\\|cache\\\\|use_panelset\\\\|xaringan-panelset' week-01-foundations-of-inquiry/session-01-introduction-to-research/pm/01-pm-datacore.Rmd)",
+      "Bash(Rscript -e 'rmarkdown::render\\(\"02-class.Rmd\", quiet = FALSE\\)')"
+    ]
+  }
+}
