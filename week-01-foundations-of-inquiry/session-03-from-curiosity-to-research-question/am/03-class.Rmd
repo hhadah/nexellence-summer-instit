@@ -26,10 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
 
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
@@ -230,16 +226,6 @@ xaringanExtra::use_panelset()
 
 ```
 
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">Homework Recap: Your Research Questions</h4></li>
-    <li><h4 class="white">Gathering Information: Literature Review</h4></li>
-    <li><h4 class="white">From Questions to Hypotheses</h4></li>
-    <li><h4 class="white">Designing a Research Project</h4></li>
-</ol>
-
----
 ## Welcome Back to Day 3!
 
 .pull-left[

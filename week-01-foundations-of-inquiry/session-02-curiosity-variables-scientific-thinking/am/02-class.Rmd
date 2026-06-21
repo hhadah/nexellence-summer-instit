@@ -26,11 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
-
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
 BibOptions(check.entries = FALSE,
@@ -242,16 +237,6 @@ xaringanExtra::use_panelset()
 
 ```
 
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">Team Work & Day 1 Refresher</h4></li>
-    <li><h4 class="white">Your Research Question is a Compass</h4></li>
-    <li><h4 class="white">What Makes a Good Question? BRIC-FOR</h4></li>
-    <li><h4 class="white">Narrowing Topics with the 5 W's (and How)</h4></li>
-</ol>
-
----
 ## Welcome Back! Day 2
 
 .pull-left[
