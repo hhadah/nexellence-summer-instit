@@ -1,0 +1,619 @@
+---
+title: "DataCORE"
+subtitle: "Descriptive Statistics, Distributions & Visualizing Your Variables"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "62%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.stat-card {
+  background: #eaf3fb;
+  border-radius: 8px;
+  padding: 0.5em 0.2em;
+  text-align: center;
+}
+.stat-card .big { font-size: 1.6em; font-weight: bold; color: #2e8b57; }
+.stat-card .lbl { font-size: 0.8em; color: #333; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Descriptive Statistics &amp; Distributions</h4></li>
+    <li><h4>Visualizing Your Variables &mdash; Histogram, Bar, Scatter</h4></li>
+    <li><h4>Scientific Storytelling &mdash; Chart Annotations</h4></li>
+</ol>
+
+.font90[*Yesterday you computed one number for your DV. Today we ask: what is the **shape** of your data &mdash; and how do we **show** it?*]
+
+---
+class: segue-green
+
+# 1:00 &ndash; 1:50 &middot; Descriptive Statistics & Distributions
+## .white[From a Single Number to a Distribution]
+
+---
+### `r fontawesome::fa("ruler", height = "1em", fill = "#2e8b57")` One number hides the story
+
+.pull-left[
+.font90[
+- A **mean** tells you the *center* &mdash; but two very different datasets can share the same mean.
+
+- We need numbers for the **center** *and* the **spread**, plus a picture of the **shape**.
+
+- Today's pipeline: **summarise &rarr; visualize &rarr; describe in plain English.**
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font90[**Big idea:** a *distribution* is the full pattern of values a variable takes &mdash; not just its average.]
+]
+]
+
+.font80[`r fontawesome::fa("table", fill = "#4a7fb5")` &nbsp; We use `study_habits.csv` &mdash; swap in **your** team file.]
+
+---
+### `r fontawesome::fa("file-csv", height = "1em", fill = "#2e8b57")` Reload the dataset
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+import pandas as pd
+df = pd.read_csv("study_habits.csv")   # rows = students, columns = variables   #<<
+print(df.head())
+```
+]
+.panel[.panel-name[R]
+```{r}
+library(tidyverse)
+df <- read_csv("study_habits.csv")     # rows = students, columns = variables   #<<
+head(df)
+```
+]
+]
+
+.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; Columns: `grade_level`, `study_method`, `hours_of_sleep`, `test_score`.]
+
+---
+### `r fontawesome::fa("calculator", height = "1em", fill = "#2e8b57")` Mean, median, standard deviation
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+dv = df["test_score"]
+print("mean  :", round(dv.mean(), 2))     # the average                          #<<
+print("median:", dv.median())             # the middle value                     #<<
+print("std   :", round(dv.std(), 2))      # typical distance from the mean        #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+dv <- df$test_score
+cat("mean  :", round(mean(dv, na.rm = TRUE), 2), "\n")   # the average            #<<
+cat("median:", median(dv, na.rm = TRUE), "\n")           # the middle value       #<<
+cat("std   :", round(sd(dv, na.rm = TRUE), 2), "\n")     # spread                 #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; `df.describe()` (pandas) / `summary(df)` (R) gives all of these at once.]
+
+---
+### `r fontawesome::fa("scale-unbalanced", height = "1em", fill = "#2e8b57")` What each number tells you
+
+.three-col[
+.col[
+.content-box-blue[
+.font80[
+**Mean**<br>
+The balance point. Uses *every* value &mdash; so it gets **pulled by outliers**.
+]
+]
+]
+.col[
+.content-box-green[
+.font80[
+**Median**<br>
+The middle value. **Robust to outliers** &mdash; better when data is skewed.
+]
+]
+]
+.col[
+.content-box-yellow[
+.font80[
+**Std. Dev.**<br>
+Typical distance from the mean. **Small** = clustered; **large** = spread out.
+]
+]
+]
+]
+
+.content-box-blue[
+.font85[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; **When is median better than mean?** Income, house prices, test scores with a few extreme values &mdash; one billionaire (or one zero) drags the mean, not the median.]
+]
+
+---
+### `r fontawesome::fa("chart-simple", height = "1em", fill = "#2e8b57")` `df.hist()` &mdash; the shape of your distribution
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5, fig.height=2.5, out.width="45%", results="hide"}
+df["test_score"].hist(bins=8, color="#2e8b57", edgecolor="white")
+plt.title("Distribution of Test Scores")
+plt.xlabel("Test score"); plt.ylabel("Number of students")
+plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5, fig.height=2.5, out.width="45%"}
+ggplot(df, aes(test_score)) +
+  geom_histogram(bins = 8, fill = "#2e8b57", color = "white") +
+  labs(title = "Distribution of Test Scores",
+       x = "Test score", y = "Number of students")
+```
+]
+]
+
+.font80[`r fontawesome::fa("eye", fill = "#4a7fb5")` &nbsp; **Read the shape:** is it *normal* (bell), *skewed* (a long tail), or *bimodal* (two humps)?]
+
+---
+### `r fontawesome::fa("shapes", height = "1em", fill = "#2e8b57")` Three shapes you will meet
+
+.three-col[
+.col[
+.content-box-blue[
+.font80[
+**Normal**<br>
+Symmetric bell. Mean &asymp; median. Most values near the center.
+]
+]
+]
+.col[
+.content-box-yellow[
+.font80[
+**Skewed**<br>
+One long tail. Mean is pulled toward the tail &mdash; **report the median**.
+]
+]
+]
+.col[
+.content-box-green[
+.font80[
+**Bimodal**<br>
+Two peaks. Often a sign of **two hidden groups** mixed together.
+]
+]
+]
+]
+
+.font80[`r fontawesome::fa("users", fill = "#4a7fb5")` &nbsp; A bimodal DV is a clue: maybe boys vs. girls, or tutored vs. solo studiers behave differently.]
+
+---
+### `r fontawesome::fa("box", height = "1em", fill = "#2e8b57")` `df.boxplot()` &mdash; spot outliers visually
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5, fig.height=2.5, out.width="45%", results="hide"}
+df.boxplot(column="test_score")
+plt.title("Test Scores -- Boxplot")
+plt.ylabel("Test score")
+plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5, fig.height=2.5, out.width="45%"}
+ggplot(df, aes(y = test_score)) +
+  geom_boxplot(fill = "#2e8b57", alpha = 0.6) +
+  labs(title = "Test Scores -- Boxplot", y = "Test score")
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-dot", fill = "#4a7fb5")` &nbsp; The **box** holds the middle 50%; the **line** is the median; **dots** beyond the whiskers are possible outliers.]
+
+---
+class: segue-green
+
+# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Pipeline
+## .white[Describe Your DV's Distribution]
+
+---
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Run the pipeline on your DV &mdash; ~15 min
+
+.pull-left[
+.font90[
+**On your team's dependent variable, record:**
+
+<div class="three-col" style="margin-top:0.6em;">
+  <div class="stat-card"><div class="lbl">min</div><div class="big">?</div></div>
+  <div class="stat-card"><div class="lbl">max</div><div class="big">?</div></div>
+  <div class="stat-card"><div class="lbl">mean</div><div class="big">?</div></div>
+  <div class="stat-card"><div class="lbl">SD</div><div class="big">?</div></div>
+</div>
+
+Then run `df.hist()` **and** `df.boxplot()` on it.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+**Write ONE sentence** describing the distribution in plain English:
+
+*"Test scores ranged from 65 to 96, centered around 81, and were roughly **bell-shaped** with no extreme outliers."*
+]
+]
+]
+
+.font80[`r fontawesome::fa("pen", fill = "#4a7fb5")` &nbsp; Record the four numbers **and** your sentence on your Mission Sheet.]
+
+---
+class: segue-green
+
+# 1:50 &ndash; 2:45 &middot; Visualizing Your Variables
+## .white[The Right Chart for the Right Variable]
+
+---
+### `r fontawesome::fa("chart-line", height = "1em", fill = "#2e8b57")` Match the chart to the variable
+
+.three-col[
+.col[
+.content-box-blue[
+.font85[
+.center[`r fontawesome::fa("chart-simple", height = "1.6em", fill = "#0148A4")`]
+
+**Histogram**<br>
+One *continuous* variable. **Shows its distribution.**
+]
+]
+]
+.col[
+.content-box-green[
+.font85[
+.center[`r fontawesome::fa("chart-column", height = "1.6em", fill = "#2e8b57")`]
+
+**Bar chart**<br>
+One *categorical* variable. **Compares groups.**
+]
+]
+]
+.col[
+.content-box-yellow[
+.font85[
+.center[`r fontawesome::fa("braille", height = "1.6em", fill = "#c08a00")`]
+
+**Scatter plot**<br>
+*Two continuous* variables. **Shows their relationship.**
+]
+]
+]
+]
+
+.font80[`r fontawesome::fa("hand-point-right", fill = "#4a7fb5")` &nbsp; Instructor demos one; you replicate all three for **your** variables.]
+
+---
+### `r fontawesome::fa("chart-simple", height = "1em", fill = "#2e8b57")` Histogram &mdash; a continuous variable
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5, fig.height=2.5, out.width="45%", results="hide"}
+df["hours_of_sleep"].hist(bins=7, color="#4a7fb5", edgecolor="white")
+plt.title("Distribution of Hours of Sleep")
+plt.xlabel("Hours of sleep"); plt.ylabel("Number of students")
+plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5, fig.height=2.5, out.width="45%"}
+ggplot(df, aes(hours_of_sleep)) +
+  geom_histogram(bins = 7, fill = "#4a7fb5", color = "white") +
+  labs(title = "Distribution of Hours of Sleep",
+       x = "Hours of sleep", y = "Number of students")
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; **Bins** group the values &mdash; too few hides shape, too many makes it noisy.]
+
+---
+### `r fontawesome::fa("chart-column", height = "1em", fill = "#2e8b57")` Bar chart &mdash; a categorical variable
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5, fig.height=2.5, out.width="45%", results="hide"}
+counts = df["study_method"].value_counts()
+counts.plot(kind="bar", color="#2e8b57", edgecolor="white")
+plt.title("Students by Study Method")
+plt.xlabel("Study method"); plt.ylabel("Number of students")
+_ = plt.xticks(rotation=0)
+plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5, fig.height=2.5, out.width="45%"}
+ggplot(df, aes(study_method)) +
+  geom_bar(fill = "#2e8b57", color = "white") +
+  labs(title = "Students by Study Method",
+       x = "Study method", y = "Number of students")
+```
+]
+]
+
+.font80[`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` &nbsp; A **bar chart** counts *categories*; a **histogram** bins *numbers*. Don't mix them up.]
+
+---
+### `r fontawesome::fa("braille", height = "1em", fill = "#2e8b57")` Scatter plot &mdash; two continuous variables (IV vs DV)
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5, fig.height=2.5, out.width="45%", results="hide"}
+_ = plt.scatter(df["hours_of_sleep"], df["test_score"], color="#2e8b57")
+plt.title("Sleep vs. Test Score")
+plt.xlabel("Hours of sleep (IV)"); plt.ylabel("Test score (DV)")
+plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5, fig.height=2.5, out.width="45%"}
+ggplot(df, aes(hours_of_sleep, test_score)) +
+  geom_point(color = "#2e8b57", size = 2) +
+  labs(title = "Sleep vs. Test Score",
+       x = "Hours of sleep (IV)", y = "Test score (DV)")
+```
+]
+]
+
+.font80[`r fontawesome::fa("arrow-trend-up", fill = "#4a7fb5")` &nbsp; Each dot is one student. Look for a **trend**: do points drift up, down, or scatter randomly?]
+
+---
+### `r fontawesome::fa("triangle-exclamation", height = "1em", fill = "#2e8b57")` The one rule for every chart
+
+.pull-left[
+.content-box-red[
+.font100[
+**A chart without a title and axis labels is not a chart &mdash; it is a picture.**
+]
+]
+
+.font85[Every chart must be **self-explanatory**: a reader should understand it without you standing next to it.]
+]
+
+.pull-right[
+.content-box-green[
+.font85[
+**Every chart needs:**
+
+- `r fontawesome::fa("check", fill="#2e8b57")` A clear **title**
+- `r fontawesome::fa("check", fill="#2e8b57")` A labeled **x-axis** (with units)
+- `r fontawesome::fa("check", fill="#2e8b57")` A labeled **y-axis** (with units)
+- `r fontawesome::fa("check", fill="#2e8b57")` Readable text & legend (if needed)
+]
+]
+]
+
+.font80[`r fontawesome::fa("scissors", fill = "#4a7fb5")` &nbsp; If you screenshot a chart with no labels for your portfolio, you've saved a picture &mdash; not a finding.]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI prompt &mdash; generate, run, then polish
+
+.pull-left[
+.font90[
+**1.** Ask ChatGPT:
+
+.content-box-blue[.font80[*"Write Python code for a **scatter plot** of **[IV]** vs **[DV]** from my pandas DataFrame `df`."*]]
+
+**2.** **Run** it on your real data.
+
+**3.** **Add** color, a title, and axis labels.
+
+**4.** **Screenshot** it for your portfolio.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+**AI almost always forgets:**
+
+- A descriptive **title**
+- **Axis labels** with units
+- Sensible **color** & point size
+- Handling **missing values**
+
+*You* are the one who makes it self-explanatory.
+]
+]
+]
+
+.font80[`r fontawesome::fa("wand-magic-sparkles", fill = "#4a7fb5")` &nbsp; AI draws fast &mdash; **you** turn its picture into a chart.]
+
+---
+class: segue-green
+
+# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Challenge
+## .white[Build All Three Charts on Your Data]
+
+---
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Build &amp; label &mdash; ~20 min
+
+.pull-left[
+.font90[
+**Using your team data, build:**
+
+<div class="chev-row-sm" style="display:flex;align-items:center;gap:0.6em;margin-bottom:0.4em;">
+  <strong style="color:#2e8b57;">1.</strong> A <strong>histogram</strong> of one continuous variable.
+</div>
+<div class="chev-row-sm" style="display:flex;align-items:center;gap:0.6em;margin-bottom:0.4em;">
+  <strong style="color:#2e8b57;">2.</strong> A <strong>bar chart</strong> of one categorical variable.
+</div>
+<div class="chev-row-sm" style="display:flex;align-items:center;gap:0.6em;margin-bottom:0.4em;">
+  <strong style="color:#2e8b57;">3.</strong> A <strong>scatter plot</strong> of your <strong>IV vs DV</strong>.
+</div>
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[
+**Every chart must pass the checklist:**
+
+- Title `r fontawesome::fa("check", fill="#2e8b57")`
+- X-axis label `r fontawesome::fa("check", fill="#2e8b57")`
+- Y-axis label `r fontawesome::fa("check", fill="#2e8b57")`
+
+Screenshot each one for your **portfolio**.
+]
+]
+]
+
+.font80[`r fontawesome::fa("people-group", fill = "#4a7fb5")` &nbsp; Instructor checks that each chart is **self-explanatory** before you save it.]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Chart Annotations]
+
+---
+### `r fontawesome::fa("comment-dots", height = "1em", fill = "#2e8b57")` One sentence under every chart
+
+.pull-left[
+.font90[
+Add a **one-sentence annotation** below each chart that answers:
+
+- What **pattern** does this show?
+- What would a **reader** need to know to interpret it?
+]
+
+.content-box-blue[
+.font85[`r fontawesome::fa("seedling", fill = "#4a7fb5")` &nbsp; These annotations become the **captions in your Results section.**]
+]
+]
+
+.pull-right[
+.content-box-green[
+.font85[
+`r fontawesome::fa("eye", fill="#2e8b57")` **Describe** (Results)<br>
+*"The bars show higher values in Group A."*
+]
+]
+
+.content-box-yellow[
+.font85[
+`r fontawesome::fa("brain", fill="#c08a00")` **Interpret** (Discussion)<br>
+*"Group A reports higher scores, which may reflect..."*
+]
+]
+]
+
+---
+### `r fontawesome::fa("scale-balanced", height = "1em", fill = "#2e8b57")` Describe now &mdash; interpret later
+
+.pull-left[
+.content-box-green[
+.font85[
+**Describing = Results**
+
+- States *what the chart shows*
+- Just the facts: direction, size, groups
+- No "why," no causes
+- *"Scores rise as sleep increases."*
+]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+**Interpreting = Discussion**
+
+- Explains *what it might mean*
+- Offers reasons, caveats, theory
+- Saved for **later** in the paper
+- *"...perhaps because rested students focus better."*
+]
+]
+]
+
+.content-box-blue[
+.font85[`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` &nbsp; **Results are descriptive.** Save the "why" for the Discussion &mdash; mixing them is the most common beginner mistake.]
+]
+
+---
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Annotate your three charts &mdash; quick round
+
+.font90[
+For **each** of your three charts, write a one-sentence **descriptive** annotation. Then read your scatter-plot annotation aloud to a partner.
+]
+
+.content-box-blue[
+.font85[
+**Template:** *"This [chart type] of [variable(s)] shows [pattern], which means a reader can see [what it tells them]."*
+]
+]
+
+.content-box-yellow[
+.font85[`r fontawesome::fa("circle-check", fill = "#4a7fb5")` &nbsp; Did you stay **descriptive**? If you wrote the word *"because,"* you slipped into interpretation &mdash; move it to the Discussion.]
+]
+
+---
+class: segue-green
+
+# .white[From numbers to pictures to a story.]
+## .white[Tomorrow: comparing groups & testing relationships.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/pm/04-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/pm/04-pm-datacore.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/pm/04-pm-datacore.html")
+```

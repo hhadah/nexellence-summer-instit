@@ -1,0 +1,585 @@
+---
+title: "DataCORE"
+subtitle: "Data Cleaning & R — Same Data, Different Tool"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "62%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.log-table { font-size: 0.78em; }
+.log-table th { background: #eaf3fb; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Data Cleaning Workshop &mdash; Fixing Real Data</h4></li>
+    <li><h4>R Introduction &mdash; Same Data, Different Tool</h4></li>
+    <li><h4>Scientific Storytelling &mdash; Methods Language</h4></li>
+</ol>
+
+.font90[*Yesterday you described your data. Today we ask: **can you trust it yet?** First we clean it, then we meet a second tool &mdash; R.*]
+
+---
+class: segue-green
+
+# 1:00 &ndash; 2:00 &middot; Data Cleaning Workshop
+## .white[Every Real Dataset Has Problems]
+
+---
+### `r fontawesome::fa("broom", height = "1em", fill = "#2e8b57")` Real data is messy &mdash; fix it systematically
+
+.pull-left[
+.font90[
+- The clean datasets in textbooks **do not exist** in the wild.
+- Real files have **missing cells**, **inconsistent labels**, and **impossible values**.
+- Today we fix all three &mdash; in a **repeatable order** you can reuse on any dataset.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font90[**Today's pipeline:**
+
+1. Missing values `r fontawesome::fa("arrow-right", fill="#4a7fb5")` `fillna` / `dropna`
+2. Inconsistent formatting `r fontawesome::fa("arrow-right", fill="#4a7fb5")` standardize
+3. Outliers `r fontawesome::fa("arrow-right", fill="#4a7fb5")` identify, keep or flag
+]
+]
+]
+
+.content-box-red[
+.font85[`r fontawesome::fa("shield-halved", fill = "#fff")` &nbsp; **The golden rule: never overwrite your original data.** Save cleaning to a *new* file.]
+]
+
+---
+### `r fontawesome::fa("file-csv", height = "1em", fill = "#2e8b57")` Load a messy dataset &amp; look first
+
+```{python}
+df = pd.read_csv("study_habits_messy.csv")   # original -- we will NOT overwrite this  #<<
+print(df.head(6))
+```
+
+.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; Already spot trouble? `male` / `Male` / `M`, a blank cell, and a suspicious `999`.]
+
+---
+### `r fontawesome::fa("circle-info", height = "1em", fill = "#2e8b57")` `df.info()` &mdash; your first diagnostic
+
+```{python}
+df.info()                       # column types + how many NON-missing values each has  #<<
+```
+
+.font80[`r fontawesome::fa("eye", fill = "#4a7fb5")` &nbsp; A column with fewer non-null values than rows **has missing data**. Note `hours_of_sleep` and `test_score`.]
+
+---
+### `r fontawesome::fa("ghost", height = "1em", fill = "#2e8b57")` Step 1 &mdash; Find the missing values
+
+```{python}
+print(df.isna().sum())          # count of missing cells PER column                    #<<
+print("\nTotal rows:", len(df))
+```
+
+.font80[`r fontawesome::fa("circle-question", fill = "#4a7fb5")` &nbsp; Now the decision: do we **drop** these rows, or **fill** them? The choice changes your results.]
+
+---
+### `r fontawesome::fa("trash-can", height = "1em", fill = "#2e8b57")` `df.dropna()` &mdash; remove rows with gaps
+
+```{python}
+print("rows before:", len(df))
+print("rows after dropna():", len(df.dropna()))   # deletes ANY row with a missing cell #<<
+```
+
+.pull-left[
+.content-box-green[
+.font80[**Use `dropna()` when:** missing rows are *few*, and dropping them won't bias your sample.]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font80[**Risk:** you throw away *every other value* in that row too &mdash; and may shrink small datasets fast.]
+]
+]
+
+---
+### `r fontawesome::fa("fill-drip", height = "1em", fill = "#2e8b57")` `df.fillna()` &mdash; fill the gaps instead
+
+```{python}
+median_sleep = df["hours_of_sleep"].median()      # robust center, ignores the 25 outlier #<<
+print("median hours of sleep:", median_sleep)
+filled = df["hours_of_sleep"].fillna(median_sleep) # fill -- shown, not yet committed       #<<
+print(filled.head(6).tolist())
+```
+
+.pull-left[
+.content-box-green[
+.font80[**Use `fillna()` when:** you can't afford to lose rows; fill with the **median** (numbers) or **mode** (categories).]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font80[**Risk:** you're *inventing* values. Filling a key outcome variable can hide the truth.]
+]
+]
+
+---
+### `r fontawesome::fa("scale-balanced", height = "1em", fill = "#2e8b57")` `dropna` or `fillna`? Why the choice matters
+
+.three-col[
+.col[
+.content-box-blue[
+.font80[
+**Drop the row**<br>
+A *few* rows missing, or the **outcome (DV)** is missing &mdash; you can't honestly invent a result.
+]
+]
+]
+.col[
+.content-box-green[
+.font80[
+**Fill the value**<br>
+*Many* rows affected and the gap is in a *secondary* column &mdash; impute the median / mode.
+]
+]
+]
+.col[
+.content-box-yellow[
+.font80[
+**Always**<br>
+**Document it.** Say how many rows you dropped or filled, and why &mdash; in your cleaning log.
+]
+]
+]
+]
+
+.content-box-blue[
+.font85[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; There is no universally "right" choice &mdash; there is only a **defensible, documented** one.]
+]
+
+---
+### `r fontawesome::fa("text-height", height = "1em", fill = "#2e8b57")` Step 2 &mdash; Inconsistent formatting
+
+```{python}
+clean = df.copy()                       # work on a COPY -- protect the original          #<<
+print("gender       :", clean["gender"].unique())
+print("study_method :", clean["study_method"].unique())
+```
+
+.font80[`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` &nbsp; The computer reads `'Male'`, `'male'`, and `'M'` as **three different groups**. We must merge them.]
+
+---
+### `r fontawesome::fa("wand-magic-sparkles", height = "1em", fill = "#2e8b57")` Standardize string columns
+
+```{python}
+gender_map = {"male": "Male", "m": "Male", "female": "Female", "f": "Female"}
+clean["gender"] = clean["gender"].str.strip().str.lower().map(gender_map)   # 3 steps      #<<
+clean["study_method"] = clean["study_method"].str.strip().str.lower()       # trim + lower #<<
+
+print(clean["gender"].value_counts())
+print()
+print(clean["study_method"].value_counts())
+```
+
+.font80[`r fontawesome::fa("list-check", fill = "#4a7fb5")` &nbsp; `.str.strip()` removes stray spaces, `.str.lower()` unifies case, `.map()` collapses to one label.]
+
+---
+### `r fontawesome::fa("box", height = "1em", fill = "#2e8b57")` Step 3 &mdash; Spot outliers with a boxplot
+
+.panelset[
+.panel[.panel-name[Test score]
+```{python, fig.width=5, fig.height=2.4, out.width="44%", results="hide"}
+clean.boxplot(column="test_score")
+plt.title("Test Score -- Boxplot"); plt.ylabel("Test score")
+plt.show()
+```
+]
+.panel[.panel-name[Hours of sleep]
+```{python, fig.width=5, fig.height=2.4, out.width="44%", results="hide"}
+clean.boxplot(column="hours_of_sleep")
+plt.title("Hours of Sleep -- Boxplot"); plt.ylabel("Hours")
+plt.show()
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-dot", fill = "#4a7fb5")` &nbsp; Dots far past the whiskers are **suspects**: a `999` test score and a `25`-hour night are *impossible*, not just extreme.]
+
+---
+### `r fontawesome::fa("flag", height = "1em", fill = "#2e8b57")` Keep or flag? Make &amp; record the decision
+
+```{python}
+# These values are physically impossible -> flag as missing (a documented decision)
+clean.loc[clean["test_score"]  > 100, "test_score"]     = np.nan   # max score is 100      #<<
+clean.loc[clean["hours_of_sleep"] > 12, "hours_of_sleep"] = np.nan # nobody sleeps 25 hrs  #<<
+print("flagged as missing:", df.shape[0] - clean[["test_score","hours_of_sleep"]].notna().all(axis=1).sum(), "rows affected")
+```
+
+.content-box-yellow[
+.font80[`r fontawesome::fa("book", fill = "#4a7fb5")` &nbsp; **Not every outlier is an error.** A genuine extreme value you *keep* (and flag); an impossible value you *fix*. Either way &mdash; **write it in the log.**]
+]
+
+---
+### `r fontawesome::fa("clipboard-list", height = "1em", fill = "#2e8b57")` Your data cleaning log
+
+.font85[A running record &mdash; one row per decision &mdash; so your cleaning is **reproducible and defensible**.]
+
+<table class="log-table">
+<thead><tr><th>Issue found</th><th>Column</th><th>Decision</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Missing values</td><td>hours_of_sleep</td><td>Filled with median</td><td>Secondary variable; few rows</td></tr>
+<tr><td>Missing values</td><td>test_score</td><td>Dropped those rows</td><td>Can't invent the outcome</td></tr>
+<tr><td>Mixed labels</td><td>gender, study_method</td><td>Standardized to one label each</td><td>Same category, 3 spellings</td></tr>
+<tr><td>Impossible value (999)</td><td>test_score</td><td>Flagged as missing</td><td>Score cannot exceed 100</td></tr>
+<tr><td>Impossible value (25)</td><td>hours_of_sleep</td><td>Flagged as missing</td><td>Not physically possible</td></tr>
+</tbody>
+</table>
+
+.font80[`r fontawesome::fa("pen", fill = "#4a7fb5")` &nbsp; Keep this in your shared notebook &mdash; it becomes the backbone of your **Methods** section.]
+
+---
+### `r fontawesome::fa("floppy-disk", height = "1em", fill = "#2e8b57")` Finish &amp; save as a NEW file
+
+```{python}
+clean["hours_of_sleep"] = clean["hours_of_sleep"].fillna(clean["hours_of_sleep"].median())
+clean = clean.dropna(subset=["test_score"])      # drop rows missing the outcome           #<<
+
+clean.to_csv("study_habits_clean.csv", index=False)   # NEW file -- original untouched      #<<
+print("original :", df.shape, "-> study_habits_messy.csv")
+print("cleaned  :", clean.shape, "-> study_habits_clean.csv")
+```
+
+.content-box-red[
+.font85[`r fontawesome::fa("shield-halved", fill = "#fff")` &nbsp; **Never `to_csv` over your raw file.** If cleaning goes wrong, you must be able to start over.]
+]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI assist &mdash; generate, then *test* the code
+
+.pull-left[
+.font90[
+**Prompt the AI:**
+
+.content-box-blue[.font80[*"My column has these unique values: `['Male','male','M','Female','female','F']`. Write Python code to standardize them into two categories."*]]
+
+Paste in **your** real unique values from `df["col"].unique()`.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+**Then test it &mdash; does it handle edge cases?**
+
+- A trailing space: `'male '`?
+- An unexpected value: `'Nonbinary'`, `'?'`
+- A **missing** cell (`NaN`)?
+- A new spelling next week?
+
+*Run it on your data and check the `value_counts()`.*
+]
+]
+]
+
+.font80[`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` &nbsp; AI writes plausible code fast &mdash; **you** are responsible for proving it's correct.]
+
+---
+class: segue-green
+
+# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Workshop
+## .white[Clean Your Own Dataset]
+
+---
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Apply all three techniques &mdash; ~25 min
+
+.pull-left[
+.font90[
+**On your team's real dataset:**
+
+1. `df.isna().sum()` &rarr; decide **drop vs fill** for each column.
+2. Standardize every **string** column to one label per category.
+3. Boxplot your numeric columns &rarr; **keep or flag** outliers.
+4. Save as **`yourdata_clean.csv`** &mdash; a *new* file.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[
+**Output before you leave:**
+
+- `r fontawesome::fa("check", fill="#2e8b57")` A clean CSV (original untouched)
+- `r fontawesome::fa("check", fill="#2e8b57")` A completed **cleaning log**
+- `r fontawesome::fa("check", fill="#2e8b57")` Row count: before &rarr; after
+]
+]
+
+.center[`r timer(25L)`]
+]
+
+---
+class: segue-green
+
+# 2:00 &ndash; 2:45 &middot; R Introduction
+## .white[Same Data, Different Tool]
+
+---
+### `r fontawesome::fa("r-project", height = "1em", fill = "#2e8b57")` Meet R &mdash; not better, just *different*
+
+.pull-left[
+.font90[
+- Open **RStudio Cloud** &mdash; free, browser-based, nothing to install.
+- We'll load the **same dataset** and run the **same summaries** you ran in Python.
+- **R is not better or worse than Python.** It's a different tool, favored in much **social science & health** research.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[`r fontawesome::fa("compass", fill = "#4a7fb5")` &nbsp; Why learn both? Researchers pick tools by **field norms** and **the task** &mdash; not loyalty. Being bilingual makes you flexible.]
+]
+]
+
+.font80[`r fontawesome::fa("cloud", fill = "#4a7fb5")` &nbsp; Same data &middot; same questions &middot; a second set of words to ask them in.]
+
+---
+### `r fontawesome::fa("right-left", height = "1em", fill = "#2e8b57")` `read.csv`, `head`, `summary` &mdash; the R equivalents
+
+.panelset[
+.panel[.panel-name[Python (pandas)]
+```{python}
+df = pd.read_csv("study_habits.csv")
+print(df.head())
+```
+]
+.panel[.panel-name[R (base)]
+```{r}
+df <- read.csv("study_habits.csv")   # pandas: pd.read_csv()                              #<<
+head(df)                             # pandas: df.head()                                  #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; Same idea, different spelling: `pd.read_csv()` &rarr; `read.csv()`, `df.head()` &rarr; `head(df)`.]
+
+---
+### `r fontawesome::fa("table-list", height = "1em", fill = "#2e8b57")` `summary()` &mdash; R's `df.describe()`
+
+.panelset[
+.panel[.panel-name[R]
+```{r}
+summary(df)                          # pandas: df.describe()                              #<<
+```
+]
+.panel[.panel-name[Python]
+```{python}
+print(df.describe())
+```
+]
+]
+
+.font80[`r fontawesome::fa("eye", fill = "#4a7fb5")` &nbsp; Notice R's `summary()` describes **every** column at once &mdash; including the text ones.]
+
+---
+### `r fontawesome::fa("filter", height = "1em", fill = "#2e8b57")` RcS &mdash; install `dplyr`, then `filter()` &amp; `mutate()`
+
+```{r, eval=FALSE}
+install.packages("dplyr")     # run ONCE per environment (RStudio Cloud)                  #<<
+```
+
+```{r}
+library(dplyr)
+
+df |>                                            # the pipe: "and then..."
+  filter(grade_level == "11th") |>               # keep rows  (pandas: df[df.col == ...]) #<<
+  head(4)
+```
+
+.font80[`r fontawesome::fa("scissors", fill = "#4a7fb5")` &nbsp; `filter()` keeps **rows** that meet a condition &mdash; like a query on your data.]
+
+---
+### `r fontawesome::fa("plus", height = "1em", fill = "#2e8b57")` `mutate()` &mdash; add a new column
+
+```{r}
+df |>
+  mutate(enough_sleep = ifelse(hours_of_sleep >= 7, "yes", "no")) |>   # new column        #<<
+  head(5)
+```
+
+.font80[`r fontawesome::fa("wand-magic-sparkles", fill = "#4a7fb5")` &nbsp; `mutate()` **creates or changes columns** &mdash; the R cousin of `df["new"] = ...` in pandas.]
+
+---
+### `r fontawesome::fa("scale-balanced", height = "1em", fill = "#2e8b57")` Two tools, one job &mdash; what did you notice?
+
+.pull-left[
+.content-box-blue[
+.font85[
+**What feels easier in Python?**
+
+- One object `df` with dot-methods
+- Huge ecosystem for ML & web data
+- Very common in industry & CS
+]
+]
+]
+
+.pull-right[
+.content-box-green[
+.font85[
+**What feels cleaner in R?**
+
+- `summary()` describes everything at once
+- The pipe reads like a sentence
+- Built *by* statisticians, for stats
+]
+]
+]
+
+.content-box-yellow[
+.font85[`r fontawesome::fa("circle-check", fill = "#c08a00")` &nbsp; **No answer is wrong.** Note one thing you liked in each &mdash; researchers choose tools by field norms and task requirements.]
+]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Methods Language]
+
+---
+### `r fontawesome::fa("feather-pointed", height = "1em", fill = "#2e8b57")` Two sentences for your Methods slide
+
+.pull-left[
+.font90[
+Write **two sentences** &mdash; the start of your written Methods section:
+
+1. **Describe your dataset** &mdash; name, source, timeframe, **N**.
+2. **Describe how you cleaned it** &mdash; what you dropped, filled, or fixed.
+]
+
+.content-box-blue[
+.font80[`r fontawesome::fa("clock-rotate-left", fill = "#4a7fb5")` &nbsp; Write in the **past tense** &mdash; the work is done: *"We used...", "We excluded..."*]
+]
+]
+
+.pull-right[
+.content-box-green[
+.font80[
+**1. The dataset**<br>
+*"We used the **Study Habits Survey** (school records, 2024&ndash;25), covering **N = 19** students after cleaning."*
+]
+]
+
+.content-box-yellow[
+.font80[
+**2. The cleaning**<br>
+*"We excluded rows where the test score was missing, standardized gender labels, and flagged impossible values as missing."*
+]
+]
+]
+
+---
+### `r fontawesome::fa("pen-fancy", height = "1em", fill = "#2e8b57")` Write yours now &mdash; quick round
+
+.pull-left[
+.font90[
+Fill in the template on your Mission Sheet, then read **both sentences** aloud to a partner.
+
+.content-box-blue[
+.font80[*"We used **[dataset]** from **[source]**, covering **[timeframe]**, with **N = [count]**. We cleaned it by **[what you did]**."*]
+]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+`r fontawesome::fa("circle-check", fill = "#c08a00")` **Checklist:**
+
+- Past tense? (*"We used..."*)
+- Name **and** source of data?
+- Timeframe **and** N?
+- One concrete cleaning step?
+]
+]
+
+.center[`r timer(15L)`]
+]
+
+---
+class: segue-green
+
+# .white[You took messy data and made it trustworthy.]
+## .white[Tomorrow: comparing groups & testing relationships.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/pm/05-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/pm/05-pm-datacore.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/pm/05-pm-datacore.html")
+```

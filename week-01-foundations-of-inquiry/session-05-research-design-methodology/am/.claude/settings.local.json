@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/hhadah/Projects/GiT/nexellence-summer-instit && find . -name \"*.Rmd\" | head -50 && echo \"---PPTX---\" && ls -la week-01-foundations-of-inquiry/session-05-research-design-methodology/am/ && echo \"---ASSETS---\" && ls -la week-01-foundations-of-inquiry/session-05-research-design-methodology/am/assets/)"
+    ]
+  }
+}

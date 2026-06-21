@@ -1,0 +1,818 @@
+---
+title: "Research Methods"
+subtitle: "Day 4: Literature Review — Finding & Evaluating Evidence"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+class: segue-yellow
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+    .chev-step-highlight .chev-right {
+      background: #f0e442;
+      box-shadow: 0 0 0 3px #0148a4;
+    }
+    .chev-step-highlight p strong {
+      color: #0148a4;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .logo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .logo-card {
+      flex: 0 0 22%;
+      text-align: center;
+    }
+    .logo-card img {
+      width: 100%;
+      border-radius: 6px;
+    }
+    .logo-card p {
+      margin: 0.2em 0 0 0;
+      line-height: 1.15;
+    }
+
+```
+
+# Welcome to Day 4! <br> Let's Start with a Fun Game! `r top_icon("gamepad")`
+
+---
+### Refresher cont'd: The Research Process
+
+.font110[The journey from question to insight follows these essential steps:]
+
+.font80[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("circle-question", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>1. Ask a Question</strong><br>
+    Formulate a clear, specific question worth investigating.</p>
+  </div>
+  <div class="chev-step chev-step-highlight">
+    <div class="chev-right">`r fontawesome::fa("magnifying-glass", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>2. Gather Information</strong><br>
+    Review the literature & collect relevant data through appropriate methods.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-line", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>3. Analyze the Information</strong><br>
+    Examine data for patterns, trends, and meaning.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("lightbulb", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>4. Draw Conclusions</strong><br>
+    Develop evidence-based answers to your original question.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("share-nodes", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>5. Share Findings</strong><br>
+    Communicate results effectively to appropriate audiences.</p>
+  </div>
+</div>
+]
+
+---
+class: center, middle
+
+## Question 1
+
+.font130[True or False: A personal blog is a reliable source for scientific facts.]
+
+--
+
+.font150[`r fontawesome::fa("xmark", fill = "#D55E00")` **FALSE!**]
+
+---
+class: center, middle
+
+## Question 2
+
+.font120[Which of the following is usually the MOST reliable for accurate scientific information?]
+
+.font110[
+A. Wikipedia &nbsp;&nbsp; B. TikTok video &nbsp;&nbsp; C. Peer-reviewed science journal &nbsp;&nbsp; D. Reddit post
+]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **Answer: C**]
+
+---
+class: center, middle
+
+## Question 3
+
+.font120[What should you check to see if a website is trustworthy?]
+
+.font110[
+A. Its color and design &nbsp;&nbsp; B. If it has ads <br>
+C. Who wrote it and when it was last updated &nbsp;&nbsp; D. How many emojis it uses
+]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **Answer: C**]
+
+---
+class: center, middle
+
+## Question 4
+
+.font120[Which source is the least likely to be biased?]
+
+.font100[
+A. A product review written by the company that made the product <br>
+B. A university study published in a journal <br>
+C. A celebrity's opinion on a diet trend <br>
+D. A tweet from a random user
+]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **Answer: B**]
+
+---
+class: center, middle
+
+## Question 5
+
+.font130[True or False: An article that includes sources and references is more trustworthy than one that doesn't.]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **TRUE!**]
+
+---
+class: center, middle
+
+## Question 6
+
+.font130[True or False: All information on the internet is true if it has lots of likes or views.]
+
+--
+
+.font150[`r fontawesome::fa("xmark", fill = "#D55E00")` **FALSE!**]
+
+---
+class: center, middle
+
+## Question 7
+
+.font130[True or False: It's okay to use Wikipedia as a starting point, but you should double-check the facts with more reliable sources.]
+
+--
+
+.font150[`r fontawesome::fa("xmark", fill = "#D55E00")` **FALSE!**]
+
+--
+
+.font150[Just kidding... `r fontawesome::fa("check", fill = "#009E73")` **TRUE!!!**]
+
+---
+class: center, middle
+
+## Question 8
+
+.font120[Which of these sources would most likely be considered a primary source?]
+
+.font100[
+A. A YouTube video about World War II <br>
+B. A soldier's diary from World War II <br>
+C. A news article written last week about World War II <br>
+D. A textbook chapter on World War II
+]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **Answer: B**]
+
+---
+class: center, middle
+
+## Question 9
+
+.font120[Which of these sources is usually written by experts and reviewed before being published?]
+
+.font110[
+A. Peer-reviewed journal &nbsp;&nbsp; B. Instagram story <br>
+C. Student opinion piece &nbsp;&nbsp; D. Online ad
+]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **Answer: A**]
+
+---
+class: center, middle
+
+## Question 10
+
+.font120[Which of these shows bias in a source?]
+
+.font100[
+A. The author includes only one side of an argument <br>
+B. The source shows both pros and cons <br>
+C. The author lists sources at the end <br>
+D. The source has a publication date
+]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **Answer: A**]
+
+---
+class: center, middle
+
+## Bonus Question
+
+.font130[True or False: A website with lots of ads and pop-ups might not be a good place to find trustworthy information.]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **TRUE!**]
+
+---
+class: segue
+
+# Literature Review `r top_icon("book")`
+
+### What is it? &nbsp;•&nbsp; How to do it? &nbsp;•&nbsp; How to do it well?
+
+---
+### What is a Literature Review?
+
+.pull-left[
+<img src="assets/lit-template-reading.png" width="60%" style="border-radius: 6px;">
+]
+
+.pull-right[
+.font90[
+A **literature review** is a summary and analysis of what has *already* been written on a topic.
+
+It helps you:
+- Understand what's already known
+- See where there are gaps or debates
+- Avoid repeating others' work
+- Build a strong foundation for your own research
+]
+]
+
+---
+### How to Conduct a Lit Review
+
+.font90[
+**Step 1: Clarify Your Topic or Research Question**
+
+**Step 2: Search for Reliable Sources**
+
+**Step 3: Skim and Select**
+- Read abstracts first to decide if the source is relevant.
+- Choose a mix of recent, relevant, and diverse perspectives.
+- Aim for at least **5–10 solid sources** (depending on assignment length).
+]
+
+
+---
+### Reliable vs. Unreliable Sources
+
+.pull-left[
+.content-box-blue[
+### `r fontawesome::fa("circle-check", height = "1em", fill = "#4a7fb5")` Reliable Sources
+
+- Backed by verifiable evidence
+- Created by experts
+- Undergo review processes
+- Transparent about methods
+- Cite their sources
+]
+]
+
+.pull-right[
+.content-box-yellow[
+### `r fontawesome::fa("triangle-exclamation", height = "1em")` Unreliable Sources
+
+- Lack transparency
+- Anonymous or unclear authorship
+- Sensationalist language
+- One-sided arguments
+- Missing citations
+]
+]
+
+---
+### Examples of Reliable Sources
+
+.font70[
+<div class="logo-grid">
+  <div class="logo-card"><img src="assets/logo-1.png"><p><strong>CDC</strong><br>Centers for Disease Control and Prevention</p></div>
+  <div class="logo-card"><img src="assets/logo-2.png"><p><strong>NASA</strong><br>National Aeronautics and Space Administration</p></div>
+  <div class="logo-card"><img src="assets/logo-3.png"><p><strong>NEJM</strong><br>Academic Medical Journal</p></div>
+  <div class="logo-card"><img src="assets/logo-4.png"><p><strong>US Census Bureau</strong><br>Federal Statistical Agency</p></div>
+  <div class="logo-card"><img src="assets/logo-5.png"><p><strong>WHO</strong><br>World Health Organization</p></div>
+  <div class="logo-card"><img src="assets/logo-6.png"><p><strong>National Geographic</strong><br>Science and Education Publication</p></div>
+  <div class="logo-card"><img src="assets/logo-7.png"><p><strong>Smithsonian</strong><br>Research and Museum Institution</p></div>
+  <div class="logo-card"><img src="assets/logo-8.png"><p><strong>APA</strong><br>American Psychological Association</p></div>
+</div>
+]
+
+.font80[.center[These institutions are known for rigorous research methods, expert review processes, and commitment to accuracy in their published information.]]
+
+---
+### Why Source Evaluation Matters
+
+.font90[
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("trophy", height = "1.4em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Credible Research</strong><br>
+  Strong sources lead to respected conclusions.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("shield-halved", height = "1.4em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Protection from Misinformation</strong><br>
+  Critical evaluation prevents spreading falsehoods.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("brain", height = "1.4em", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Critical Thinking Development</strong><br>
+  Evaluating sources builds essential life skills.</div>
+</div>
+]
+
+---
+### Red Flags of Misinformation
+
+.pull-left[
+<img src="assets/lit-redflags-caution.png" width="60%" style="border-radius: 6px;">
+]
+
+.pull-right[
+.font90[
+**`r fontawesome::fa("triangle-exclamation", fill = "#D55E00")` Sensational Language**<br>
+.font80["You won't believe this!" or excessive punctuation for shock value.]
+
+**`r fontawesome::fa("circle-question", fill = "#0148A4")` Missing Attribution**<br>
+.font80[No clear author, source, or supporting evidence.]
+
+**`r fontawesome::fa("arrows-left-right", fill = "#0148A4")` One-Sided Presentation**<br>
+.font80[No acknowledgment of alternative perspectives or debates.]
+
+**`r fontawesome::fa("bolt", fill = "#D55E00")` Extraordinary Claims**<br>
+.font80[Bold statements without proportional evidence.]
+]
+]
+
+---
+### Types of Sources
+
+.pull-left[
+.content-box-blue[
+#### `r fontawesome::fa("layer-group", fill = "#4a7fb5")` Primary / Secondary / Tertiary
+
+- **Primary:** original work or raw data (e.g., a study, a diary, survey results)
+- **Secondary:** interprets or analyzes primary work (e.g., a review article)
+- **Tertiary:** compiles & summarizes (e.g., encyclopedias, textbooks)
+]
+]
+
+.pull-right[
+.content-box-green[
+#### `r fontawesome::fa("scale-balanced", fill = "#2C5F2D")` Peer-Reviewed vs. Grey Literature
+
+- **Peer-reviewed:** vetted by experts before publication
+- **Grey literature:** reports, working papers, government & NGO documents — useful, but evaluate carefully
+]
+]
+
+---
+### Anatomy of an Academic Article
+
+.font90[One of today's goals: understand the **basic structure** of an academic article.]
+
+.font85[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("align-left", height = "1.4em", fill = "#0148A4")`</div>
+    <p><strong>Abstract</strong><br>The whole study in a paragraph.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("circle-question", height = "1.4em", fill = "#0148A4")`</div>
+    <p><strong>Intro</strong><br>The question & why it matters.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("flask", height = "1.4em", fill = "#0148A4")`</div>
+    <p><strong>Methods</strong><br>How they studied it.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-column", height = "1.4em", fill = "#0148A4")`</div>
+    <p><strong>Results</strong><br>What they found.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("lightbulb", height = "1.4em", fill = "#0148A4")`</div>
+    <p><strong>Discussion</strong><br>What it means.</p>
+  </div>
+</div>
+]
+
+---
+### How to Read an Abstract Efficiently
+
+.pull-left[
+.font90[
+Skim the abstract and ask four questions:
+
+1. **What was the research question?**
+2. **How did they study it?**
+3. **What did they find?**
+4. **What did they conclude?**
+]
+]
+
+.pull-right[
+.content-box-yellow[
+#### `r fontawesome::fa("stopwatch", fill = "#0148A4")` Activity: Speed-Read!
+
+Read an abstract in **90 seconds** and answer the four questions above.
+]
+]
+
+---
+### How to Conduct a Lit Review
+
+.center[
+  .orange[From the start]
+  ]
+.font90[
+**Step 1: Clarify Your Topic or Research Question**
+
+**Step 2: Search for Reliable Sources**
+
+**Step 3: Skim and Select**
+- Read abstracts first to decide if the source is relevant.
+- Choose a mix of recent, relevant, and diverse perspectives.
+- Aim for at least **5–10 solid sources** (depending on assignment length).
+]
+
+---
+### How to Conduct a Lit Review
+
+.font85[
+**Step 4: Take Notes**
+- Write down the main point of each source.
+- Note how it relates to your topic, and any key quotes or data.
+- Use color coding or a chart to organize themes or arguments.
+
+**Step 5: Group by Themes or Ideas**
+- Don't stop at summarizing each article one by one.
+- Instead, group your notes by common themes, disagreements, or trends.
+- Ask: *What do these sources have in common? How do they differ?*
+
+**Step 6: Start Writing**
+
+**Step 7: Cite Everything** .font80[(we will cover *how* next week)]
+]
+
+---
+### Literature Review Template .font60[(Short Version)]
+
+.pull-left[
+<img src="assets/lit-compass-research.png" width="60%" style="border-radius: 6px;">
+]
+
+.pull-right[
+.font90[
+**Begin with a short introduction**
+- What is your topic?
+- Why is it important?
+
+**Body**
+- Share what other studies have found.
+- Organize by **themes, not by author**.
+
+**Summary**
+- Clarify how *your* project connects to past research.
+]
+]
+
+---
+### Tools for Searching the Literature
+
+.font90[
+<div class="logo-grid">
+  <div class="logo-card"><p>`r fontawesome::fa("graduation-cap", height = "1.8em", fill = "#0148A4")`<br><strong>Google Scholar</strong><br>Broad academic search</p></div>
+  <div class="logo-card"><p>`r fontawesome::fa("heart-pulse", height = "1.8em", fill = "#0148A4")`<br><strong>PubMed</strong><br>Health & medicine</p></div>
+  <div class="logo-card"><p>`r fontawesome::fa("chalkboard-user", height = "1.8em", fill = "#0148A4")`<br><strong>ERIC</strong><br>Education research</p></div>
+  <div class="logo-card"><p>`r fontawesome::fa("building-columns", height = "1.8em", fill = "#0148A4")`<br><strong>JSTOR</strong><br>Journals & archives</p></div>
+</div>
+]
+
+.font85[
+**Demo:** Search *"sleep adolescents academic performance"* in Google Scholar — read an abstract, check citations, find full text, and use **"Cited by"** to find more recent work.
+
+.content-box-blue[Use **Wikipedia** as an *entry point* only — then follow its references to reliable sources. Track everything with the **Source Tracker** handout.]
+]
+
+---
+### Efficient Literature Search
+
+.pull-left[
+<img src="assets/lit-efficient-search.png" width="60%" style="border-radius: 6px;">
+]
+
+.pull-right[
+.font80[
+**`r fontawesome::fa("key", fill = "#0148A4")` Smart Keywords**
+- Pick keywords that find the right content
+- Try synonyms
+- Use quotation marks: *"Climate Change"*
+
+**`r fontawesome::fa("bullseye", fill = "#0148A4")` Intentional Sources**
+- Google Scholar (if available)
+- Library databases (and use filters)
+- Trusted `.edu` / `.gov` / organization sites
+
+**`r fontawesome::fa("book-open", fill = "#0148A4")` Initial Reading**
+- Abstract, conclusions, and graphs first
+- Track & "rate" finds in your **Source Tracker** ;)
+]
+]
+
+---
+class: middle
+
+### `r fontawesome::fa("magnifying-glass-location", fill = "#0148A4")` Activity: Scavenger Hunting!
+
+.content-box-yellow[
+.font90[
+Let's see how your **key variables** are defined by the experts — and find an article that examines your research question (or a related one).
+
+**Use your Source Tracker doc!**
+
+**Must find:**
+1. One **peer-reviewed** source
+2. One **government / institutional** data source
+]
+]
+
+---
+### `r fontawesome::fa("people-group", fill = "#0148A4")` After-Class Team Session .font60[(3:15 – 5:15 PM)]
+
+.pull-left[
+<img src="assets/lit-homework-team.png" width="60%" style="border-radius: 6px;">
+]
+
+.pull-right[
+.font85[
+Work with your **TA / peer mentor** — produce a **tangible output** before dinner (*not* free time).
+
+- Begin the **Team Literature Review Template** — each member contributes **1 source summary** (author, year, finding, relevance to your question).
+- Search **Google Scholar** or **PubMed** for **2 additional sources**.
+- Apply the **CRAAP test** to assess quality *before* logging each source.
+]
+]
+
+---
+### `r fontawesome::fa("moon", fill = "#0148A4")` Evening Work Period .font60[(7:00 – 9:00 PM)]
+
+.font90[Individual + partner work during **CTD RTA study hours**. TA available for drop-in questions.]
+
+.pull-left[
+.content-box-blue[
+.font85[
+#### `r fontawesome::fa("clipboard-list", fill = "#4a7fb5")` Individual Mission Sheet
+
+**Part 1 — Search Strategy**<br>
+Document keywords used, databases searched, and quality criteria applied.
+
+**Part 2 — Key Source**<br>
+Identify one important article, assess its quality, and summarize **one finding in your own words**.
+]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+#### `r fontawesome::fa("pen-nib", fill = "#0148A4")` Research Cycle Sheet (RcS)
+
+Write the **"Beginning"** paragraph of your literature review:
+
+- Introduce your topic
+- Define your variables
+- Include **2+ citations** in **APA format**
+]
+]
+]
+
+---
+class: middle
+
+### `r fontawesome::fa("comments", fill = "#0148A4")` Activity: Scientific Storytelling
+
+.content-box-blue[
+.font90[
+Each team member writes a **2-sentence summary** of one source they found:
+
+1. What was the study about?
+2. What did it find?
+
+**Sentence starter:** *"According to [Author, Year], researchers found that..."*
+
+Then **read it aloud** to a partner. Practice a tone that is **formal but accessible**.
+]
+]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/04-class.html
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/am/04-class.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/am/04-class.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/am/04-class.html")
+```
