@@ -1,0 +1,1363 @@
+---
+title: "Research Methods"
+subtitle: "Day 3: From Curiosity to Research Questions"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .rate-scale {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 1em;
+      margin-top: 1.5em;
+    }
+    .rate-scale > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 110px;
+    }
+    .rate-box {
+      width: 70px;
+      height: 70px;
+      background: #c9e4f6;
+      border: 3px solid #0148A4;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 2em;
+      color: #0148A4;
+    }
+    .rate-label {
+      margin-top: 0.5em;
+      font-size: 0.9em;
+      color: #A4123F;
+      font-weight: bold;
+      text-align: center;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Homework Recap: Your Research Questions</h4></li>
+    <li><h4 class="white">Gathering Information: Literature Review</h4></li>
+    <li><h4 class="white">From Questions to Hypotheses</h4></li>
+    <li><h4 class="white">Designing a Research Project</h4></li>
+</ol>
+
+---
+## Welcome Back to Day 3!
+
+.pull-left[
+```{r img1, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/01-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+<br>
+
+### Today we shape your research projects.
+
+<br>
+
+#### First, let's talk about your homework.
+]
+
+---
+class: segue-yellow
+
+# Let's Play a Game: <br> WEAK or STRONG <br> Research Questions? `r top_icon("gamepad")`
+
+---
+class: center, middle
+
+.font130["Is pollution bad?"]
+
+--
+
+.font150[`r fontawesome::fa("xmark", fill = "#D55E00")` **WEAK!**]
+
+.font110[Vague, obvious, closed-ended and not specific about type of pollution or effects.]
+
+---
+class: center, middle
+
+.font130["What effects does air pollution have on respiratory health in children?"]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **STRONG!**]
+
+.font110[Specifies pollution type, health aspect, and affected population.]
+
+---
+class: center, middle
+
+.font130["How do we fix the education system?"]
+
+--
+
+.font150[`r fontawesome::fa("xmark", fill = "#D55E00")` **WEAK!**]
+
+.font110[Too broad, assumes problems, and implies one solution exists.]
+
+---
+class: center, middle
+
+.font130["What challenges do students face in remote learning, and how do these affect performance?"]
+
+--
+
+.font150[`r fontawesome::fa("check", fill = "#009E73")` **STRONG!**]
+
+.font110[Focused on specific context with clear variables to examine.]
+
+---
+background-image: url("assets/02-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Let's Refresh Our Memories: What is Research?
+
+.three-col[
+.col[
+`r fontawesome::fa("compass", height = "2.5em", fill = "#4a7fb5")`
+
+**A Journey of Discovery**
+
+Research is a systematic investigation to establish facts and reach new conclusions.
+]
+.col[
+`r fontawesome::fa("circle-question", height = "2.5em", fill = "#4a7fb5")`
+
+**Question-Driven**
+
+Every great discovery begins with a well-framed question that guides your direction.
+]
+.col[
+`r fontawesome::fa("lightbulb", height = "2.5em", fill = "#4a7fb5")`
+
+**Evidence-Based**
+
+Research relies on gathering and analyzing evidence rather than opinions or assumptions.
+]
+]
+
+---
+### Refresher cont'd: Core Principles of Good Research
+
+#### <span style="color:#0148A4;">No matter what the field is</span>
+
+<div style="position:relative; width:540px; height:380px; margin:0.2em auto 0 auto;">
+  <svg viewBox="0 0 420 330" width="540" height="380" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="210,0 280,110 140,110" fill="#0148A4"/>
+    <polygon points="143.8,116 276.2,116 340,216 80,216" fill="#7fb8e0"/>
+    <polygon points="83.5,222 336.5,222 405,330 15,330" fill="#c9e4f6"/>
+  </svg>
+  <div style="position:absolute; top:63px; left:270px; transform:translate(-50%,-50%);">`r fontawesome::fa("handshake", height = "1.4em", fill = "#ffffff")`</div>
+  <div style="position:absolute; top:104px; left:270px; transform:translate(-50%,-50%); color:#ffffff; font-weight:bold;">Be Honest</div>
+  <div style="position:absolute; top:173px; left:270px; transform:translate(-50%,-50%);">`r fontawesome::fa("list-check", height = "1.4em", fill = "#0148A4")`</div>
+  <div style="position:absolute; top:213px; left:270px; transform:translate(-50%,-50%); color:#0148A4; font-weight:bold;">Be Systematic</div>
+  <div style="position:absolute; top:297px; left:270px; transform:translate(-50%,-50%);">`r fontawesome::fa("magnifying-glass", height = "1.4em", fill = "#0148A4")`</div>
+  <div style="position:absolute; top:337px; left:270px; transform:translate(-50%,-50%); color:#0148A4; font-weight:bold;">Be Curious</div>
+</div>
+
+--
+
+.center[.font110[<strong style="color:#FFC520;">Research begins with curiosity.</strong>]]
+
+---
+### Refresher cont'd: Principle 1 &mdash; Be Curious
+
+.pull-left[
+.content-box-blue[
+**The Starting Point: Curiosity**
+]
+
+.content-box-blue[.font90[
+**Wonder** &mdash; Asking questions such as
+
+"Why?" &nbsp;&nbsp; "When?" &nbsp;&nbsp; "How much?"<br>
+"What if?" &nbsp;&nbsp; "How come?" &nbsp;&nbsp; "For whom?"<br>
+"Under what circumstances?"<br>
+"What is the trend?"<br>
+"What is the relationship between?"
+
+drives meaningful research.
+]]
+]
+
+.pull-right[
+```{r img3, echo=FALSE, warning=FALSE, out.width="72%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/03-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+.center[.font90[<strong style="color:#FFC520;">Research begins with curiosity and asking meaningful questions.</strong>]]
+]
+
+---
+### Refresher cont'd: The Research Process
+
+.font110[The journey from question to insight follows these essential steps:]
+
+.font80[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("circle-question", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>1. Ask a Question</strong><br>
+    Formulate a clear, specific question worth investigating.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("magnifying-glass", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>2. Gather Information</strong><br>
+    Review the literature & collect relevant data through appropriate methods.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-line", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>3. Analyze the Information</strong><br>
+    Examine data for patterns, trends, and meaning.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("lightbulb", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>4. Draw Conclusions</strong><br>
+    Develop evidence-based answers to your original question.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("share-nodes", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>5. Share Findings</strong><br>
+    Communicate results effectively to appropriate audiences.</p>
+  </div>
+</div>
+]
+
+--
+
+.center[.font120[<strong style="color:#0148A4;">Today we focus on Step 1: Asking a Good Question!</strong>]]
+
+---
+### Your Research Question is a Compass
+
+.pull-left[
+```{r img4, echo=FALSE, warning=FALSE, out.width="100%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/04-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+#### `r fontawesome::fa("compass", height = "1em", fill = "#4a7fb5")` &nbsp; A well-framed question acts as your compass, pointing you toward useful answers.
+
+#### `r fontawesome::fa("rotate", height = "1em", fill = "#4a7fb5")` &nbsp; Vague questions lead to circular research. Specific questions drive you to meaningful discoveries.
+
+#### `r fontawesome::fa("triangle-exclamation", height = "1em", fill = "#4a7fb5")` &nbsp; Without the right question, even the best research efforts might not yield satisfying answers.
+]
+
+---
+### Case Study: The Library Problem
+
+.pull-left[.font80[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Initial Question</strong><br>
+  "How can we make teens read more books?"</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Reframed Question</strong><br>
+  "What are the barriers to teens' library use?"</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Research Method</strong><br>
+  Surveyed classmates about library usage.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Discovery</strong><br>
+  Limited Wi-Fi and few comfortable spaces deterred teens.</div>
+</div>
+]]
+
+.pull-right[
+```{r img5, echo=FALSE, warning=FALSE, out.width="72%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/05-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Case Study: Solar Panel Investigation
+
+<br>
+
+.content-box-blue[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Initial Question**
+
+"How can we improve solar panel efficiency?"
+]
+
+.content-box-blue[
+**`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` Better Question**
+
+"What factors are limiting our school's solar panel performance?"
+]
+
+.content-box-green[
+**`r fontawesome::fa("chart-line", fill = "#4a7fb5")` Research Findings**
+
+Shade, incorrect tilt, and dust accumulation were the issues.
+]
+
+---
+### What Makes a Good Research Question? BRIC-FOR
+
+.pull-left[
+```{r img6, echo=FALSE, warning=FALSE, out.width="100%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/06-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[
+
+<br>
+
+### <strong style="color:#A4123F;">B</strong>alanced (Well-Scoped)
+### <strong style="color:#A4123F;">R</strong>elevant & <strong style="color:#A4123F;">I</strong>nteresting
+### <strong style="color:#A4123F;">C</strong>lear & <strong style="color:#A4123F;">F</strong>ocused
+### <strong style="color:#A4123F;">O</strong>pen-ended
+### <strong style="color:#A4123F;">R</strong>esearchable
+]
+
+---
+### .font70[.red[B]RIC-FOR:] Balanced in Scope (aka Well-Scoped Questions)
+
+.three-col[
+.col[
+.content-box-yellow[
+**Too Broad**
+
+"What is the history of the United States?"
+
+Spans hundreds of years and countless topics.
+]
+]
+.col[
+.content-box-yellow[
+**Too Narrow**
+
+"What was the price of bread in our town on January 1, 1950?"
+
+More of a trivia fact than a research project.
+]
+]
+.col[
+.content-box-green[
+**Just Right**
+
+"How have food prices in our town changed from 1950 to today, and why?"
+
+Focused yet allows for meaningful analysis.
+]
+]
+]
+
+---
+### .font70[B.red[RI]C-FOR:] Relevant and Interesting Questions
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("heart", fill = "#4a7fb5")` Personal Relevance**
+
+Choose topics that matter to you&mdash;you'll stay more engaged.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("people-group", fill = "#4a7fb5")` Community Impact**
+
+Research that addresses local issues can have real-world applications.
+]
+
+.content-box-green[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Example**
+
+"How does sleep affect test scores among students in my grade?"
+]
+]
+
+.pull-right[
+```{r img7, echo=FALSE, warning=FALSE, out.width="72%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/07-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### .font70[BRI.red[C-F]OR:] Clear and Focused Questions
+
+<br>
+
+.pull-left[
+.content-box-yellow[
+**Too Broad**
+
+"What causes climate change?"
+
+This spans science, policy, history, and economics&mdash;a lifetime of work!
+]
+]
+
+.pull-right[
+.content-box-green[
+**Well-Focused**
+
+"How do car emissions contribute to climate change in my city?"
+
+Narrows to one cause, one effect, and one location.
+]
+]
+
+---
+### .font70[BRIC-F.red[O]R:] Open-Ended Questions
+
+.pull-left[.font90[
+.content-box-yellow[
+**Closed-Ended**
+
+"Do video games affect mood?"
+
+Can be answered with just "yes" or "no"&mdash;limited exploration.
+
+- Easy to quantify and analyze
+- Good for specific, categorizable information such as "Do you have a library card?"
+- Useful for gathering straightforward facts or opinions you can count
+]
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**Open-Ended**
+
+"How might playing video games affect the mood of middle school students?"
+
+Invites exploration of different effects, game types, and conditions.
+
+- Require detailed, free-form responses
+- Provide rich, nuanced information
+- Harder to analyze quickly
+]
+]]
+
+---
+### .font70[BRIC-FO.red[R]:] Researchable Questions
+
+.pull-left[.font90[
+.content-box-yellow[
+**Not Easily Researchable**
+
+"Is there life on other planets?"
+
+Fascinating but beyond a student's ability to gather original data.
+]
+
+.content-box-green[
+**Researchable Version**
+
+"What do high school students believe about life on other planets?"
+
+Can be investigated through surveys and interviews.
+]
+
+.content-box-blue[
+**Key Consideration**
+
+Can you gather information to answer this using available tools?
+]
+]]
+
+.pull-right[
+```{r img8, echo=FALSE, warning=FALSE, out.width="72%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/08-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Using the 5 W's (and How)
+
+.three-col[
+.col[
+`r fontawesome::fa("user", height = "2em", fill = "#4a7fb5")`
+
+**Who**
+
+Who is involved or affected? (teenagers, athletes, teachers, polar bears)
+]
+.col[
+`r fontawesome::fa("circle-question", height = "2em", fill = "#4a7fb5")`
+
+**What**
+
+What aspect interests you? (mental health, economic cost, performance)
+]
+.col[
+`r fontawesome::fa("location-dot", height = "2em", fill = "#4a7fb5")`
+
+**Where**
+
+A certain location or context? (your city, online communities, lakes)
+]
+]
+
+.three-col[
+.col[
+`r fontawesome::fa("clock", height = "2em", fill = "#4a7fb5")`
+
+**When**
+
+A time period? (past 5 years, during summer, historical period)
+]
+.col[
+`r fontawesome::fa("gears", height = "2em", fill = "#4a7fb5")`
+
+**Why/How**
+
+Causes or processes? (why something happens, how factors interact)
+]
+]
+
+---
+### Example: Narrowing "Video Games"
+
+<br>
+
+.content-box-yellow[
+**`r fontawesome::fa("gamepad", fill = "#4a7fb5")` Broad Topic**
+
+Video games (huge topic with many aspects)
+]
+
+.content-box-blue[
+**`r fontawesome::fa("brain", fill = "#4a7fb5")` Narrower Focus**
+
+Video games and learning (educational aspect)
+]
+
+.content-box-green[
+**`r fontawesome::fa("puzzle-piece", fill = "#4a7fb5")` Specific Angle**
+
+Video games and problem-solving skills
+]
+
+---
+background-image: url("assets/11-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+### From Topic to Research Question
+
+.pull-left[.font90[
+.content-box-blue[
+**Broad Topic**
+
+Video games
+]
+
+.content-box-blue[
+**Research Question**
+
+"Can playing video games improve middle school students' problem-solving skills, and if so, how?"
+]
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**Narrower Focus**
+
+Video games and problem-solving skills
+]
+
+.content-box-green[
+**Elements**
+
+- **Who:** middle school students
+- **What:** effect on problem-solving skills
+- **Open-ended:** asks "how" not just "if"
+]
+]]
+
+---
+
+> "The formulation of a problem is often more essential than its solution, which may be merely a matter of mathematical or experimental skill.” ~ Albert Einstein
+
+---
+class: segue-green
+
+# YOUR TURN! `r top_icon("users")`
+
+---
+### YOUR TURN! Let's Team UP to merge & refine your potential research questions
+
+#### <span style="color:#A4123F;">Make sure to use the 5 W's (& H)</span>
+
+.font80[
+.three-col[
+.col[
+`r fontawesome::fa("user", height = "1.6em", fill = "#4a7fb5")`
+
+**Who**
+
+Who is involved or affected? (teenagers, athletes, teachers, polar bears)
+]
+.col[
+`r fontawesome::fa("circle-question", height = "1.6em", fill = "#4a7fb5")`
+
+**What**
+
+What aspect interests you? (mental health, economic cost, performance)
+]
+.col[
+`r fontawesome::fa("location-dot", height = "1.6em", fill = "#4a7fb5")`
+
+**Where**
+
+A certain location or context? (your city, online communities, lakes)
+]
+]
+
+.three-col[
+.col[
+`r fontawesome::fa("clock", height = "1.6em", fill = "#4a7fb5")`
+
+**When**
+
+A time period? (past 5 years, during summer, historical period)
+]
+.col[
+`r fontawesome::fa("gears", height = "1.6em", fill = "#4a7fb5")`
+
+**Why/How**
+
+Causes or processes? (why something happens, how factors interact)
+]
+]
+]
+
+---
+class: segue-yellow
+
+# Gamified Challenge: <br> 'Question Impossible' / <br> 'Peer Review Carousel' `r top_icon("trophy")`
+
+---
+### Peer Review Carousel `r fontawesome::fa("rotate", fill = "#A4123F")`
+
+#### <span style="color:#A4123F;">Put your draft questions to the test with the BRIC-FOR criteria!</span>
+
+.pull-left[.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Post your drafts</strong><br>
+  Each team posts their draft research questions on the whiteboard.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Rotate & review</strong><br>
+  Teams rotate around the room and leave post-it feedback using the <strong>BRIC-FOR</strong> criteria. <em>(10 min)</em></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Debrief</strong><br>
+  Return to your questions, read the feedback, and discuss as a class. <em>(10 min)</em></div>
+</div>
+]]
+
+.pull-right[.font80[
+.content-box-blue[
+**`r fontawesome::fa("clipboard-check", fill = "#4a7fb5")` BRIC-FOR Checklist**
+
+- **B**alanced (Well-Scoped)
+- **R**elevant & **I**nteresting
+- **C**lear & **F**ocused
+- **O**pen-ended
+- **R**esearchable
+]
+]]
+
+```{r game-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 20, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+---
+### From Questions to Hypotheses
+
+<br>
+
+.font120[The information you have collected from the literature may help you translate your questions to **hypotheses**.]
+
+--
+
+<br>
+
+.pull-left[
+.content-box-blue[
+**Singular:** Hypothesis
+]
+]
+
+.pull-right[
+.content-box-blue[
+**Plural:** Hypotheses
+]
+]
+
+---
+### What is a Hypothesis?
+
+<br>
+<br>
+
+.content-box-blue[
+**An educated guess** about what you expect to find based on your research question.
+]
+
+--
+
+<br>
+<br>
+
+#### `r fontawesome::fa("book-open-reader", height = "1em", fill = "#4a7fb5")` &nbsp; Good hypotheses are developed from prior knowledge, preliminary research, and logical reasoning.
+
+--
+
+<br>
+<br>
+
+#### `r fontawesome::fa("flask-vial", height = "1em", fill = "#4a7fb5")` &nbsp; A hypothesis transforms your curiosity into a **testable prediction** that guides your research process.
+
+
+---
+background-image: url("assets/07-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Characteristics of a Good Hypothesis
+
+.three-col[
+.col[
+`r fontawesome::fa("comment-dots", height = "2.5em", fill = "#4a7fb5")`
+
+**It's a statement, not a question**
+
+Directly answers your research question or predicts an outcome.
+]
+.col[
+`r fontawesome::fa("vial-circle-check", height = "2.5em", fill = "#4a7fb5")`
+
+**It is testable**
+
+You can gather data to support or refute it.
+]
+.col[
+`r fontawesome::fa("diagram-project", height = "2.5em", fill = "#4a7fb5")`
+
+**It predicts a relationship between variables**
+
+Often phrased as "If X happens, then Y will happen."
+]
+]
+
+---
+background-image: url("assets/07-strip.png")
+background-position: 5% 10%
+background-size: 100% 20%
+class: center, middle
+
+<br>
+
+<br>
+
+<br>
+
+### Characteristics of a Good Hypothesis
+
+.three-col[
+.col[
+`r fontawesome::fa("comment-dots", height = "2.5em", fill = "#4a7fb5")`
+
+**There is a structure for the way we make a prediction:
+**
+
+]
+.col[
+ '.red[We hypothesize that [IV] is [positively/negatively/not] associated with [DV] among [population], because [brief rationale].]'
+
+]
+]
+
+---
+### Example: Study Time Hypothesis
+
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Research Question**
+
+"How does the amount of time spent studying affect test scores among 8th graders?"
+]
+
+.content-box-blue[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Hypothesis**
+
+"8th graders who study for at least 2 hours a day will have higher test scores than those who study for less than 1 hour a day."
+]
+]
+
+--
+
+.pull-right[.font90[
+#### `r fontawesome::fa("comment-dots", height = "1em", fill = "#4a7fb5")` &nbsp; It's a statement
+Predicting an outcome (more study &rarr; higher scores).
+
+#### `r fontawesome::fa("vial-circle-check", height = "1em", fill = "#4a7fb5")` &nbsp; It's testable
+You could gather data on study habits and test scores.
+
+#### `r fontawesome::fa("people-group", height = "1em", fill = "#4a7fb5")` &nbsp; It mentions specific groups to compare
+Those who study &ge;2 hours vs. those who study &lt;1 hour.
+]]
+
+---
+### Example: Sleep and Sugary Drinks
+
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Research Question**
+
+"Does drinking sugary drinks before bed affect sleep quality in teenagers?"
+]
+
+.content-box-blue[
+**`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` Hypothesis**
+
+"Drinking sugary drinks in the evening will lead to poorer sleep quality in teenagers, with more frequent waking during the night."
+]
+]
+
+--
+
+.pull-right[.font90[
+#### `r fontawesome::fa("comment-dots", height = "1em", fill = "#4a7fb5")` &nbsp; It's a statement
+
+#### `r fontawesome::fa("vial-circle-check", height = "1em", fill = "#4a7fb5")` &nbsp; It's testable
+Through comparison of sleep patterns.
+
+#### `r fontawesome::fa("people-group", height = "1em", fill = "#4a7fb5")` &nbsp; It mentions a specific group
+
+#### `r fontawesome::fa("arrow-right", height = "1em", fill = "#4a7fb5")` &nbsp; It predicts an effect (poorer sleep) and gives a rationale (sugar disrupts sleep)
+]]
+
+---
+### Variables in Research
+
+.pull-left[
+```{r img8a, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/08-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("sliders", fill = "#4a7fb5")` Independent Variable**
+
+What you change or what differs between groups. The potential cause or input you're testing. *Example: amount of study time.*
+]
+
+.content-box-blue[
+**`r fontawesome::fa("gauge-high", fill = "#4a7fb5")` Dependent Variable**
+
+What you measure as the outcome. The effect that might change based on the independent variable. *Example: test scores.*
+]
+
+.content-box-green[
+**`r fontawesome::fa("equals", fill = "#4a7fb5")` Hypothesis Formula**
+
+"If [independent variable], then [dependent variable], because [reason]."
+]
+]]
+
+---
+### Your Turn: Formulate a Hypothesis
+
+.pull-left[
+```{r img9, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/09-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+.pull-right[.font90[
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Make a Prediction</strong><br>
+  Based on what you know, what do you expect to find?</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Write as a Statement</strong><br>
+  Not a question &mdash; a clear prediction of what will happen.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Identify &amp; Include Variables</strong><br>
+  Connect your independent and dependent variables.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Add Reasoning</strong><br>
+  Explain why you expect this outcome ("because...").</div>
+</div>
+]]
+
+---
+### Your Turn: Share Your Hypothesis
+
+.pull-left[
+.content-box-blue[**`r fontawesome::fa("square-check", fill = "#4a7fb5")` Is it a statement?**]
+
+.content-box-blue[**`r fontawesome::fa("square-check", fill = "#4a7fb5")` Is it testable?**]
+
+.content-box-blue[**`r fontawesome::fa("square-check", fill = "#4a7fb5")` Does it predict a relationship between variables?**]
+]
+
+.pull-right[
+.content-box-blue[**`r fontawesome::fa("square-check", fill = "#4a7fb5")` Is it clear?**]
+
+.content-box-blue[**`r fontawesome::fa("square-check", fill = "#4a7fb5")` Does it mention who?**]
+
+.content-box-blue[**`r fontawesome::fa("square-check", fill = "#4a7fb5")` Is it relevant to the issue at hand?**]
+]
+
+---
+### REFINEMENT IS NORMAL!
+
+.pull-left[
+
+```{r img10, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="58%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/10-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+]
+
+.pull-right[
+
+
+#### Questions and hypotheses often evolve as you learn more.
+
+
+### But how do you "learn more"?
+
+
+.font130[<strong style="color:#0148A4;">Answer: Literature Review</strong>]
+]
+
+---
+class: segue-yellow
+
+# Beyond the Classroom: <br> Afternoon & Evening Work `r top_icon("clock")`
+
+---
+### `r fontawesome::fa("gear", fill = "#A4123F")` After-Class Team Session &mdash; .font70[3:15 &ndash; 5:15 PM]
+
+#### <span style="color:#A4123F;">Teams work with a TA / peer mentor available. Produce a tangible output before dinner &mdash; this is *not* free time.</span>
+
+.font85[
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("people-group", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Team Mission Sheet &mdash; 'Team Curiosity Unlocked'</strong><br>
+  Pool your individual curiosity lists and identify your <strong>top 5 shared questions</strong> using group consensus.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("right-left", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Draft your variables</strong><br>
+  As a team, draft your <strong>independent variable (IV)</strong> and <strong>dependent variable (DV)</strong> &mdash; then test with AI: <em>"Is this a measurable variable?"</em></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("table-columns", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>DataCORE</strong><br>
+  Open your team dataset and document <strong>all column names and data types</strong> in your shared Google Doc.</div>
+</div>
+]
+
+.center[.content-box-green[.font85[
+**`r fontawesome::fa("flag-checkered", fill = "#4a7fb5")` Team output due before dinner:** Shared curiosity list (5+ items) **+** draft IV/DV statement
+]]]
+
+---
+### `r fontawesome::fa("book", fill = "#A4123F")` Evening Work Period &mdash; .font70[7:00 &ndash; 9:00 PM]
+
+#### <span style="color:#A4123F;">Individual + partner work during CTD RTA study hours. TA available for drop-in questions.</span>
+
+.font85[
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("pen-to-square", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Individual: DataCORE Journal</strong><br>
+  Describe your dataset in your own words. <em>What does it measure? Who collected it? What is missing?</em></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("magnifying-glass", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Find academic sources</strong><br>
+  Search for <strong>2 academic sources</strong> on your topic variables. For each, record <strong>author, year, source, and one key finding in APA format</strong>.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("lightbulb", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Individual reflection</strong><br>
+  Write <strong>3 sentences</strong>: what do you already know about your topic, and what are you most uncertain about?</div>
+</div>
+]
+
+---
+### Homework: Come up with 3-5 potential research questions
+
+<br>
+
+### RATE each question using <strong style="color:#A4123F;">BRIC-FOR</strong> criteria
+
+.font90[.center[Balanced spectrum? Relevant? Interesting? Clear? Focused? Open-ended? Researchable?]]
+
+<div class="rate-scale">
+  <div>
+    <div class="rate-box">1</div>
+    <div class="rate-label">Not so much</div>
+  </div>
+  <div>
+    <div class="rate-box">2</div>
+  </div>
+  <div>
+    <div class="rate-box">3</div>
+    <div class="rate-label">Somewhat</div>
+  </div>
+  <div>
+    <div class="rate-box">4</div>
+  </div>
+  <div>
+    <div class="rate-box">5</div>
+    <div class="rate-label">Very much</div>
+  </div>
+</div>
+
+---
+class: segue-yellow
+
+# Scientific Storytelling: <br> Variable Sentence Practice `r top_icon("comment-dots")`
+
+---
+### Scientific Storytelling: Variable Sentence Practice
+
+#### <span style="color:#A4123F;">Turn your variables into one clear, testable prediction.</span>
+
+.center[.font120[.content-box-blue[
+"We predict that **[IV]** is associated with **[DV]** because **[rationale based on prior knowledge]**."
+]]]
+
+.font90[
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("pen-nib", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Write</strong> &mdash; As a team, write <strong>one sentence</strong> in the format above.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("bullhorn", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Read aloud</strong> &mdash; Share your sentence with the class.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("comments", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>One word of feedback each</strong> &mdash; the class responds with a single word:</div>
+</div>
+]
+
+.center[.font110[<strong style="color:#A4123F;">Specific</strong> &nbsp;&middot;&nbsp; <strong style="color:#A4123F;">Vague</strong> &nbsp;&middot;&nbsp; <strong style="color:#A4123F;">Interesting</strong> &nbsp;&middot;&nbsp; <strong style="color:#A4123F;">Testable</strong>]]
+
+```{r storytelling-timer, echo=FALSE, message=FALSE, cache=FALSE}
+library(countdown)
+countdown(
+  minutes = 10, seconds = 0,
+  top = 0, # right = "50%",
+  play_sound = FALSE
+)
+```
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/03-class.html
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/am/03-class.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/am/03-class.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/am/03-class.html")
+```

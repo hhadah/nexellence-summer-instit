@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/hhadah/Projects/GiT/nexellence-summer-instit && grep -rl \"timer\\\\|countdown\\\\|setInterval\" --include=*.Rmd . | head; echo \"---segue classes---\"; grep -rh \"segue-\" --include=*.css week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/am/assets/ | head)",
+      "Bash(grep -n \"gen_pdf\\\\|^---$\\\\|^class: segue\\\\|^# \\\\|^### \" /Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/am/03-class.Rmd)",
+      "Bash(grep -v 'mdash\\\\|ndash\\\\|<!--\\\\|width.cutoff\\\\|echo=\\\\|fig\\\\.\\\\|width=\\\\|cache\\\\|out\\\\.\\\\|fill =\\\\|-->\\\\|color:\\\\|content-box\\\\|font[0-9]\\\\|chev\\\\|class=\\\\|^--$\\\\|height\\\\|margin\\\\|polygon\\\\|clip-path\\\\|flex\\\\|align\\\\|<div\\\\|<svg\\\\|style=\\\\|^[0-9]*:--$')",
+      "Bash(grep -n '^--$\\\\|^—$\\\\|^–$\\\\|^\\\\\\\\--$' /Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/am/03-class.Rmd)",
+      "Bash(grep -n '^—$\\\\|^–$\\\\|^--$\\\\|&ndash;$\\\\|^\\\\s*–\\\\s*$' /Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/am/03-class.html)"
+    ]
+  }
+}
