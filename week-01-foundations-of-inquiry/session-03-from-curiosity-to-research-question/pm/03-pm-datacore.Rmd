@@ -1,0 +1,363 @@
+---
+title: "DataCORE"
+subtitle: "Filtering, Subsetting & Group Summaries in Pandas"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE)
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Filtering & Subsetting &mdash; Asking Your Data a Question</h4></li>
+    <li><h4>Handling Missing Values &amp; Group-Level Summaries</h4></li>
+    <li><h4>Scientific Storytelling &mdash; The One-Number Story</h4></li>
+</ol>
+
+.font90[*This morning you named a target population and a DV. This afternoon we make the data answer for it.*]
+
+---
+class: segue-green
+
+# 1:40 &ndash; 2:45 &middot; Filtering & Subsetting
+## .white[Core Techniques Every Researcher Needs]
+
+---
+### `r fontawesome::fa("filter", height = "1em", fill = "#2e8b57")` Why filter? From the *whole* dataset to *your* question
+
+.pull-left[
+.font90[
+- A dataset holds **everyone**. Your research question is about a **specific group**.
+
+- This morning: maybe your population is **9th graders**, or **students who sleep less than 7 hours**.
+
+- **Filtering** keeps only the rows that match &mdash; so every later number describes the group you actually care about.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font90[**Big idea:** a filter is a **yes/no test** applied to every row. Rows that pass stay; rows that fail drop out.]
+]
+]
+
+.font80[`r fontawesome::fa("table", fill = "#4a7fb5")` &nbsp; We continue with `study_habits.csv` &mdash; swap in **your** team file.]
+
+---
+### `r fontawesome::fa("file-csv", height = "1em", fill = "#2e8b57")` Reload the dataset
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+import pandas as pd
+df = pd.read_csv("study_habits.csv")   # rows = students, columns = variables   #<<
+print(df.head())
+```
+]
+.panel[.panel-name[R]
+```{r}
+library(tidyverse)
+df <- read_csv("study_habits.csv")     # rows = students, columns = variables   #<<
+head(df)
+```
+]
+]
+
+.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; Columns: `grade_level`, `study_method`, `hours_of_sleep`, `test_score`.]
+
+---
+### `r fontawesome::fa("code-branch", height = "1em", fill = "#2e8b57")` The mask: a yes/no test for every row
+
+.font90[Write the **condition** alone first &mdash; it returns `True`/`False` for each row.]
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+mask = df["hours_of_sleep"] < 7   # a Boolean Series: one True/False per row   #<<
+print(mask.head())
+```
+]
+.panel[.panel-name[R]
+```{r}
+mask <- df$hours_of_sleep < 7     # a logical vector: one TRUE/FALSE per row    #<<
+head(mask)
+```
+]
+]
+
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; The mask is the **question**; the filter is the **answer**.]
+
+---
+### `r fontawesome::fa("filter", height = "1em", fill = "#2e8b57")` `df[df['col'] < value]` &mdash; filter to a subpopulation
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+under_7 = df[df["hours_of_sleep"] < 7]   # keep only rows that pass the test    #<<
+print(under_7)
+```
+]
+.panel[.panel-name[R]
+```{r}
+under_7 <- df %>% filter(hours_of_sleep < 7)   # keep only rows that pass        #<<
+under_7
+```
+]
+]
+
+.font80[`r fontawesome::fa("equals", fill = "#4a7fb5")` &nbsp; Use `==` for categories: `df[df["grade_level"] == "9th"]`.]
+
+---
+### `r fontawesome::fa("layer-group", height = "1em", fill = "#2e8b57")` Combine conditions with `&` (and) / `|` (or)
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+# 9th graders who slept less than 7 hours -- wrap each condition in ()   #<<
+subset = df[(df["grade_level"] == "9th") & (df["hours_of_sleep"] < 7)]
+print(subset)
+```
+]
+.panel[.panel-name[R]
+```{r}
+subset <- df %>% filter(grade_level == "9th", hours_of_sleep < 7)   #<<
+subset
+```
+]
+]
+
+.content-box-yellow[
+.font80[**Watch out:** in Python use `&`/`|` (not `and`/`or`) and **parentheses** around each condition.]
+]
+
+---
+### `r fontawesome::fa("triangle-exclamation", height = "1em", fill = "#2e8b57")` `df.dropna()` &mdash; handle missing values *intentionally*
+
+.font90[Our data has blanks in `hours_of_sleep` and `test_score`. Drop rows missing a **key column** &mdash; not the whole table.]
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+print("Before:", len(df))
+clean = df.dropna(subset=["test_score"])   # drop rows with no DV value          #<<
+print("After: ", len(clean))
+```
+]
+.panel[.panel-name[R]
+```{r}
+cat("Before:", nrow(df), "\n")
+clean <- df %>% drop_na(test_score)        # drop rows with no DV value          #<<
+cat("After: ", nrow(clean), "\n")
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; `subset=` matters: dropping *any* missing value can throw away rows you needed.]
+
+---
+### `r fontawesome::fa("calculator", height = "1em", fill = "#2e8b57")` Compute the mean of your DV *for the subpopulation*
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+ninth = df[df["grade_level"] == "9th"]      # filter to the population           #<<
+print(ninth["test_score"].mean())           # mean of the DV                      #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+ninth <- df %>% filter(grade_level == "9th")   # filter to the population         #<<
+mean(ninth$test_score, na.rm = TRUE)            # mean of the DV                   #<<
+```
+]
+]
+
+.font80[`r fontawesome::fa("brain", fill = "#4a7fb5")` &nbsp; `na.rm` / pandas skips missing values automatically &mdash; know what you skipped.]
+
+---
+### `r fontawesome::fa("object-group", height = "1em", fill = "#2e8b57")` `df.groupby('category').mean()` &mdash; all groups at once
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+df.groupby("study_method")["test_score"].mean()   # one mean per category         #<<
+```
+]
+.panel[.panel-name[R]
+```{r}
+df %>% group_by(study_method) %>%                  # one mean per category         #<<
+  summarise(mean_score = mean(test_score, na.rm = TRUE))
+```
+]
+]
+
+.font80[`r fontawesome::fa("chart-column", fill = "#4a7fb5")` &nbsp; `groupby` does the filtering for *every* group in one line &mdash; instant comparison.]
+
+---
+class: segue-green
+
+# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Challenge
+## .white[Filter to Your Population &middot; Compute Your DV]
+
+---
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Team Challenge &mdash; ~25 min
+
+.pull-left[
+.font90[
+**As a team, write code that:**
+
+<div class="chev-row-sm" style="display:flex;align-items:center;gap:0.6em;margin-bottom:0.4em;">
+  <strong style="color:#2e8b57;">1.</strong> Filters **your** dataset to your **target population**.
+</div>
+
+<div class="chev-row-sm" style="display:flex;align-items:center;gap:0.6em;margin-bottom:0.4em;">
+  <strong style="color:#2e8b57;">2.</strong> Drops rows missing your **DV** (`dropna`).
+</div>
+
+<div class="chev-row-sm" style="display:flex;align-items:center;gap:0.6em;margin-bottom:0.4em;">
+  <strong style="color:#2e8b57;">3.</strong> Computes the **mean of your DV**.
+</div>
+
+**Instructor checks your output.**
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font90[**Then discuss as a team:**
+
+What does this number actually mean **in real terms**?
+
+*Not* "the mean is 78" &mdash; but *"the average test score among 9th graders who slept under 7 hours was 78 out of 100."*]
+]
+]
+
+.font80[`r fontawesome::fa("people-group", fill = "#4a7fb5")` &nbsp; Record your number **and its plain-English meaning** on your Mission Sheet.]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI prompt practice &mdash; then break it
+
+.pull-left[
+.font90[
+**1.** Ask your AI tool:
+
+.content-box-blue[.font80[*"Write Python code to filter my DataFrame to rows where **[column]** equals **[value]**."*]]
+
+**2.** **Run** the code on your real data.
+
+**3.** **Find the edge case it misses.**
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+**Edge cases AI often forgets:**
+
+- Text vs. number: `"9th"` vs `9`
+- Capitalization: `"Group"` vs `"group"`
+- Hidden spaces: `"9th "`
+- Missing values silently dropped
+- `=` (assignment) vs `==` (test)
+]
+]
+]
+
+.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; AI writes code fast &mdash; **you** are the one who checks it against the data.]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[The One-Number Story]
+
+---
+### `r fontawesome::fa("comment-dots", height = "1em", fill = "#2e8b57")` Report your DV mean in *one* sentence
+
+.pull-left[
+.font90[
+Each team reports their filtered DV mean to the class in **one sentence**:
+]
+
+.content-box-green[
+.font100[*"Among **[population]**, the average **[DV]** was **[X]**."*]
+]
+
+.content-box-blue[
+.font80[*"Among **9th graders**, the average **test score** was **79.6**."*]
+]
+]
+
+.pull-right[
+.font90[
+**As a class, discuss:**
+
+- Does this number **surprise** you?
+
+- Does it **match** what the literature found this morning?
+]
+
+.content-box-yellow[
+.font85[`r fontawesome::fa("seedling", fill = "#4a7fb5")` &nbsp; This one sentence is the **seed of your Results section.**]
+]
+]
+
+.font80[`r fontawesome::fa("people-arrows", fill = "#4a7fb5")` &nbsp; A good result is **one clear number** the audience can repeat back to you.]
+
+---
+class: segue-green
+
+# .white[From a number to a finding.]
+## .white[Tomorrow: comparing groups & visualizing.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/pm/03-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/pm/03-pm-datacore.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-03-from-curiosity-to-research-question/pm/03-pm-datacore.html")
+```
