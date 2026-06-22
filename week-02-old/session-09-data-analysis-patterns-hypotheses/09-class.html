@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Research Methods</title>
+    <meta charset="utf-8" />
+    <script src="09-class_files/header-attrs/header-attrs.js"></script>
+    <link href="09-class_files/remark-css/default.css" rel="stylesheet" />
+    <link href="09-class_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="09-class_files/panelset/panelset.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/tulane-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tulane.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Research Methods
+]
+.subtitle[
+## Day 3 · Chapter 4: Data Analysis in Python
+]
+
+---
+
+layout: true
+&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | Research Methods | 12 June 2026&lt;/div&gt;
+
+&lt;!--- Day 3 · Chapter 4: Data Analysis in Python | 12 June 2026--&gt;
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+&lt;/style&gt;
+
+# .text-shadow[.white[Outline for Today]]
+
+&lt;ol&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Why Python for Data Analysis?&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Setting Up: Anaconda, Jupyter &amp; Google Colab&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;The 5-Step EDA Workflow with pandas&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Visualization with Matplotlib&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;R vs. Python: Being Bilingual&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Coding Agents for Python-Based EDA&lt;/h4&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+---
+class: segue-yellow
+
+# Chapter 4: &lt;br&gt; Data Analysis in Python &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M255.03 261.65c6.25 6.25 16.38 6.25 22.63 0l11.31-11.31c6.25-6.25 6.25-16.38 0-22.63L253.25 192l35.71-35.72c6.25-6.25 6.25-16.38 0-22.63l-11.31-11.31c-6.25-6.25-16.38-6.25-22.63 0l-58.34 58.34c-6.25 6.25-6.25 16.38 0 22.63l58.35 58.34zm96.01-11.3l11.31 11.31c6.25 6.25 16.38 6.25 22.63 0l58.34-58.34c6.25-6.25 6.25-16.38 0-22.63l-58.34-58.34c-6.25-6.25-16.38-6.25-22.63 0l-11.31 11.31c-6.25 6.25-6.25 16.38 0 22.63L386.75 192l-35.71 35.72c-6.25 6.25-6.25 16.38 0 22.63zM624 416H381.54c-.74 19.81-14.71 32-32.74 32H288c-18.69 0-33.02-17.47-32.77-32H16c-8.8 0-16 7.2-16 16v16c0 35.2 28.8 64 64 64h512c35.2 0 64-28.8 64-64v-16c0-8.8-7.2-16-16-16zM576 48c0-26.4-21.6-48-48-48H112C85.6 0 64 21.6 64 48v336h512V48zm-64 272H128V64h384v256z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Why Python for Data Analysis?
+
+.font75[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm177.6 62.1C192.8 334.5 218.8 352 256 352s63.2-17.5 78.4-33.9c9-9.7 24.2-10.4 33.9-1.4s10.4 24.2 1.4 33.9c-22 23.8-60 49.4-113.6 49.4s-91.7-25.5-113.6-49.4c-9-9.7-8.4-24.9 1.4-33.9s24.9-8.4 33.9 1.4zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> Easy to learn syntax**
+
+Readable, expressive syntax with strong typing conventions. Python is the #1 language in data science, ML, and AI research &amp;mdash; knowing it opens every modern data role.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 160c8.8 0 16 7.2 16 16V336c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16H464zM80 96C35.8 96 0 131.8 0 176V336c0 44.2 35.8 80 80 80H464c44.2 0 80-35.8 80-80V320c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32V176c0-44.2-35.8-80-80-80H80zm368 96H96V320H448V192z"/></svg> Batteries included**
+
+NumPy (vectorized math), pandas (tabular data), matplotlib/seaborn (visualization), scikit-learn (ML), TensorFlow/PyTorch (deep learning) &amp;mdash; the complete data science stack.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"/></svg> Broad usage**
+
+Netflix uses Python for recommendation algorithms, Spotify for music analysis, NASA for mission data pipelines, and Instagram for backend infrastructure.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg> Large community**
+
+The largest data science community worldwide. Stack Overflow, GitHub, Kaggle, and Hugging Face are all Python-first &amp;mdash; help is always one search away, including from AI coding agents.
+]
+]
+]
+
+---
+### Real World Examples
+
+.pull-left[
+&lt;img src="09-class_files/figure-html/img04-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;br&gt;
+
+.font80[
+Sources:
+
+- [Python at Netflix: the Python story behind Netflix's streaming empire](https://pythonflood.com/python-at-netflix-the-python-story-behind-netflixs-streaming-empire-c11704a4c0bb)
+
+- [How we use Python at Spotify](https://engineering.atspotify.com/2013/03/how-we-use-python-at-spotify)
+]
+]
+
+---
+### Real World Examples: NASA
+
+&lt;img src="09-class_files/figure-html/img05-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+
+.font70[Source: [techport.nasa.gov/projects/95917](https://techport.nasa.gov/projects/95917)]
+
+---
+### Setting Up Python: Anaconda and Jupyter Notebooks
+
+.content-box-blue[
+**Let's start with beginner-friendly options:**
+
+**Anaconda Distribution** (with Jupyter Notebooks) &amp;mdash; a popular all-in-one installer.
+]
+
+--
+
+.content-box-green[
+**In case you can't install:**
+
+**Google Colab** &amp;mdash; an online Jupyter Notebook environment that runs in your browser (no installation required).
+]
+
+---
+### Install Anaconda (Python + Jupyter)
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg> &amp;nbsp; Go to: [anaconda.com/download/success](https://www.anaconda.com/download/success)
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M128 32C92.7 32 64 60.7 64 96V352h64V96H512V352h64V96c0-35.3-28.7-64-64-64H128zM19.2 384C8.6 384 0 392.6 0 403.2C0 445.6 34.4 480 76.8 480H563.2c42.4 0 76.8-34.4 76.8-76.8c0-10.6-8.6-19.2-19.2-19.2H19.2z"/></svg> &amp;nbsp; Download the correct option for your system
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg> &amp;nbsp; The file is large, it may take a few mins
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> &amp;nbsp; After the download is complete, run and install it
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img07-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Install Anaconda (Python + Jupyter)
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M152.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 113C-2.3 103.6-2.3 88.4 7 79s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zm0 160c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 273c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zM224 96c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zM160 416c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H192c-17.7 0-32-14.3-32-32zM48 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg> &amp;nbsp; Follow the prompts &amp;mdash; it will be a different screen for Mac and Windows
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 24C0 10.7 10.7 0 24 0H360c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V67c0 40.3-16 79-44.5 107.5L225.9 256l81.5 81.5C336 366 352 404.7 352 445v19h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H24c-13.3 0-24-10.7-24-24s10.7-24 24-24h8V445c0-40.3 16-79 44.5-107.5L158.1 256 76.5 174.5C48 146 32 107.3 32 67V48H24C10.7 48 0 37.3 0 24zM110.5 371.5c-3.9 3.9-7.5 8.1-10.7 12.5H284.2c-3.2-4.4-6.8-8.6-10.7-12.5L192 289.9l-81.5 81.5zM284.2 128C297 110.4 304 89 304 67V48H80V67c0 22.1 7 43.4 19.8 61H284.2z"/></svg> &amp;nbsp; Installation may take a few mins
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg> &amp;nbsp; Once it's done, you will have **Python** and **Anaconda Navigator**
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img08-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Launch Jupyter Notebook
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M156.6 384.9L125.7 354c-8.5-8.5-11.5-20.8-7.7-32.2c3-8.9 7-20.5 11.8-33.8L24 288c-8.6 0-16.6-4.6-20.9-12.1s-4.2-16.7 .2-24.1l52.5-88.5c13-21.9 36.5-35.3 61.9-35.3l82.3 0c2.4-4 4.8-7.7 7.2-11.3C289.1-4.1 411.1-8.1 483.9 5.3c11.6 2.1 20.6 11.2 22.8 22.8c13.4 72.9 9.3 194.8-111.4 276.7c-3.5 2.4-7.3 4.8-11.3 7.2v82.3c0 25.4-13.4 49-35.3 61.9l-88.5 52.5c-7.4 4.4-16.6 4.5-24.1 .2s-12.1-12.2-12.1-20.9V380.8c-14.1 4.9-26.4 8.9-35.7 11.9c-11.2 3.6-23.4 .5-31.8-7.8zM384 168a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"/></svg> &amp;nbsp; Start Anaconda Navigator
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"/></svg> &amp;nbsp; Sign in is optional
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z"/></svg> &amp;nbsp; Launch Jupyter Notebook
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img09-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Launch Jupyter Notebook &amp;mdash; via Command Line
+
+.pull-left[
+.content-box-blue[
+**On Windows:**
+
+- Open command line
+- Type: `Anaconda Prompt`
+- Then: `jupyter notebook`
+]
+
+.content-box-green[
+**On Mac/Linux:**
+
+- Open terminal app
+- Type: `jupyter notebook`
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img12-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### What is Jupyter Notebook?
+
+.pull-left[
+.font90[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"/></svg> Interactive Environment**
+
+Create documents that mix code, output, and explanatory text.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm88 64v64H64V96h88zm56 0h88v64H208V96zm240 0v64H360V96h88zM64 224h88v64H64V224zm232 0v64H208V224h88zm64 0h88v64H360V224zM152 352v64H64V352h88zm56 0h88v64H208V352zm240 0v64H360V352h88z"/></svg> Cell-Based Structure**
+
+Break work into steps (cells), run each step, and see results immediately.
+]
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> Visualization Support**
+
+Display charts and graphs directly in your notebook.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/></svg> Shareable Format**
+
+Easy to share your analysis and results with others.
+]
+
+&lt;img src="09-class_files/figure-html/img13-1.png" alt="" width="40%" style="display: block; margin: auto;" /&gt;
+]]
+
+---
+### Option 2: Google Colab
+
+.pull-left[.font90[
+- If installing software is an issue or you want to get started quickly, **Google Colab** is a fantastic option.
+
+- Colab is essentially a **Jupyter Notebook hosted by Google on the cloud**, and it's free to use (with some limitations) if you have a Google account.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"/></svg> &amp;nbsp; Go to [colab.research.google.com](https://colab.research.google.com)
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"/></svg> &amp;nbsp; If prompted, sign in with your Google account
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384v38.6C310.1 219.5 256 287.4 256 368c0 59.1 29.1 111.3 73.7 143.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zm48 96a144 144 0 1 1 0 288 144 144 0 1 1 0-288zm16 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v48H368c-8.8 0-16 7.2-16 16s7.2 16 16 16h48v48c0 8.8 7.2 16 16 16s16-7.2 16-16V384h48c8.8 0 16-7.2 16-16s-7.2-16-16-16H448V304z"/></svg> &amp;nbsp; Create a Notebook &amp;mdash; it looks and works almost exactly like a Jupyter Notebook
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/></svg> &amp;nbsp; It uses Google cloud servers &amp;mdash; if you need a local file, you need to upload it
+]]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img15-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Other Options
+
+.font100[There are many other options to use for Python.]
+
+&lt;div class="img-row" style="max-width: 55%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/17a-img.png" style="max-height: 220px; width: auto;"&gt;&lt;p&gt;&lt;strong&gt;PyCharm&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/17b-img.png" style="max-height: 220px; width: auto;"&gt;&lt;p&gt;&lt;strong&gt;VS Code&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Why Jupyter in This Class?
+
+.pull-left[.font85[
+- Jupyter implements the **literate programming paradigm**: code, output, and narrative coexist in one document &amp;mdash; making analysis self-documenting and reproducible. Required by many research journals and data competitions.
+
+- To add a text cell in Jupyter, switch the cell to **"Markdown" mode** and you can write descriptions in plain English (and even include math or images).
+
+- Markdown supports LaTeX math, hyperlinks, images, and tables &amp;mdash; a single `.ipynb` file can contain a complete analysis from data loading to conclusions, shareable as a PDF or web page.
+]]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img13b-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Navigating the Jupyter Notebook Interface
+
+&lt;img src="09-class_files/figure-html/img19-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+### Navigating the Jupyter Notebook Interface
+
+.pull-left[
+&lt;img src="09-class_files/figure-html/img20-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg> &amp;nbsp; Menu bar &amp;amp; tool bar
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/></svg> &amp;nbsp; Code cells &amp;amp; markdown cells
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg> &amp;nbsp; Run button &amp;mdash; output appears after you hit run
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128h95.1l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H347.1L325.8 320H384c17.7 0 32 14.3 32 32s-14.3 32-32 32H315.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7H155.1l-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l21.3-128H64c-17.7 0-32-14.3-32-32s14.3-32 32-32h68.9l11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320h95.1l21.3-128H187.1z"/></svg> &amp;nbsp; Number of executions
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg> &amp;nbsp; Adds code/markdown line above or below
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg> &amp;nbsp; Shows the running engine (kernel) on the backend
+]
+
+---
+### Try It Yourself!
+
+.pull-left[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;Start the Jupyter Notebook.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;Create a new notebook (under Documents or folder of your choice).&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;Write the following into the code line:&lt;br&gt;&lt;code&gt;print("Hello, Python!")&lt;/code&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Run it!&lt;/strong&gt;&lt;/div&gt;
+&lt;/div&gt;
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img24-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### What is Pandas?
+
+.font85[
+.content-box-blue[
+**pandas** is the standard Python library for tabular data &amp;mdash; built on NumPy arrays for speed. The primary data structure (DataFrame) was inspired by R's `data.frame`.
+]
+
+**Core EDA workflow:** load &amp;rarr; inspect dtypes &amp;rarr; clean &amp;rarr; transform &amp;rarr; aggregate &amp;rarr; visualize. pandas handles every step. Most real-world datasets live in DataFrames first.
+
+**Main data structures:**
+
+- **Series:** 1D labeled array. Each column of a DataFrame is a Series. Supports vectorized operations &amp;mdash; no loops needed.
+
+- **DataFrame:** 2D labeled table with a row index and named columns. Think SQL table or Excel sheet &amp;mdash; with the full power of Python.
+]
+
+---
+### Analysis Steps: The 5-Step EDA Workflow in Python
+
+.font80[
+&lt;div class="chev-flow"&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;1. Import libraries&lt;/strong&gt;&lt;br&gt;
+    pandas, NumPy, matplotlib, seaborn. Every analysis starts here.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V304H176c-35.3 0-64 28.7-64 64V512H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM200 352h16c22.1 0 40 17.9 40 40v8c0 8.8-7.2 16-16 16s-16-7.2-16-16v-8c0-4.4-3.6-8-8-8H200c-4.4 0-8 3.6-8 8v80c0 4.4 3.6 8 8 8h16c4.4 0 8-3.6 8-8v-8c0-8.8 7.2-16 16-16s16 7.2 16 16v8c0 22.1-17.9 40-40 40H200c-22.1 0-40-17.9-40-40V392c0-22.1 17.9-40 40-40zm133.1 0H368c8.8 0 16 7.2 16 16s-7.2 16-16 16H333.1c-7.2 0-13.1 5.9-13.1 13.1c0 5.2 3 9.9 7.8 12l37.4 16.6c16.3 7.2 26.8 23.4 26.8 41.2c0 24.9-20.2 45.1-45.1 45.1H304c-8.8 0-16-7.2-16-16s7.2-16 16-16h42.9c7.2 0 13.1-5.9 13.1-13.1c0-5.2-3-9.9-7.8-12l-37.4-16.6c-16.3-7.2-26.8-23.4-26.8-41.2c0-24.9 20.2-45.1 45.1-45.1zm98.9 0c8.8 0 16 7.2 16 16v31.6c0 23 5.5 45.6 16 66c10.5-20.3 16-42.9 16-66V368c0-8.8 7.2-16 16-16s16 7.2 16 16v31.6c0 34.7-10.3 68.7-29.6 97.6l-5.1 7.7c-3 4.5-8 7.1-13.3 7.1s-10.3-2.7-13.3-7.1l-5.1-7.7c-19.3-28.9-29.6-62.9-29.6-97.6V368c0-8.8 7.2-16 16-16z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;2. Load the dataset&lt;/strong&gt;&lt;br&gt;
+    &lt;code&gt;pd.read_csv()&lt;/code&gt;. Check &lt;code&gt;df.shape&lt;/code&gt; immediately &amp;mdash; does the row count match what you expect?&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;3. Data audit&lt;/strong&gt;&lt;br&gt;
+    &lt;code&gt;df.head()&lt;/code&gt;, &lt;code&gt;df.dtypes&lt;/code&gt;, &lt;code&gt;df.info()&lt;/code&gt;, &lt;code&gt;df.describe()&lt;/code&gt;. Flag type mismatches and missing values before any analysis.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;4. Answer specific questions&lt;/strong&gt;&lt;br&gt;
+    Compute statistics (mean, median, groupby, value_counts). Each answer raises new questions &amp;mdash; that's EDA.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;5. Visualize&lt;/strong&gt;&lt;br&gt;
+    Histograms for distributions, bar charts for categories, scatter plots for relationships. Always interpret shape, not just numbers.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Step 1: Import Libraries
+
+.pull-left[
+**Import:**
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg> &amp;nbsp; matplotlib for plotting
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 256V160H224v96H64zm0 64H224v96H64V320zm224 96V320H448v96H288zM448 256H288V160H448v96zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/></svg> &amp;nbsp; pandas for data frames
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"/></svg> &amp;nbsp; NumPy for numeric analyses
+]
+
+.pull-right[
+**How can we import them?**
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+.font90[
+- We use the `import` function and provide the package name.
+- Use `as` to define the short name we want to use.
+]
+]
+
+---
+### Step 1: Import Libraries
+
+.font100[If everything is loaded correctly, **you won't see any output**.]
+
+&lt;img src="09-class_files/figure-html/img29-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+### Step 2: Load the Dataset
+
+.font90[
+- Make sure `car_data.csv` is in the current directory or provide the path.
+- Define your data frame name &amp;mdash; for short we like to call it `df`.
+- Use pandas &amp;mdash; now `pd` in our environment &amp;mdash; to read the file.
+- **Check whether it worked!**
+]
+
+```python
+df = pd.read_csv("car_data.csv")
+print("Data loaded. Number of rows and columns:", df.shape)
+```
+
+--
+
+&lt;img src="09-class_files/figure-html/img31-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+### Step 3: Quick Data Peek
+
+.font90[After every data load, run these commands before anything else &amp;mdash; `df.head` outputs the first rows we ask for; `df.describe` provides the summary statistics:]
+
+```python
+df.head(5)
+df.describe()
+```
+
+--
+
+&lt;img src="09-class_files/figure-html/img33-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+
+---
+### Let's Check the Size
+
+.pull-left[
+.font90[You can check the size of the data frame with the `df.shape` function. It shows the **number of rows and columns**.]
+
+```python
+df.shape
+```
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img35-1.png" alt="" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Information about the Variables
+
+.pull-left[
+.font90[To see **column names and types** we can use `df.info()`.]
+
+```python
+df.info()
+```
+
+.content-box-blue[
+.font90[`int64` and `float64` are **continuous data**.]
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img36-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Summary Statistics
+
+.font90[`df.describe()` provides summary statistics for all the numeric variables:]
+
+&lt;img src="09-class_files/figure-html/img37-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+### Attention!
+
+.pull-left[
+.content-box-yellow[
+**Always validate your data with these 5 checks:**
+
+1. `df.shape` &amp;mdash; expected row count?
+2. `df.dtypes` &amp;mdash; types match data dictionary?
+3. `df.describe()` &amp;mdash; min/max plausible?
+4. `df.isnull().sum()` &amp;mdash; missing values?
+5. Mean vs median &amp;mdash; similar or diverging?
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img38-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Step 4: Specific Analysis Questions
+
+.pull-left[
+.font100[Let's answer a couple of questions with our data:]
+
+.content-box-blue[
+**Question 1: What is the average and median MPG of these cars?**
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img39-1.png" alt="" width="48%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Step 4: Question 1
+
+.font90[We use the `mean` function for average and the `median` function for the median value. You can simply get the mean by `df["mpg"].mean()`, but the below code produces nicer output:]
+
+```python
+avg_mpg = df["mpg"].mean()
+median_mpg = df["mpg"].median()
+print(f"Average MPG = {avg_mpg:.2f}")
+print(f"Median MPG = {median_mpg:.2f}")
+```
+
+.font90[*f-string formatting prints the values with 2 decimal places (`:.2f`).*]
+
+--
+
+&lt;img src="09-class_files/figure-html/img41-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+
+.font80[Mean MPG = 21.30, Median MPG = 20.00. **The mean exceeds the median &amp;mdash; a signature of right skew.** A few high-MPG cars pull the mean upward. The median is the better "typical" value here. *This is why we always compute both.*]
+
+---
+### Step 4: Question 2
+
+.pull-left[
+.content-box-blue[
+**Question 2: How many cars are produced abroad?**
+]
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/></svg> &amp;nbsp; Think which **variable** we should use
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg> &amp;nbsp; Think which **function** we should use
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img42-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Step 4: Question 2
+
+.font90[We use the variable **"foreign"** and the **`value_counts`** function. Using `print` allows us to have nice output with an explanation:]
+
+```python
+for_counts = df["foreign"].value_counts()
+print("Foreign Production Counts:")
+print(for_counts)
+```
+
+--
+
+.content-box-green[
+**Answer: There are 22 foreign and 52 domestic cars.**
+]
+
+---
+### Step 4: Question 3
+
+.content-box-blue[
+**Question 3: Does the price of cars differ by where they are produced?**
+]
+
+.font90[
+**Two variables:** production location and price.
+
+We need to compute the **average price for foreign and domestic cars** &amp;mdash; use the `groupby()` function:
+]
+
+```python
+df.groupby("foreign")["price"].mean()
+```
+
+--
+
+&lt;img src="09-class_files/figure-html/img46-1.png" alt="" width="95%" style="display: block; margin: auto;" /&gt;
+
+---
+### Step 5: Visualization &amp;mdash; Basic Plotting in Python (Matplotlib)
+
+.font90[
+- Python has multiple plotting libraries.
+- The foundational one is **Matplotlib**, which provides low-level plotting functions.
+- Let's import the package as `plt`:
+]
+
+```python
+import matplotlib.pyplot as plt
+```
+
+--
+
+.content-box-blue[
+.font90[**How is miles per gallon distributed?** A histogram shows the distribution of a continuous numeric variable by grouping values into "bins" (ranges) and plotting bars for the count of observations in each bin.]
+]
+
+---
+### Histogram of MPG in Python
+
+.pull-left[
+```python
+plt.hist(df["mpg"], bins=10,
+         color='skyblue',
+         edgecolor='black')
+plt.title("Distribution of Car MPG")
+plt.xlabel("Miles per Gallon (MPG)")
+plt.ylabel("Number of Cars")
+plt.show()
+```
+
+.font80[
+- `plt.hist(df["mpg"], bins=10)` creates a histogram with **10 intervals (bins)**.
+- `color='skyblue', edgecolor='black'` styles the bars (similar to R).
+- `plt.title`, `plt.xlabel`, `plt.ylabel`: add title and axis labels as in R.
+- `plt.show()` displays the plot &amp;mdash; good practice, especially in scripts.
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img53-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Histogram &amp;mdash; Interpretation
+
+.pull-left[.font75[
+- This histogram shows MPG **distribution shape** &amp;mdash; each bar is a bin (value range), height is count. Shape tells you things no single statistic can: skewness, clusters, gaps, outliers.
+
+- This is **right-skewed** &amp;mdash; the right tail is longer. Mean (21.3) &amp;gt; Median (20.0) &amp;mdash; a classic signature. A few fuel-efficient imports pull the mean upward.
+
+- The **mode bin is 15&amp;ndash;20 MPG**. Ask: would you have predicted this shape from the mean alone? This is why visualization precedes modeling.
+
+- **Try `bins=5` vs `bins=20`.** Fewer bins over-smooth; too many bins show noise. The choice of bins is an analytical decision, not a technical one.
+]]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img53b-1.png" alt="" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Your Turn!
+
+.pull-left[
+.content-box-blue[
+**Plot a histogram of car price.** How does it look? Are the prices usually similar? Does the distribution look skewed?
+]
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> &amp;nbsp; Think which function you need to use!
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img54-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Your Turn: Solution
+
+```python
+plt.hist(df["price"], bins=10, color='skyblue', edgecolor='black')
+plt.title("Distribution of Car Prices")
+plt.xlabel("Car Price (Dollar)")
+plt.ylabel("Number of Cars")
+plt.show()
+```
+
+---
+### Bar Chart in Python
+
+.font90[**Question: What percent of cars are produced abroad?** For categorical data, a bar chart shows rectangular bars with heights proportional to the values they represent:]
+
+.pull-left[
+&lt;img src="09-class_files/figure-html/img57a-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+
+.font80[
+- `value_counts()` &amp;mdash; **creates the frequency table**
+- `df["foreign"]` &amp;mdash; **selects the specific variable**
+- `.index` / `.values` &amp;mdash; **provide the x-axis and y-axis values**
+- `plt.title` etc. &amp;mdash; **title and axis labels**
+- `plt.show()` &amp;mdash; **prints the plot**
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img57b-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Let's Exercise
+
+.pull-left[
+.content-box-blue[
+**Before plotting, formulate a hypothesis:** what direction do you expect? What physics principle explains it?
+]
+
+.font90[
+**Let's get a scatterplot** of weight vs. MPG.
+
+*Hint: use `plt.scatter(x, y)` or `sns.scatterplot(x=, y=, data=)`*
+
+**After plotting:** describe direction, form (linear/curved?), strength, and any outliers.
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img60-1.png" alt="" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Let's Exercise: Solution
+
+```python
+plt.scatter(df["weight"], df["mpg"], color='blue')
+plt.title("Scatter plot of MPG vs. Weight")
+plt.xlabel("Car Weight (1000 lbs)")
+plt.ylabel("Miles Per Gallon")
+plt.show()
+```
+
+--
+
+.content-box-green[
+.font90[**Interpretation:** As car weight increases, miles per gallon (MPG) generally **decreases**, indicating that heavier cars tend to be less fuel efficient.]
+]
+
+---
+### Assignment: Dataset Investigation Rubric
+
+.font75[For your chosen dataset, complete each step and document your findings:]
+
+.font75[
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Load&lt;/strong&gt; with &lt;code&gt;pd.read_csv()&lt;/code&gt;, then run: &lt;code&gt;df.head()&lt;/code&gt;, &lt;code&gt;df.describe()&lt;/code&gt;, &lt;code&gt;df.shape&lt;/code&gt;, &lt;code&gt;df.info()&lt;/code&gt;.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Type audit:&lt;/strong&gt; run &lt;code&gt;df.dtypes&lt;/code&gt;. Flag any columns that look numerical but should be categorical (e.g., IDs, zip codes).&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Analysis:&lt;/strong&gt; for each numerical variable of interest, compute mean, median, std, and IQR. Note where mean and median diverge. Calculate the frequencies or average statistics.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Visualization:&lt;/strong&gt; at least one histogram (with appropriate bin count) and one bar chart for a categorical variable.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;5&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Interpretation:&lt;/strong&gt; for each plot, write 2&amp;ndash;3 sentences connecting the visual pattern to a statistical concept (skewness, outliers, or mode).&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Your Turn!
+
+.pull-left[
+.content-box-blue[
+**Compute the median price and compare it to the mean price in Python.**
+]
+]
+
+.pull-right[
+&lt;img src="09-class_files/figure-html/img64-1.png" alt="" width="62%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Your Turn: Solution
+
+```python
+avg_price = df["price"].mean()
+median_price = df["price"].median()
+print(f"Average Price = {avg_price:.2f}")
+print(f"Median Price = {median_price:.2f}")
+```
+
+--
+
+.content-box-green[
+.font85[**Interpretation:** Average car price is $6,165.26 and median is $5,006.50. The mean ($6,165) exceeds the median ($5,007) &amp;mdash; **right skew from a small number of expensive luxury cars**. The median better represents the typical car price. Coefficient of variation = sd/mean &amp;asymp; 57% &amp;mdash; substantial variability.]
+]
+
+---
+### Reflection: R vs. Python
+
+.font70[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM256 416c35.3 0 64-28.7 64-64c0-17.4-6.9-33.1-18.1-44.6L366 161.7c5.3-12.1-.2-26.3-12.3-31.6s-26.3 .2-31.6 12.3L257.9 288c-.6 0-1.3 0-1.9 0c-35.3 0-64 28.7-64 64s28.7 64 64 64zM176 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM96 288a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm352-32a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Speed of Development**
+
+R: one-line `summary()` with quartiles for all columns. Python: `df.describe()` + `df.dtypes` separate. For statistical analysis, R often has fewer keystrokes. For ML pipelines, Python wins.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> Visualization**
+
+R's ggplot2 (grammar of graphics) is more principled &amp;mdash; every chart is data + aesthetics + geometry. Python's matplotlib is more imperative but seaborn wraps it more cleanly for statistical plots.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M96 0C78.3 0 64 14.3 64 32v96h64V32c0-17.7-14.3-32-32-32zM288 0c-17.7 0-32 14.3-32 32v96h64V32c0-17.7-14.3-32-32-32zM32 160c-17.7 0-32 14.3-32 32s14.3 32 32 32v32c0 77.4 55 142 128 156.8V480c0 17.7 14.3 32 32 32s32-14.3 32-32V412.8C297 398 352 333.4 352 256V224c17.7 0 32-14.3 32-32s-14.3-32-32-32H32z"/></svg> Integration**
+
+Python integrates with APIs, web services, databases, ML frameworks, and cloud platforms. R integrates tightly with academic publishing (R Markdown, Quarto). Most data teams use both.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/></svg> Learning Curve**
+
+R: function-centric (everything is a function call). Python: object-oriented (methods called on objects). Both are learnable &amp;mdash; the concepts transfer; only the syntax differs.
+]
+]
+]
+
+---
+### Being Bilingual in Data Science
+
+.pull-left[
+&lt;img src="09-class_files/figure-html/img67-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[.font75[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M403.8 34.4c12-5 25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V160H352c-10.1 0-19.6 4.7-25.6 12.8L284 229.3 244 176l31.2-41.6C293.3 110.2 321.8 96 352 96h32V64c0-12.9 7.8-24.6 19.8-29.6zM164 282.7L204 336l-31.2 41.6C154.7 401.8 126.2 416 96 416H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96c10.1 0 19.6-4.7 25.6-12.8L164 282.7zm274.6 188c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V416H352c-30.2 0-58.7-14.2-76.8-38.4L121.6 172.8c-6-8.1-15.5-12.8-25.6-12.8H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96c30.2 0 58.7 14.2 76.8 38.4L326.4 339.2c6 8.1 15.5 12.8 25.6 12.8h32V320c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64z"/></svg> Flexibility** &amp;mdash; pandas + matplotlib for quick EDA; ggplot2 + dplyr for statistical reporting; scikit-learn (Python) for ML; Stan/brms (R) for Bayesian modeling. The question isn't which is better &amp;mdash; it's which is right for *this* job.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg> Collaboration** &amp;mdash; most industry data teams are bilingual. A Python-only analyst who can't read an R script will miss insights from 50% of the academic literature. Vice versa for R-only analysts.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M184 48H328c4.4 0 8 3.6 8 8V96H176V56c0-4.4 3.6-8 8-8zm-56 8V96H64C28.7 96 0 124.7 0 160v96H192 320 512V160c0-35.3-28.7-64-64-64H384V56c0-30.9-25.1-56-56-56H184c-30.9 0-56 25.1-56 56zM512 288H320v32c0 17.7-14.3 32-32 32H224c-17.7 0-32-14.3-32-32V288H0V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V288z"/></svg> Career Advantage** &amp;mdash; top data science job postings increasingly list both. Kaggle and academic research often require Python; pharma, finance, and social science research often require R.
+
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H352c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V80c0-17.7-14.3-32-32-32s-32 14.3-32 32v35.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V432c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H160c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z"/></svg> Learning Transfer** &amp;mdash; data frames, vectorization, split-apply-combine, and the grammar of graphics are language-agnostic concepts. Learn them once; apply them everywhere &amp;mdash; including in coding agents.
+]]
+
+---
+### R vs. Python: Syntax Comparison
+
+.font80[
+
+| Task | R Syntax | Python (pandas) Syntax |
+|------|----------|------------------------|
+| Reading data | `read.csv("file.csv")` | `pd.read_csv("file.csv")` |
+| Viewing data | `head(df)` | `df.head()` |
+| Summary stats | `summary(df)` | `df.describe()` |
+| Accessing column | `df$col` | `df["col"]` |
+| Mean of column | `mean(df$col)` | `df["col"].mean()` |
+| Frequency count | `table(df$col)` | `df["col"].value_counts()` |
+| Installing packages | `install.packages("pkg")` | `pip install pkg` (in terminal) |
+| Call package from library | `library(pkg)` | `import pkg` |
+
+]
+
+---
+### Chapter 4 Summary
+
+.pull-left[
+&lt;img src="09-class_files/figure-html/img68-1.png" alt="" width="52%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[.font80[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64H240l-10.7 32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H346.7L336 416H512c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM512 64V288H64V64H512z"/></svg> &amp;nbsp; Python Environment Setup
+Jupyter's literate programming model (code + prose + output) enables reproducible analysis. Anaconda or Google Colab provide the full scientific Python stack out of the box.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 256V160H224v96H64zm0 64H224v96H64V320zm224 96V320H448v96H288zM448 256H288V160H448v96zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/></svg> &amp;nbsp; pandas for Data Analysis
+5-step EDA: import &amp;rarr; load &amp;rarr; audit (dtypes, shape, nulls) &amp;rarr; analyze &amp;rarr; visualize. Always validate before computing statistics.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg> &amp;nbsp; Matplotlib for Visualization
+Histograms (distributions), bar charts (categories), scatter plots (relationships). Interpret shape, not just numbers.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/></svg> &amp;nbsp; R vs. Python
+Both are industry-standard. R excels in statistical modeling and reproducible reports; Python excels in ML pipelines and production.
+]]
+
+---
+### Extra: Get the Mean for a Specific Variable
+
+.font90[
+- `df["mpg"]` helps select the "mpg" column.
+- `.mean()` provides the mean value.
+- Here is the working code: `df["mpg"].mean()`
+]
+
+&lt;img src="09-class_files/figure-html/img70-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+
+.font85[**Note:** here we saved the calculated mean value as the `avg_mpg` object. After that we use `print` to print a nice output.]
+
+---
+### Extra: Frequency Counts
+
+.font90[To count occurrences like we did with `table(car_data$cyl)` in R, pandas offers `value_counts()`:]
+
+&lt;img src="09-class_files/figure-html/img71-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+class: segue-green
+
+# Coding Agents for Python-Based EDA &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M32,224H64V416H32A31.96166,31.96166,0,0,1,0,384V256A31.96166,31.96166,0,0,1,32,224Zm512-48V448a64.06328,64.06328,0,0,1-64,64H160a64.06328,64.06328,0,0,1-64-64V176a79.974,79.974,0,0,1,80-80H288V32a32,32,0,0,1,64,0V96H464A79.974,79.974,0,0,1,544,176ZM264,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,264,256Zm-8,128H192v32h64Zm96,0H288v32h64ZM456,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,456,256Zm-8,128H384v32h64ZM640,256V384a31.96166,31.96166,0,0,1-32,32H576V224h32A31.96166,31.96166,0,0,1,640,256Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Python + Coding Agent: EDA Workflow
+
+.font80[An agent can execute your entire EDA pipeline &amp;mdash; **but only if you give it precise, analytical instructions**:]
+
+.pull-left[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg> Weak**
+
+"Analyze the data."
+
+&amp;rarr; Agent produces arbitrary outputs with no analytical focus.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#009E73;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Strong**
+
+"Load car_data.csv. Run `df.shape`, `df.dtypes`, `df.describe()`, and `df.isnull().sum()`. Report any columns with null values or dtypes that look wrong. Then compute mean and median for all numerical columns and flag where they differ by more than 10%."
+]
+]
+
+&lt;div style="clear: both;"&gt;&lt;/div&gt;
+
+.font75[
+**The 4-step agent loop for EDA:** (1) You set the analytical question. (2) Agent writes and runs pandas code. (3) You evaluate the output &amp;mdash; does it answer the question? Are dtypes right? Is the sample size expected? (4) You iterate with follow-up questions.
+
+**Key risk:** agents confidently produce wrong code. Always cross-check &amp;mdash; `df.shape` should match the expected row count, `df.describe()` min/max should be physically plausible.
+]
+
+---
+### Seaborn: Statistical Visualization in Python
+
+.font85[
+**Why seaborn over matplotlib for statistical plots:** matplotlib is imperative (you specify every detail). **seaborn** is declarative &amp;mdash; built on matplotlib, it generates statistically-informed plots in one line.
+
+**Key seaborn functions for EDA:**
+
+```python
+sns.histplot(df, x="mpg", kde=True)               # histogram + KDE overlay
+sns.boxplot(df, x="foreign", y="price")           # compare distributions across groups
+sns.scatterplot(df, x="weight", y="mpg", hue="foreign")  # scatter colored by category
+sns.heatmap(df.corr(), annot=True)                # correlation matrix at once
+```
+]
+
+--
+
+.content-box-blue[
+.font90[**Ask your coding agent:** "Reproduce our EDA plots using seaborn. Add a KDE overlay to the MPG histogram and a regression line to the scatter plot."]
+]
+
+---
+### Hands-On: Agent-Assisted Python EDA
+
+.font90[**Activity (pairs, 25 minutes)** &amp;mdash; use `car_data.csv` with a coding agent in Jupyter:]
+
+.font80[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Audit:&lt;/strong&gt; Prompt the agent to run &lt;code&gt;df.shape&lt;/code&gt;, &lt;code&gt;df.dtypes&lt;/code&gt;, &lt;code&gt;df.describe()&lt;/code&gt;, and &lt;code&gt;df.isnull().sum()&lt;/code&gt;. Review every output. Flag any dtype that looks wrong.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Statistics:&lt;/strong&gt; Ask for mean, median, and std of all numerical columns. Which variable has the highest coefficient of variation (std/mean)? What does that tell you?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Visualization:&lt;/strong&gt; Request a seaborn histplot for mpg and price, a boxplot comparing price by foreign/domestic, and a scatter of weight vs. mpg with a regression line.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Interpretation:&lt;/strong&gt; For each plot, write one sentence connecting the shape to a statistical concept. Does the agent's interpretation match yours?&lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.font90[**Challenge:** ask the agent a deliberately vague question. Evaluate whether its output answers a meaningful analytical question or just produces output.]
+
+---
+### Chapter 4: What You Can Do Now
+
+.font75[
+**Python environment:**
+
+- Set up Jupyter (Anaconda or Google Colab) and run the 5-step EDA workflow from import to visualization.
+
+**Data analysis in Python:**
+
+- Load CSV with `pd.read_csv()`. Audit with `df.shape`, `df.dtypes`, `df.describe()`, `df.isnull().sum()`. Flag mismatches before computing statistics.
+- Compute mean, median, std, IQR, `value_counts()`, and `groupby()` aggregations. Interpret when mean and median diverge and why.
+- Create matplotlib histograms, bar charts, and scatter plots. Generate seaborn statistical plots (histplot with KDE, boxplot, heatmap).
+
+**Bilingual data science:**
+
+- Map equivalent operations between R and Python (`summary()` &amp;harr; `describe()`, `$` &amp;harr; `df["col"]`, `tapply()` &amp;harr; `groupby()`). Know when to use each language.
+- Direct a coding agent to perform full EDA in Python, evaluate its outputs critically, and iterate with precise analytical follow-up prompts.
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/remark-zoom.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9",
+  "navigation": {
+    "scroll": false
+  }
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
