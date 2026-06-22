@@ -1,3 +1,9 @@
 
 # local R history
 .Rhistory
+
+# macOS junk
+.DS_Store
+
+# Office temp lock files
+~$*
