@@ -1,0 +1,1163 @@
+---
+title: "Research Methods"
+subtitle: "Day 10 · Chapter 10: Solving a Data Mystery — Capstone Project"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.72em !important;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">The Mystery: Disappearing Bees</h4></li>
+    <li><h4 class="white">The Data Detective's 6-Step Pipeline</h4></li>
+    <li><h4 class="white">Findings & the Most Plausible Explanation</h4></li>
+    <li><h4 class="white">Communicating Your Findings</h4></li>
+    <li><h4 class="white">Reflection & Key Takeaways</h4></li>
+    <li><h4 class="white">Coding Agents for Your Data Mystery</h4></li>
+</ol>
+
+---
+class: segue-yellow
+
+# Chapter 10: <br> Solving a Data Mystery `r top_icon("search")`
+
+### .white[Your capstone project: bring together EDA, inference, and storytelling to crack a real data case.]
+
+---
+### Data Detective: Solving a Data Mystery
+
+.pull-left[
+<br>
+
+.content-box-blue[
+**Welcome to Chapter 10!**
+
+You'll now put your data detective skills to the test in a real-world mini project.
+
+We'll walk through the entire process of solving a data mystery about **declining bee populations**.
+]
+]
+
+.pull-right[
+```{r img02, echo=FALSE, warning=FALSE, out.width="85%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/02-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### The Mystery: Disappearing Bees
+
+.pull-left[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("puzzle-piece", fill = "#4a7fb5")` The Puzzle**
+
+A community garden has noticed bee counts dropping in summer months (June&ndash;July).
+]
+
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` The Question**
+
+What factors could be causing this mid-summer bee decline?
+]
+
+.content-box-green[
+**`r fontawesome::fa("database", fill = "#4a7fb5")` The Data**
+
+Monthly bee counts, local weather data, and notes about events like pesticide spraying.
+]
+]]
+
+.pull-right[
+```{r img03, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="50%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/03-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Framing the Mystery
+
+.pull-left[.font90[
+#### `r fontawesome::fa("circle-question", height = "1em", fill = "#4a7fb5")` &nbsp; Identify the Question
+Why are local bee counts declining in summer months?
+
+#### `r fontawesome::fa("lightbulb", height = "1em", fill = "#4a7fb5")` &nbsp; Consider Possible Causes
+Heat? Lack of rain? Pesticides? Disease?
+
+#### `r fontawesome::fa("bullseye", height = "1em", fill = "#4a7fb5")` &nbsp; Define Success
+Find patterns or correlations that explain the decline.
+]]
+
+.pull-right[
+```{r img04, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="50%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/04-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### The Data Detective's Approach
+
+.font85[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("magnifying-glass", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>1. Gather &amp; Inspect</strong><br>
+    Load the bee counts, weather data, and event notes. Run the standard audit on each.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("broom", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>2. Clean</strong><br>
+    Apply the cleaning checklist to fix missing values, outliers, and inconsistencies.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("object-group", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>3. Combine</strong><br>
+    Merge the datasets so each month has bee counts and weather together.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-line", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>4. Explore (EDA)</strong><br>
+    Plot trends and relationships; compute correlations.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("scale-balanced", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>5. Interpret</strong><br>
+    Weigh the evidence; distinguish correlation from causation.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("comments", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>6. Present</strong><br>
+    Tell the story with visuals and actionable recommendations.</p>
+  </div>
+</div>
+]
+
+---
+### Step 1: Gather and Inspect the Data
+
+.font90[
+**Three data sources for this mystery:**
+
+#### `r fontawesome::fa("bug", height = "1em", fill = "#4a7fb5")` &nbsp; `bee_counts.csv` &mdash; monthly bee counts over six years
+
+#### `r fontawesome::fa("cloud-sun", height = "1em", fill = "#4a7fb5")` &nbsp; `weather.csv` &mdash; monthly max temperature and total rainfall
+
+#### `r fontawesome::fa("file-lines", height = "1em", fill = "#4a7fb5")` &nbsp; Event notes &mdash; records of pesticide spraying and garden events
+
+**First moves (the standard audit):** check `head()`, `dim()`/`shape`, data types, and summary statistics for each file *before* doing anything else.
+]
+
+---
+### Step 2: Clean the Data &mdash; Using Our Checklist
+
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Check Row and Column Counts</strong><br>
+  Verify datasets have expected dimensions.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Review Column Names</strong><br>
+  Ensure naming is consistent across datasets.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Examine Data Types</strong><br>
+  Confirm appropriate types (numeric, date, categorical).</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Preview Sample Entries</strong><br>
+  Look at first few rows to understand data structure.</div>
+</div>
+
+--
+
+.content-box-blue[
+.font90[This initial inspection helps identify potential issues **before** diving deeper into analysis.]
+]
+
+---
+### Step 3: Combine the Data
+
+.content-box-blue[
+We'll **merge the bee counts with the weather data on Year and Month** so that each record has both the bee count and corresponding weather for that month.
+]
+
+.font90[If there's event data, we might merge that as well by date:]
+
+```python
+bee_weather = pd.merge(bee_counts, weather,
+                       on=["Year", "Month"], how="left")
+```
+
+```r
+bee_weather <- bee_counts %>%
+  left_join(weather, by = c("Year", "Month"))
+```
+
+---
+### Steps 4 &amp; 5: Explore, Then Interpret
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("chart-line", fill = "#4a7fb5")` Step 4: Exploratory Analysis**
+
+- Line chart of bee counts by month &mdash; *is the summer dip consistent every year?*
+- Scatterplot of temperature vs. bee count &mdash; *is there a relationship?*
+- Same for rainfall; check the event notes against the timing of the dips.
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("scale-balanced", fill = "#4a7fb5")` Step 5: Interpret the Findings**
+
+- Which explanation fits *all* the evidence?
+- Are there lurking variables you can't rule out?
+- How confident can you honestly be?
+]
+]
+
+---
+### Step 6: Present the Solution
+
+```{r img13, echo=FALSE, warning=FALSE, out.width="62%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/13-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+
+---
+### Do Your Own Work!
+
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Select your software</strong> (R or Python). If time allows, run on both and compare outputs.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Follow the steps.</strong></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Don't forget to write your log record.</strong></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Check your results</strong> against <code>Ch10.R</code> and <code>Ch10.ipynb</code>. If yours differ &mdash; investigate why. <em>Differences are learning opportunities.</em></div>
+</div>
+
+---
+### Correlation vs. Causation &mdash; Important Distinction
+
+.pull-left[.font85[
+- Strong correlation (r &asymp; &minus;0.7 between temp and bee counts) is compelling evidence &mdash; but **NOT proof of causation**.
+
+- **Lurking variables** (pesticide use, disease, habitat loss) could explain the pattern. A controlled experiment &mdash; where you manipulate *only* temperature &mdash; would be needed to establish causation.
+
+- The biological mechanism is plausible and consistent, which raises our confidence &mdash; but correlation plus a mechanism still isn't the same as proof. **Always stay honest about what your data can and cannot show.**
+]]
+
+.pull-right[
+```{r img15, echo=FALSE, warning=FALSE, out.width="90%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/15-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+class: segue-green
+
+# Are Your Findings Similar? `r top_icon("clipboard-check")`
+
+---
+### Key Findings
+
+.pull-left[.font90[
+.content-box-blue[
+**`r fontawesome::fa("rotate", fill = "#4a7fb5")` Consistent Pattern**
+
+Bee populations drop consistently in June&ndash;July compared to spring and late summer.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("temperature-high", fill = "#4a7fb5")` Temperature Correlation**
+
+These drops coincide with the hottest temperatures of the year.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("cloud-rain", fill = "#4a7fb5")` Rainfall Relationship**
+
+Lower rainfall periods also correlate with reduced bee counts.
+]
+]]
+
+.pull-right[
+```{r img17, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="50%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/17-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### The Most Plausible Explanation
+
+.content-box-green[
+.font110[**Extreme heat and dry conditions in early summer are stressing the bee colonies.** High heat can cause bees to stay in the hive to cool it, reducing foraging activity. Drought can reduce food availability.]
+]
+
+---
+### How Heat Affects Bees
+
+.pull-left[.font90[
+**Biological Impacts:**
+
+- Bees must **ventilate hives** when hot
+- **Foraging activity decreases**
+- **Water needs increase**
+- **Nectar production** in flowers decreases
+
+.content-box-blue[
+During extreme heat, bees may spend more energy cooling the hive than collecting food &mdash; explaining the observed population decline.
+]
+]]
+
+.pull-right[
+```{r img19, echo=FALSE, warning=FALSE, out.width="90%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/19-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Recovery Pattern
+
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Spring (April&ndash;May)</strong><br>
+  Peak bee activity with moderate temperatures and good rainfall.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Early Summer (June&ndash;July)</strong><br>
+  Bee counts drop during the hottest, driest period.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Late Summer (August&ndash;September)</strong><br>
+  Bee counts recover as temperatures moderate and conditions improve.</div>
+</div>
+
+--
+
+.content-box-green[
+.font90[The recovery in late summer supports our theory that the decline is due to **temporary environmental stress** rather than a permanent issue.]
+]
+
+---
+### Recommendations for the Garden
+
+.pull-left[.font90[
+#### `r fontawesome::fa("droplet", height = "1em", fill = "#4a7fb5")` &nbsp; Provide Water Sources
+Set up shallow water dishes near hives during hot periods.
+
+#### `r fontawesome::fa("umbrella", height = "1em", fill = "#4a7fb5")` &nbsp; Add Shade
+Create shade over hives during peak summer heat.
+
+#### `r fontawesome::fa("seedling", height = "1em", fill = "#4a7fb5")` &nbsp; Plant Heat-Resistant Flowers
+Ensure nectar sources even during hot weather.
+
+#### `r fontawesome::fa("ban", height = "1em", fill = "#4a7fb5")` &nbsp; Avoid Summer Pesticides
+Don't add chemical stress during already difficult periods.
+]]
+
+.pull-right[
+```{r img21, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="50%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/21-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Further Investigation Ideas
+
+.three-col[
+.col[
+`r fontawesome::fa("flask", height = "2.5em", fill = "#4a7fb5")`
+
+**Experimental Interventions**
+
+.font85[Test if providing additional water or shade to the hives in summer helps the bees.]
+]
+.col[
+`r fontawesome::fa("virus", height = "2.5em", fill = "#4a7fb5")`
+
+**Parasite Monitoring**
+
+.font85[Check for parasites or diseases in late spring to rule those out or identify them as contributing factors.]
+]
+.col[
+`r fontawesome::fa("map", height = "2.5em", fill = "#4a7fb5")`
+
+**Regional Comparison**
+
+.font85[Gather data from other nearby areas to see if they observe the same pattern.]
+]
+]
+
+--
+
+.content-box-blue[
+.font90[These additional investigations could strengthen our conclusions or reveal other factors at play.]
+]
+
+---
+class: segue-yellow
+
+# Communicating Your Findings `r top_icon("comments")`
+
+---
+### Communicating Your Findings
+
+.pull-left[
+.content-box-blue[
+A complete data story has four parts:
+
+1. **Introduction** &mdash; the problem and why it matters
+2. **Data &amp; Methods** &mdash; what you used and what you did
+3. **Findings** &mdash; the key evidence, shown visually
+4. **Conclusion** &mdash; the answer and what to do about it
+]
+]
+
+.pull-right[
+```{r img24, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="50%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/24-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Sample Introduction
+
+.pull-left[
+.content-box-blue[
+*"The Case of the Disappearing Bees: Solved! Our community garden has been puzzled by a consistent drop in bee counts during summer months. As data detectives, we investigated this mystery using bee count records and weather data to uncover the likely cause."*
+]
+
+.font90[A good introduction **captures attention** and clearly states the problem you're solving. It should also explain **why the issue matters** (bees are important pollinators for the garden).]
+]
+
+.pull-right[
+```{r img25, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="50%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/25-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Sample Data, Methods, and Findings
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("database", fill = "#4a7fb5")` Data &amp; Methods**
+
+"We analyzed six years of monthly bee counts alongside local weather records. After cleaning and merging the data, we examined trends and computed correlations."
+
+.font90[*Keep technical details simple when presenting to a general audience.*]
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("chart-line", fill = "#4a7fb5")` Findings**
+
+"Bee counts drop by about 30% when temperatures exceed 30&deg;C &mdash; and recover when conditions cool. The chart shows the summer dip happening every year."
+
+.font90[*Lead with the one or two charts that make the pattern obvious.*]
+]
+]
+
+---
+### Sample Conclusion
+
+.content-box-blue[
+**`r fontawesome::fa("circle-check", fill = "#4a7fb5")` Answer the Mystery**
+
+Heat stress and possibly drought conditions are causing the summer bee decline.
+]
+
+.content-box-green[
+**`r fontawesome::fa("heart", fill = "#4a7fb5")` Reassurance**
+
+The bees recover naturally when conditions improve in late summer.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("list-check", fill = "#4a7fb5")` Actionable Suggestions**
+
+Provide shade, water sources, and avoid pesticides during hot periods.
+]
+
+--
+
+.font90[A good conclusion provides **clear answers and practical next steps** based on your findings.]
+
+---
+class: segue-green
+
+# Reflection and Key Takeaways `r top_icon("lightbulb")`
+
+---
+### The Data Detective Process
+
+.font80[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("circle-question", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>1. Frame It</strong><br>
+    Define the question clearly.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("list-check", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>2. Plan It</strong><br>
+    Outline data needs and steps.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("broom", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>3. Wrangle It</strong><br>
+    Clean and combine data.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("magnifying-glass", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>4. Explore It</strong><br>
+    Find patterns and clues.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("scale-balanced", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>5. Explain It</strong><br>
+    Draw evidence-based conclusions.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("comments", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>6. Communicate It</strong><br>
+    Share insights effectively.</p>
+  </div>
+</div>
+]
+
+--
+
+.content-box-blue[
+.font90[**This process can be applied to any data mystery you encounter in the future.**]
+]
+
+---
+### Common Challenges in Data Projects
+
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("broom", fill = "#4a7fb5")` Messy Data**
+
+Real-world data is rarely clean and often requires significant preparation.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("eye-slash", fill = "#4a7fb5")` Unclear Patterns**
+
+Sometimes relationships aren't obvious and require deeper investigation.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**`r fontawesome::fa("diagram-project", fill = "#4a7fb5")` Multiple Factors**
+
+Real problems often have multiple contributing causes.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("battery-quarter", fill = "#4a7fb5")` Limited Data**
+
+You may not have all the data you ideally want.
+]
+]
+
+<div style="clear: both;"></div>
+
+.content-box-green[
+.font90[**Successful data detectives adapt their approach to overcome these challenges.**]
+]
+
+---
+### Value of Domain Knowledge
+
+.pull-left[
+.content-box-blue[
+In our bee mystery, **knowing that bees are affected by heat and need water** helped guide our investigation and interpret our findings.
+]
+
+.font90[Numbers tell you *what* happened; domain knowledge tells you *why it makes sense* &mdash; and what to check next.]
+]
+
+.pull-right[
+```{r img33, echo=FALSE, warning=FALSE, out.width="90%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/33-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### The Importance of Documentation
+
+.three-col[
+.col[
+`r fontawesome::fa("file-pen", height = "2.5em", fill = "#4a7fb5")`
+
+**Record Decisions**
+
+.font85[Document how you handled missing values, outliers, and other data issues.]
+]
+.col[
+`r fontawesome::fa("comment-dots", height = "2.5em", fill = "#4a7fb5")`
+
+**Explain Reasoning**
+
+.font85[Note why you chose certain analysis methods or made specific assumptions.]
+]
+.col[
+`r fontawesome::fa("code-branch", height = "2.5em", fill = "#4a7fb5")`
+
+**Track Versions**
+
+.font85[Keep track of different versions of your analysis as it evolves.]
+]
+]
+
+--
+
+.content-box-blue[
+.font90[Good documentation helps others understand your work and allows you to revisit your analysis months later.]
+]
+
+---
+### Practice Exercise: Write Your Own Summary
+
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Introduction</strong><br>
+  Write 1&ndash;2 sentences explaining the bee mystery and why it matters.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Approach</strong><br>
+  Write 1&ndash;2 sentences describing what data you used and how you analyzed it.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Findings</strong><br>
+  Write 1&ndash;2 sentences highlighting the key evidence you discovered.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Conclusion</strong><br>
+  Write 1&ndash;2 sentences stating your solution and recommendations.</div>
+</div>
+
+--
+
+.font90[*This exercise helps you practice translating technical analysis into clear communication.*]
+
+---
+### Example Summary
+
+.content-box-blue[
+.font95[*"Our community garden's bees have been mysteriously disappearing during summer months, threatening plant pollination. By analyzing six years of bee counts alongside weather data, we discovered a strong relationship between high temperatures and declining bee populations. The evidence shows that when temperatures exceed 30&deg;C, bee counts drop by about 30%, but recover when conditions improve. We recommend providing shade and water sources for the hives during hot periods to help the bees thrive year-round."*]
+]
+
+--
+
+.font90[This summary concisely covers **the problem, approach, findings, and recommendations** in plain language.]
+
+---
+### Key Takeaways from This Project
+
+.pull-left[.font90[
+#### `r fontawesome::fa("broom", height = "1em", fill = "#4a7fb5")` &nbsp; Clean Data is Crucial
+Data preparation is often the most time-consuming but essential step.
+
+#### `r fontawesome::fa("object-group", height = "1em", fill = "#4a7fb5")` &nbsp; Integration Reveals Insights
+Combining multiple data sources often leads to deeper understanding.
+
+#### `r fontawesome::fa("list-check", height = "1em", fill = "#4a7fb5")` &nbsp; Structured Approach Works
+Following a step-by-step process helps manage complex problems.
+
+#### `r fontawesome::fa("brain", height = "1em", fill = "#4a7fb5")` &nbsp; Context Enhances Analysis
+Domain knowledge improves hypothesis formation and interpretation.
+]]
+
+.pull-right[
+```{r img37, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="50%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/37-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+### Congratulations, Data Detective!
+
+.pull-left[
+.content-box-green[
+**You've completed the Data Detective series!** Across 10 chapters, you have built a complete data science toolkit:
+
+.font85[
+- **Ch 1&ndash;2:** Thinking like a detective &mdash; data types, formats, and basic statistics
+- **Ch 3&ndash;4:** R and Python &mdash; your data analysis power tools
+- **Ch 5&ndash;7:** Collecting, cleaning, and wrangling real-world data
+- **Ch 8:** EDA &mdash; finding patterns and relationships in data
+- **Ch 9:** Statistical inference &mdash; from sample to confident conclusion
+- **Ch 10:** The full pipeline &mdash; frame, wrangle, analyze, communicate, and act
+]
+]
+
+.font90[**What comes next?** Machine learning, advanced statistics, data engineering, and AI &mdash; all build on exactly what you've learned here. *You are ready.*]
+]
+
+.pull-right[
+```{r img38, echo=FALSE, warning=FALSE, fig.width=4, fig.height=6, out.width="52%", fig.show='hold', fig.align='center'}
+# Read the image file
+img <- readPNG("assets/38-img.png")
+
+# Plot the image
+grid.raster(img)
+```
+]
+
+---
+class: segue
+
+# Coding Agents for Your Data Mystery `r top_icon("robot")`
+
+---
+### Using a Coding Agent Across the Full Project Pipeline
+
+.font80[
+<div class="chev-row-sm">
+  <div class="chev-sm">1</div>
+  <div class="chev-text"><strong>Framing:</strong> "Help me write a clear research question and two hypotheses about [your topic]."</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">2</div>
+  <div class="chev-text"><strong>Cleaning:</strong> "Here is my CSV. Write R code to check for missing values, outliers, and type issues."</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">3</div>
+  <div class="chev-text"><strong>Merging:</strong> "Merge bee_counts.csv and weather.csv on Year and Month columns using Python pandas."</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">4</div>
+  <div class="chev-text"><strong>EDA:</strong> "Create a scatterplot of Bee_Count vs Max_Temp, add a trend line, and compute Pearson's r."</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">5</div>
+  <div class="chev-text"><strong>Inference:</strong> "Run a t-test to compare mean bee counts in June&ndash;July vs. other months. Interpret the p-value."</div>
+</div>
+
+<div class="chev-row-sm">
+  <div class="chev-sm">6</div>
+  <div class="chev-text"><strong>Storytelling:</strong> "Summarize my findings for a community garden newsletter. Keep it under 100 words, no jargon."</div>
+</div>
+]
+
+--
+
+.content-box-yellow[
+.font90[**Golden Rule:** the agent helps you CODE each step &mdash; YOU do the thinking, hypothesizing, and interpreting.]
+]
+
+---
+### A Real Agent Conversation: Bee Mystery EDA
+
+.pull-left[.font75[
+**`r fontawesome::fa("user", fill = "#4a7fb5")` Student Prompt**
+
+*"I have a merged dataset called bee_weather with columns: Month, Bee_Count, Max_Temp_C, Total_Rainfall_mm. Using R, create two plots side-by-side: (1) a line chart of Bee_Count over months, and (2) a scatterplot of Max_Temp_C vs Bee_Count with a trend line and the Pearson correlation printed on the plot."*
+
+**Why this is a strong prompt:**
+
+- Names the dataset and all relevant columns
+- Specifies the language (R)
+- Describes exactly what each chart should show
+- Asks for a specific statistic (Pearson's r) on the plot
+]]
+
+.pull-right[.font75[
+**`r fontawesome::fa("robot", fill = "#4a7fb5")` Agent's R Code**
+
+```r
+library(ggplot2); library(gridExtra)
+r_val <- round(cor(bee_weather$Max_Temp_C,
+  bee_weather$Bee_Count), 2)
+p1 <- ggplot(bee_weather, aes(x=Month,
+  y=Bee_Count)) + geom_line() + geom_point()
+p2 <- ggplot(bee_weather, aes(x=Max_Temp_C,
+  y=Bee_Count)) + geom_point() +
+  geom_smooth(method="lm") +
+  labs(subtitle=paste("r =", r_val))
+grid.arrange(p1, p2, ncol=2)
+```
+
+**Your job after running it:**
+
+Read the r value. Does it confirm a strong negative relationship? Write one sentence interpreting it *in context of the bee mystery*.
+]]
+
+---
+### Choose Your Own Mystery &mdash; Extension Challenge
+
+.font90[Finished the bee mystery? Pick one of these real-world mysteries and run your own full investigation using the same 6-step pipeline and a coding agent.]
+
+.font75[
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("school", fill = "#4a7fb5")` School Performance**
+
+**Mystery:** Why do some schools in a district consistently outperform others?
+
+**Data to explore:** test scores, class size, teacher experience, income levels, spending per student.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("basketball", fill = "#4a7fb5")` Sports Performance**
+
+**Mystery:** What statistics best predict whether an NBA player will be an All-Star?
+
+**Data to explore:** points, assists, rebounds, shooting %, minutes played, team win rate.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("earth-americas", fill = "#4a7fb5")` Climate Patterns**
+
+**Mystery:** Has the temperature in your city changed over the last 30 years? When? By how much?
+
+**Data to explore:** NOAA historical weather records, monthly averages, extreme event counts.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("mobile-screen", fill = "#4a7fb5")` Social Media**
+
+**Mystery:** What features make a YouTube video go viral? Is it length, title, or upload time?
+
+**Data to explore:** views, likes, comments, duration, category, upload day/time, subscriber count.
+]
+]
+]
+
+---
+### Final Reflection: You + the Agent = A Powerful Team
+
+.pull-left[.font80[
+.content-box-blue[
+**`r fontawesome::fa("brain", fill = "#4a7fb5")` What YOU Bring**
+
+- **Domain curiosity** &mdash; knowing bees matter and asking why counts drop
+- **Hypothesis formation** &mdash; "maybe it's heat or drought"
+- **Critical judgment** &mdash; recognizing correlation &ne; causation
+- **Storytelling** &mdash; translating data into actionable recommendations
+- **Ethics** &mdash; being honest about what the data can and cannot show
+]
+]]
+
+.pull-right[.font80[
+.content-box-green[
+**`r fontawesome::fa("robot", fill = "#4a7fb5")` What the AGENT Brings**
+
+- **Speed** &mdash; generates and debugs code in seconds
+- **Syntax recall** &mdash; knows ggplot2, seaborn, scipy so you don't have to memorize
+- **Error explanation** &mdash; turns cryptic messages into plain English fixes
+- **Language adaptation** &mdash; rewrites technical findings for different audiences
+- **Breadth** &mdash; can suggest approaches you hadn't considered
+]
+]]
+
+<div style="clear: both;"></div>
+
+.content-box-yellow[
+.font90[**Together:** you provide the questions and judgment; the agent provides the computational muscle. That combination is what real data scientists use every day.]
+]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-15-research-summit-presentations/15-class.html
+
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-15-research-summit-presentations/15-class.html",
+       to = "~/Documents/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-15-research-summit-presentations/15-class.pdf")
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-15-research-summit-presentations/15-class.html")
+```
