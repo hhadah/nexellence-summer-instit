@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/hhadah/Projects/GiT/nexellence-summer-instit/**)",
+      "Bash(ls -la week-02-investigation-and-analysis/)"
+    ]
+  }
+}
