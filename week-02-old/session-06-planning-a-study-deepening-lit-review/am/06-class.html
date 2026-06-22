@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Research Methods</title>
+    <meta charset="utf-8" />
+    <script src="06-class_files/header-attrs/header-attrs.js"></script>
+    <link href="06-class_files/remark-css/default.css" rel="stylesheet" />
+    <link href="06-class_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="06-class_files/panelset/panelset.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/tulane-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tulane.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Research Methods
+]
+.subtitle[
+## Day 1 · Chapter 1: Introduction — Thinking Like a Data Detective
+]
+
+---
+
+layout: true
+&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | Research Methods | 12 June 2026&lt;/div&gt;
+
+&lt;!--- Day 1 · Chapter 1: Introduction — Thinking Like a Data Detective | 12 June 2026--&gt;
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+
+
+
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+&lt;/style&gt;
+
+# .text-shadow[.white[Outline for Today]]
+
+&lt;ol&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;What Is a "Data Detective"?&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;The Perils of "Face Value"&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;The Mindset: Curiosity and Skepticism&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Basic Data Terminology&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Becoming a Critical Thinker with Data&lt;/h4&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;h4 class="white"&gt;Introduction to Coding Agents&lt;/h4&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+---
+class: segue-yellow
+
+# Chapter 1: Introduction &lt;br&gt; What Is a "Data Detective"? &lt;svg viewBox="0 0 512 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Thinking Like a Data Detective
+
+.pull-left[
+&lt;img src="06-class_files/figure-html/img1-1.png" alt="" width="58%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[.font90[
+.content-box-blue[
+Data is everywhere &amp;mdash; and most of it is trying to tell you something. **Your job is to figure out what's signal and what's noise.**
+]
+
+**In this chapter:**
+
+- How data shapes decisions &amp;mdash; from algorithms to policy
+- Analytical frameworks for evaluating claims and sources
+- Core statistical concepts: variables, distributions, correlation vs. causation
+- Introduction to coding agents as analytical tools
+]]
+
+---
+### Data in Everyday Life &amp;mdash; Why Data Matters
+
+.font110[Can you think of some data examples in your daily life?]
+
+&lt;div class="img-row"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/02a-img.png"&gt;&lt;p&gt;&lt;strong&gt;Weather forecast&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/02b-img.png"&gt;&lt;p&gt;&lt;strong&gt;Sport stats&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/02c-img.png"&gt;&lt;p&gt;&lt;strong&gt;Social media trends&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### What Is a "Data Detective"?
+
+.pull-left[.font80[
+- **Applies systematic skepticism** &amp;mdash; treats every claim as a hypothesis to be tested against evidence.
+
+- **Interrogates methodology**: how data was collected, who collected it, and what incentives may have shaped it.
+
+- **Uses tools** &amp;mdash; spreadsheets, statistical summaries, visualizations, and code &amp;mdash; to surface patterns invisible to the naked eye.
+
+- **Distinguishes correlation from causation** and resists the pull of compelling but misleading narratives.
+
+- **Communicates findings with appropriate uncertainty** &amp;mdash; knowing what the data does and does not support.
+]]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img3-1.png" alt="" width="58%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### What Would a Data Detective Ask?
+
+.pull-left[
+&lt;img src="06-class_files/figure-html/img4-1.png" alt="" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+.content-box-blue[
+Imagine your school newspaper claims that **"90% of students prefer online homework."**
+]
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> &amp;nbsp; How did they get that number?
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg> &amp;nbsp; Did they survey all students or just a few?
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M168.2 384.9c-15-5.4-31.7-3.1-44.6 6.4c-8.2 6-22.3 14.8-39.4 22.7c5.6-14.7 9.9-31.3 11.3-49.4c1-12.9-3.3-25.7-11.8-35.5C60.4 302.8 48 272 48 240c0-79.5 83.3-160 208-160s208 80.5 208 160s-83.3 160-208 160c-31.6 0-61.3-5.5-87.8-15.1zM26.3 423.8c-1.6 2.7-3.3 5.4-5.1 8.1l-.3 .5c-1.6 2.3-3.2 4.6-4.8 6.9c-3.5 4.7-7.3 9.3-11.3 13.5c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c5.1 0 10.2-.3 15.3-.8l.7-.1c4.4-.5 8.8-1.1 13.2-1.9c.8-.1 1.6-.3 2.4-.5c17.8-3.5 34.9-9.5 50.1-16.1c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9zM144 272a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm144-32a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm80 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg> &amp;nbsp; Could the wording of the question have influenced the answers?
+]
+
+---
+class: segue-green
+
+# The Perils of "Face Value" &lt;svg viewBox="0 0 576 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### The Perils of "Face Value"
+
+.font80[
+.three-col[
+.col[
+&lt;img src="assets/05a-img.png" style="width:100%; border-radius:6px;"&gt;
+
+**Misleading Scales**
+
+Zoomed-in axes can make small changes look dramatic &amp;mdash; a 2% shift appears catastrophic when the y-axis starts at 98.
+]
+.col[
+&lt;img src="assets/05b-img.png" style="width:100%; border-radius:6px;"&gt;
+
+**Skewed Averages**
+
+Outliers skew the mean without affecting the median &amp;mdash; always ask which measure of central tendency best represents the distribution.
+]
+.col[
+&lt;img src="assets/05c-img.png" style="width:100%; border-radius:6px;"&gt;
+
+**Cherry-Picked Data**
+
+Selecting a convenient time window or subgroup can reverse a trend &amp;mdash; this is why peer review requires full data disclosure.
+]
+]
+]
+
+---
+### Pay Attention to What You See
+
+.pull-left[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg> Manipulated axis**
+
+A truncated y-axis exaggerates small differences and can make an ordinary change look like a crisis.
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#009E73;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Correct axis**
+
+Starting the y-axis at zero shows the true size of the difference.
+]
+]
+
+&lt;div style="clear: both;"&gt;&lt;/div&gt;
+
+.font70[Source: [CDC &amp;mdash; High school students sleep facts and stats](https://www.cdc.gov/sleep/data-research/facts-stats/high-school-students-sleep-facts-and-stats.html)]
+
+---
+### Misleading Scales
+
+.font110[Can you spot the issue with this plot?]
+
+&lt;div class="img-row"&gt;
+  &lt;div class="cell" style="flex: 1.4;"&gt;&lt;img src="assets/06a-img.png"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/06b-img.png"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+.font70[Source: [Bad Data Visualisation: Real Life Examples (Medium)](https://medium.com/%40thomas.ellyatt/bad-data-visualisation-real-life-examples-out-there-in-the-wild-eb5032329aeb)]
+
+---
+### Can You Spot the Issue with This Plot?
+
+&lt;div class="img-row" style="max-width: 75%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/07a-img.png" style="max-height: 380px; width: auto;"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/07b-img.png" style="max-height: 380px; width: auto;"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+.font70[Source: [Bad Data Visualisation: Real Life Examples (Medium)](https://medium.com/%40thomas.ellyatt/bad-data-visualisation-real-life-examples-out-there-in-the-wild-eb5032329aeb)]
+
+---
+### Misleading Scales
+
+.font100[Your team's math-contest accuracy rose from **60% last semester to 65% this semester**. Can you spot the differences on the two plots? Which plot presents the difference accurately?]
+
+&lt;div class="img-row" style="max-width: 80%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/08a-img.png"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/08b-img.png"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Skewed Averages &amp;mdash; the Example of Stat Land
+
+.pull-left[
+.font100[**Average income in the Stat Land!**]
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> &amp;nbsp; What is the mean income?
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M522.1 62.4c16.8-5.6 25.8-23.7 20.2-40.5S518.6-3.9 501.9 1.6l-113 37.7C375 15.8 349.3 0 320 0c-44.2 0-80 35.8-80 80c0 3 .2 5.9 .5 8.8L117.9 129.6c-16.8 5.6-25.8 23.7-20.2 40.5s23.7 25.8 40.5 20.2l135.5-45.2c4.5 3.2 9.3 5.9 14.4 8.2V480c0 17.7 14.3 32 32 32H512c17.7 0 32-14.3 32-32s-14.3-32-32-32H352V153.3c21-9.2 37.2-27 44.2-49l125.9-42zM439.6 288L512 163.8 584.4 288H439.6zM512 384c62.9 0 115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L536.1 109.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L392.7 273.1c-5.7 9.8-9.3 21.1-6.7 32.1C396.8 350 449.1 384 512 384zM129.2 291.8L201.6 416H56.7l72.4-124.2zM3.2 433.1C14 478 66.3 512 129.2 512s115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L153.2 237.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L9.9 401.1c-5.7 9.8-9.3 21.1-6.7 32.1z"/></svg> &amp;nbsp; Does the mean income well represent everyone in the Stat Land?
+
+.content-box-yellow[
+This one person skews the dataset, making **$5M/year**.
+]
+]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img9-1.png" alt="" width="100%" style="display: block; margin: auto;" /&gt;
+
+&lt;img src="06-class_files/figure-html/img9b-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Cherry Picking Data
+
+.pull-left[
+.content-box-blue[
+By deliberately cherry picking inappropriate time periods, here **1998&amp;ndash;2012**, an artificial "pause" can be created, even though the overall warming trend continues.
+]
+
+.font70[Source: [Wikipedia &amp;mdash; Cherry picking](https://en.wikipedia.org/wiki/Cherry_picking)]
+]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img10-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: segue-yellow
+
+# The Mindset of a Data Detective: &lt;br&gt; Curiosity and Skepticism &lt;svg viewBox="0 0 352 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### The Mindset of a Data Detective: Curiosity and Skepticism
+
+.pull-left[.font80[
+- **Cultivate curiosity as a professional habit**: every statistic is an invitation to ask "Why? How? Under what conditions?"
+
+- **Follow the evidence chain**: from raw data &amp;rarr; measurement &amp;rarr; analysis &amp;rarr; claim &amp;mdash; each link can introduce error or bias.
+
+- **Practice calibrated skepticism**: demand methodological transparency, not just numerical results.
+
+- **Guard against anchoring**: the first data point you encounter shapes all subsequent interpretation &amp;mdash; seek disconfirming evidence deliberately.
+]]
+
+.pull-right[
+&lt;div class="img-row" style="max-width: 80%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/11a-img.png"&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/11b-img.png" style="max-height: 220px; width: auto;"&gt;&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### The School Newspaper Claim
+
+.font70[
+.three-col[
+.col[
+&lt;img src="assets/11a-img.png" style="max-height: 140px; width: auto; border-radius: 6px;"&gt;
+
+**A curious person**
+
+"Wow, why do so many prefer online? What do they like about it?"
+]
+.col[
+&lt;img src="assets/11b-img.png" style="max-height: 140px; width: auto; border-radius: 6px;"&gt;
+
+**A skeptical person**
+
+"90% seems high, did they really ask everyone?"
+]
+.col[
+&lt;img src="assets/12b-img.png" style="max-height: 140px; width: auto; border-radius: 6px;"&gt;
+
+**A data detective**
+
+"Why and how was the data collected? What would your answer be if the question were phrased as: 'Do you enjoy the flexibility of online homework?'"
+]
+]
+]
+
+--
+
+.font90[.center[**Curiosity** keeps you engaged and digging deeper. **Skepticism** ensures you validate and verify rather than jump to conclusions. *Both are necessary.*]]
+
+---
+### Chocolate Mystery
+
+.pull-left[
+&lt;img src="06-class_files/figure-html/img13-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+.content-box-yellow[
+**Claim: Eating chocolate improves memory by 50%.**
+]
+
+&lt;br&gt;
+
+#### As a data detective, what questions would you ask about the data behind it?
+
+&lt;br&gt;
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/></svg> Work in pairs** to list 3&amp;ndash;4 questions.
+]
+]
+
+---
+### Ice Cream and Drowning &amp;mdash; a Classic Case of Misinterpreting Data
+
+&lt;img src="06-class_files/figure-html/img14-1.png" alt="" width="75%" style="display: block; margin: auto;" /&gt;
+
+--
+
+.pull-left[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> &amp;nbsp; Is there a hidden factor here?
+]
+
+.pull-right[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> &amp;nbsp; Can you say ice cream consumption "causes" drowning?
+]
+
+---
+### The Mindset of a Data Detective
+
+&lt;img src="06-class_files/figure-html/img15-1.png" alt="" width="42%" style="display: block; margin: auto;" /&gt;
+
+---
+### Cultivating Curiosity
+
+&lt;img src="06-class_files/figure-html/img16-1.png" alt="" width="32%" style="display: block; margin: auto;" /&gt;
+
+---
+### Practicing Skepticism
+
+&lt;img src="06-class_files/figure-html/img17-1.png" alt="" width="38%" style="display: block; margin: auto;" /&gt;
+
+---
+### The SIFT Framework for Evaluating Claims
+
+.pull-left[.font90[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;S&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Stop&lt;/strong&gt;&lt;br&gt;
+  Pause before sharing or accepting a claim &amp;mdash; your gut reaction is the least reliable filter.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;I&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Investigate the source&lt;/strong&gt;&lt;br&gt;
+  What is the publisher's track record, funding, and potential conflicts of interest?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;F&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Find better coverage&lt;/strong&gt;&lt;br&gt;
+  Seek the original study, data set, or primary source rather than relying on media summaries.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;T&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Trace claims&lt;/strong&gt;&lt;br&gt;
+  Follow data back upstream &amp;mdash; sampling method, sample size, response rate, and how variables were operationalized all matter.&lt;/div&gt;
+&lt;/div&gt;
+]]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img18-1.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### What Is Reliable?
+
+.font70[
+1. **TikTok:** "Teens who use social media 3+ hours daily have lower test scores"
+
+2. **Company advertisement:** "Use our app and boost test scores by 50%"
+
+3. **Study in *Youth &amp;amp; Society*:** Based on a survey of 1,459 middle schoolers, frequent social media use was associated with decreased academic achievement, accounting for factors like age, gender, and race
+
+4. **According to the Centers for Disease Control:** 1 in 4 teens (ages 12&amp;ndash;17) who use screens 4+ hours daily reported anxiety (27.1%) or depression (25.9%) in the past 2 weeks, significantly higher than teens using screens less (&amp;lt;4 hrs: 12.3% anxiety; 9.5% depression) ([CDC Data Brief 513](https://www.cdc.gov/nchs/products/databriefs/db513.htm))
+]
+
+--
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/></svg> Work in pairs to:**
+
+- **Rank the sources by reliability** (most &amp;rarr; least)
+- **Justify rankings** (method, sample, controls, sources, etc.)
+]
+
+---
+class: segue-green
+
+# Basic Data Terminology &lt;svg viewBox="0 0 448 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Basic Data Terminology
+
+.font90[
+.pull-left[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"/></svg> Data**
+
+Structured vs. Unstructured &amp;mdash; tabular rows/columns are structured; text, images, and social posts are unstructured and require preprocessing.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M64 256V160H224v96H64zm0 64H224v96H64V320zm224 96V320H448v96H288zM448 256H288V160H448v96zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/></svg> Dataset**
+
+A structured collection of data; can be tidy (one observation per row, one variable per column) or messy &amp;mdash; real-world data is almost always messy.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/></svg> Variable**
+
+Can be quantitative (continuous or discrete) or categorical (nominal or ordinal). The type determines which statistical operations are valid.
+]
+
+.content-box-blue[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg> Observation**
+
+One record (a row) representing a single entity. Sample size *n* = number of observations; larger *n* generally reduces sampling error.
+]
+]
+]
+
+---
+### How to Read a Dataset
+
+.pull-left[
+
+| Name | Age | Favorite Subject |
+|------|-----|------------------|
+| Ali  | 14  | Math             |
+| Sara | 15  | Science          |
+| Omar | 14  | History          |
+
+.font80[
+&amp;uarr; Each **row** is an observation; each **column** is a variable.
+]
+]
+
+.pull-right[
+#### <svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M254 52.8C249.3 40.3 237.3 32 224 32s-25.3 8.3-30 20.8L57.8 416H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-1.8l18-48H303.8l18 48H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H390.2L254 52.8zM279.8 304H168.2L224 155.1 279.8 304z"/></svg> &amp;nbsp; Data can be textual (names and favorite subject), or numeric (age).
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zm64 0v64h64V96H64zm384 0H192v64H448V96zM64 224v64h64V224H64zm384 0H192v64H448V224zM64 352v64h64V352H64zm384 0H192v64H448V352z"/></svg> &amp;nbsp; In this dataset we have **3 observations** (rows) and **3 variables** (columns).
+]
+
+---
+### Let's Explore a Dataset
+
+.pull-left[
+
+| Student | Daily Screen Time (hrs) | Nightly Sleep (hrs) |
+|---------|-------------------------|---------------------|
+| A       | 3                       | 8                   |
+| B       | 7                       | 6                   |
+| C       | 2                       | 9                   |
+| D       | 8                       | 5                   |
+| E       | 5                       | 7                   |
+
+]
+
+.pull-right[.font70[
+1. **Calculate the mean and median** for each variable. Do they differ? Why might that matter?
+
+2. **Describe the apparent relationship** between screen time and sleep. Is this correlation positive or negative? Can you say it's causal? What would you need to know?
+
+3. With only **n=5 observations**, how confident can you be in any pattern you observe? What sample size would give you more confidence, and why?
+
+4. What **confounding variables** might explain this relationship? Propose a follow-up study design that could isolate the effect of screen time.
+]]
+
+---
+class: segue-yellow
+
+# Becoming a Critical Thinker with Data &lt;svg viewBox="0 0 576 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M208 0c-29.9 0-54.7 20.5-61.8 48.2-.8 0-1.4-.2-2.2-.2-35.3 0-64 28.7-64 64 0 4.8.6 9.5 1.7 14C52.5 138 32 166.6 32 200c0 12.6 3.2 24.3 8.3 34.9C16.3 248.7 0 274.3 0 304c0 33.3 20.4 61.9 49.4 73.9-.9 4.6-1.4 9.3-1.4 14.1 0 39.8 32.2 72 72 72 4.1 0 8.1-.5 12-1.2 9.6 28.5 36.2 49.2 68 49.2 39.8 0 72-32.2 72-72V64c0-35.3-28.7-64-64-64zm368 304c0-29.7-16.3-55.3-40.3-69.1 5.2-10.6 8.3-22.3 8.3-34.9 0-33.4-20.5-62-49.7-74 1-4.5 1.7-9.2 1.7-14 0-35.3-28.7-64-64-64-.8 0-1.5.2-2.2.2C422.7 20.5 397.9 0 368 0c-35.3 0-64 28.6-64 64v376c0 39.8 32.2 72 72 72 31.8 0 58.4-20.7 68-49.2 3.9.7 7.9 1.2 12 1.2 39.8 0 72-32.2 72-72 0-4.8-.5-9.5-1.4-14.1 29-12 49.4-40.6 49.4-73.9z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### Becoming a Critical Thinker with Data
+
+.font90[
+&lt;div class="img-row" style="max-width: 90%; margin-left: auto; margin-right: auto;"&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/19a-img.png" style="max-height: 170px; width: auto;"&gt;&lt;p&gt;&lt;strong&gt;Ask Questions&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/19b-img.png" style="max-height: 170px; width: auto;"&gt;&lt;p&gt;&lt;strong&gt;Examine the Evidence&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/19c-img.png" style="max-height: 170px; width: auto;"&gt;&lt;p&gt;&lt;strong&gt;Consider Context&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="cell"&gt;&lt;img src="assets/19d-img.png" style="max-height: 170px; width: auto;"&gt;&lt;p&gt;&lt;strong&gt;Watch for Bias &amp;amp; Use Logic&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+]
+
+---
+### Ask Questions about the Data
+
+.pull-left[.font80[
+**Who?**
+Who collected it, who funded it, and who is represented or excluded? Coverage bias systematically omits populations that are harder to reach.
+
+**What?**
+What construct is being measured &amp;mdash; and is the measurement actually valid? (e.g., GPA measures academic performance, but does it measure learning?)
+
+**When &amp;amp; Where?**
+When and where was the data collected (could things have changed since then or be different elsewhere)?
+
+**Why &amp;amp; How?**
+Why was the data collected (purpose) and how (methodology)?
+]]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img20-1.png" alt="" width="68%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Examine the Evidence
+
+.pull-left[.font75[
+- **Scrutinize axes**: Is the y-axis truncated? Does it start at zero? What does the scale choice emphasize or conceal?
+
+- **Check methodology disclosures**: sample size, response rate, confidence intervals, and p-values are all red flags when missing.
+
+- **When possible, access the raw data**: summary statistics flatten distributions and can hide bimodality, heavy tails, or outlier clusters.
+
+- **Distinguish statistical significance from practical significance** &amp;mdash; a result can be statistically real yet too small to matter in the real world.
+
+- **Build your own interpretation** before reading the author's conclusion &amp;mdash; then compare. Where you differ is often where the most interesting analysis lives.
+]]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img21-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Consider Context
+
+.font110[.center[**Context gives meaning to the data.**]]
+
+.font80[
+.three-col[
+.col[
+&lt;img src="assets/22a-img.png" style="max-height: 150px; width: auto; border-radius: 6px;"&gt;
+
+**"The new movie made $100M!"**
+
+Is $100 million good? Depends on the budget and industry standards.
+]
+.col[
+&lt;img src="assets/22b-img.png" style="max-height: 150px; width: auto; border-radius: 6px;"&gt;
+
+**"I got 75 out of 100 on a test."**
+
+Is 75/100 good? Depends on the class average and difficulty.
+]
+.col[
+&lt;img src="assets/22c-img.png" style="max-height: 150px; width: auto; border-radius: 6px;"&gt;
+
+**"1% might be bigger than 50%."**
+
+1% of a city of one million is larger than 50% of a small town with 1,000 population.
+]
+]
+]
+
+---
+### Challenge
+
+.content-box-yellow[
+**Claim: "Crime increased 200% this year"**
+]
+
+.font100[Apply the **SIFT framework** and answer these questions in your group:]
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;A 200% increase &lt;strong&gt;from what baseline&lt;/strong&gt;? (From 1 incident to 3 is also 200%.)&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Which crime types are included?&lt;/strong&gt; Violent crime and property crime trend very differently.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;Could &lt;strong&gt;reporting rates have changed&lt;/strong&gt; (e.g., new online reporting system) rather than actual incidents?&lt;/div&gt;
+&lt;/div&gt;
+
+---
+### Be Aware of Confirmation Bias
+
+.font70[
+.three-col[
+.col[
+&lt;img src="assets/23a-img.png" style="width:100%; border-radius:6px;"&gt;
+
+**What Is It?**
+
+A cognitive bias where we preferentially seek, interpret, and remember information consistent with our pre-existing beliefs &amp;mdash; even when contradictory evidence is equally available.
+
+*Related: motivated reasoning &amp;mdash; where the conclusion is decided first and "evidence" is gathered to support it rather than to test it.*
+]
+.col[
+&lt;img src="assets/23b-img.png" style="width:100%; border-radius:6px;"&gt;
+
+**Example**
+
+A researcher who believes social media causes depression may only publish studies that confirm it &amp;mdash; this is publication bias, a systemic form of confirmation bias in science.
+
+*The backfire effect: when shown contradictory evidence, people sometimes strengthen their original belief rather than update it.*
+]
+.col[
+&lt;img src="assets/23c-img.png" style="width:100%; border-radius:6px;"&gt;
+
+**How to Combat It**
+
+Practice "steel-manning": construct the strongest possible version of the opposing view before dismissing it.
+
+*Pre-mortem thinking: before accepting a result, ask "How could this be wrong?" &amp;mdash; a technique used by scientists, auditors, and intelligence analysts.*
+]
+]
+]
+
+---
+### Use Logical Reasoning
+
+.pull-left[.font80[
+**Deductive vs. Inductive Reasoning**
+
+- **Deductive**: Start with a general rule, apply it to a specific case. Valid logic + true premises = certain conclusion.
+- **Inductive**: Observe specific cases and generalize &amp;mdash; the foundation of data science. Conclusions are probabilistic, never certain.
+
+**Establishing Causation (Not Just Correlation)**
+
+- Three requirements: **temporal order** (cause precedes effect), **covariation** (they move together), and **elimination of confounders** (no third variable explains both).
+- Randomized controlled experiments are the gold standard &amp;mdash; observational data alone rarely establishes causation.
+]]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img24-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Challenge
+
+.pull-left[.font75[
+.content-box-yellow[
+**Claim: Teenagers spend 6 hours a day on phones.**
+
+As a data detective, what questions would you ask about the data behind it?
+]
+
+1. **Operationalization:** What counts as "on a phone"? Active use only? Screen-on time? Music playing in pocket?
+
+2. **Measurement method:** Self-report surveys vs. screen-time app data &amp;mdash; which is more accurate, and why might each be biased?
+
+3. **Population:** Which teenagers? Age range, geography, socioeconomic background? A global average would look very different from a US suburban average.
+
+4. **Distribution:** Is 6 hours the mean or median? If a small number of heavy users skew the mean, the median might be 3 hours &amp;mdash; a very different story.
+]]
+
+.pull-right[
+&lt;img src="06-class_files/figure-html/img25-1.png" alt="" width="55%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+### Assignment
+
+.font80[Work in groups to find a **data-backed claim** from a news article, research summary, or advertisement. Apply a full methodological audit.]
+
+.font75[
+**Methodology Evaluation Rubric:**
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Source &amp;amp; Credibility:&lt;/strong&gt; Who produced this? What are their incentives? Is this peer-reviewed, journalism, or marketing?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Methodology:&lt;/strong&gt; How was the data collected? What was the sample size, sampling method, and response rate?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Operationalization:&lt;/strong&gt; How were key terms defined and measured? Could a different definition change the result?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Confounders &amp;amp; Alternative Explanations:&lt;/strong&gt; What third variables might explain the relationship? Is causation being implied from correlation?&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row-sm"&gt;
+  &lt;div class="chev-sm"&gt;5&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Verdict:&lt;/strong&gt; On a scale of 1&amp;ndash;5, how reliable is this claim? What would it take to move the rating up one point?&lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.content-box-green[
+.font80[**Deliverable:** A 1-page audit report using the rubric above. Be prepared to present your verdict and defend it.]
+]
+
+---
+### The Journey Ahead
+
+.content-box-blue[
+**You've built the mindset. Now build the toolkit.**
+
+Coming up: we move from analyzing data manually to writing code that does it for you &amp;mdash; and then to working alongside AI coding agents that can accelerate your analysis.
+]
+
+--
+
+**The Road Ahead:**
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M566.6 54.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192-34.7-34.7c-4.2-4.2-10-6.6-16-6.6c-12.5 0-22.6 10.1-22.6 22.6v29.1L364.3 320h29.1c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16l-34.7-34.7 192-192zM341.1 353.4L222.6 234.9c-42.7-3.7-85.2 11.7-115.8 42.3l-8 8C76.5 307.5 64 337.7 64 369.2c0 6.8 7.1 11.2 13.2 8.2l51.1-25.5c5-2.5 9.5 4.1 5.4 7.9L7.3 473.4C2.7 477.6 0 483.6 0 489.9C0 502.1 9.9 512 22.1 512l173.3 0c38.8 0 75.9-15.4 103.4-42.8c30.6-30.6 45.9-73.1 42.3-115.8z"/></svg> &amp;nbsp; Chapter 2: Data Wrangling &amp;mdash; loading, cleaning, and reshaping datasets with Python/pandas
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z"/></svg> &amp;nbsp; Chapter 3: Visualization &amp;mdash; translating data into charts that reveal (and sometimes deceive)
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"/></svg> &amp;nbsp; Chapter 4: Coding Agents &amp;mdash; using AI as a collaborator to write, debug, and extend your analysis code
+
+--
+
+.font90[The skills you practiced today &amp;mdash; skepticism, source evaluation, causal reasoning &amp;mdash; are exactly what make you an effective partner with an AI agent.]
+
+---
+### Bonus: Code It Yourself
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;Collect class screen-time data, then open a &lt;strong&gt;Python notebook&lt;/strong&gt; and load your numbers into a list. Calculate the mean, median, and standard deviation &amp;mdash; compare your manual answer to Python's output.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;Calculate the mean and median. &lt;strong&gt;Did an outlier&lt;/strong&gt; (like someone who said "12 hours") &lt;strong&gt;affect the mean?&lt;/strong&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;Use &lt;strong&gt;matplotlib&lt;/strong&gt; to plot the same data twice: once with a full y-axis (starting at 0) and once truncated. Screenshot both &amp;mdash; how different do they look? This is the y-axis manipulation you saw earlier, now in code.&lt;/div&gt;
+&lt;/div&gt;
+
+---
+class: segue-green
+
+# Introduction to Coding Agents &lt;svg viewBox="0 0 640 512" style="height:1em;display:inline-block;position:fixed;top:10;right:10;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M32,224H64V416H32A31.96166,31.96166,0,0,1,0,384V256A31.96166,31.96166,0,0,1,32,224Zm512-48V448a64.06328,64.06328,0,0,1-64,64H160a64.06328,64.06328,0,0,1-64-64V176a79.974,79.974,0,0,1,80-80H288V32a32,32,0,0,1,64,0V96H464A79.974,79.974,0,0,1,544,176ZM264,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,264,256Zm-8,128H192v32h64Zm96,0H288v32h64ZM456,256a40,40,0,1,0-40,40A39.997,39.997,0,0,0,456,256Zm-8,128H384v32h64ZM640,256V384a31.96166,31.96166,0,0,1-32,32H576V224h32A31.96166,31.96166,0,0,1,640,256Z"&gt;&lt;/path&gt;&lt;/svg&gt;
+
+---
+### What Is a Coding Agent?
+
+.content-box-blue[
+A coding agent is an AI system that **reads instructions in plain English, writes code to carry them out, runs that code, observes the results, and iterates** &amp;mdash; all in a loop.
+]
+
+--
+
+.pull-left[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M123.6 391.3c12.9-9.4 29.6-11.8 44.6-6.4c26.5 9.6 56.2 15.1 87.8 15.1c124.7 0 208-80.5 208-160s-83.3-160-208-160S48 160.5 48 240c0 32 12.4 62.8 35.7 89.2c8.6 9.7 12.8 22.5 11.8 35.5c-1.4 18.1-5.7 34.7-11.3 49.4c17-7.9 31.1-16.7 39.4-22.7zM21.2 431.9c1.8-2.7 3.5-5.4 5.1-8.1c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208s-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6c-15.1 6.6-32.3 12.6-50.1 16.1c-.8 .2-1.6 .3-2.4 .5c-4.4 .8-8.7 1.5-13.2 1.9c-.2 0-.5 .1-.7 .1c-5.1 .5-10.2 .8-15.3 .8c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c4.1-4.2 7.8-8.7 11.3-13.5c1.7-2.3 3.3-4.6 4.8-6.9c.1-.2 .2-.3 .3-.5z"/></svg> Chatbot**
+
+- Answers questions with text
+- One-shot response
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"/></svg> Coding agent**
+
+- Executes real code and returns real outputs
+- Multi-step loop (plan &amp;rarr; code &amp;rarr; run &amp;rarr; check &amp;rarr; revise)
+]
+]
+
+&lt;div style="clear: both;"&gt;&lt;/div&gt;
+
+.font90[**What coding agents can do for data analysis:** load and clean messy datasets, compute statistics, generate visualizations, and explain every step of the code they write.]
+
+---
+### How a Coding Agent Thinks
+
+**The Agent Loop**
+
+.font80[
+&lt;div class="chev-flow"&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;1. Understand&lt;/strong&gt;&lt;br&gt;
+    Parse your goal from natural language into a concrete task.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M152.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 113C-2.3 103.6-2.3 88.4 7 79s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zm0 160c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 273c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zM224 96c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zM160 416c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H192c-17.7 0-32-14.3-32-32zM48 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;2. Plan&lt;/strong&gt;&lt;br&gt;
+    Break the task into sub-steps (e.g., load data &amp;rarr; filter rows &amp;rarr; compute mean &amp;rarr; plot).&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1.6em;width:2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;3. Code&lt;/strong&gt;&lt;br&gt;
+    Write Python (or another language) to execute each sub-step.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1.6em;width:1.2em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;4. Execute&lt;/strong&gt;&lt;br&gt;
+    Run the code and capture any outputs, errors, or warnings.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="chev-step"&gt;
+    &lt;div class="chev-right"&gt;<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1.6em;width:1.6em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#0148A4;overflow:visible;position:relative;"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>&lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;5. Reflect&lt;/strong&gt;&lt;br&gt;
+    If an error occurred or output looks wrong, revise the code and retry.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+]
+
+--
+
+.content-box-blue[
+.font90[**Why this matters for you:** you direct the agent with your analytical judgment. The agent handles syntax. Together you move much faster than either alone.]
+]
+
+---
+### You Are Still the Detective
+
+.content-box-yellow[
+**The agent is a tool, not the analyst.**
+
+- A coding agent will do exactly what you ask &amp;mdash; even if what you asked was the wrong question. *Garbage in, garbage out still applies.*
+- It can compute a correlation coefficient in seconds. It cannot tell you whether the correlation is **meaningful** without your domain knowledge.
+]
+
+--
+
+**Your critical thinking skills are non-negotiable:**
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> &amp;nbsp; You must frame the right question &amp;mdash; the agent cannot know what you are actually trying to understand.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg> &amp;nbsp; You must evaluate the output &amp;mdash; check that results are plausible, the right columns were used, and no silent errors occurred.
+
+#### <svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M297.2 248.9C311.6 228.3 320 203.2 320 176c0-70.7-57.3-128-128-128S64 105.3 64 176c0 27.2 8.4 52.3 22.8 72.9c3.7 5.3 8.1 11.3 12.8 17.7l0 0c12.9 17.7 28.3 38.9 39.8 59.8c10.4 19 15.7 38.8 18.3 57.5H109c-2.2-12-5.9-23.7-11.8-34.5c-9.9-18-22.2-34.9-34.5-51.8l0 0 0 0c-5.2-7.1-10.4-14.2-15.4-21.4C27.6 247.9 16 213.3 16 176C16 78.8 94.8 0 192 0s176 78.8 176 176c0 37.3-11.6 71.9-31.4 100.3c-5 7.2-10.2 14.3-15.4 21.4l0 0 0 0c-12.3 16.8-24.6 33.7-34.5 51.8c-5.9 10.8-9.6 22.5-11.8 34.5H226.4c2.6-18.7 7.9-38.6 18.3-57.5c11.5-20.9 26.9-42.1 39.8-59.8l0 0 0 0 0 0c4.7-6.4 9-12.4 12.7-17.7zM192 128c-26.5 0-48 21.5-48 48c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-44.2 35.8-80 80-80c8.8 0 16 7.2 16 16s-7.2 16-16 16zm0 384c-44.2 0-80-35.8-80-80V416H272v16c0 44.2-35.8 80-80 80z"/></svg> &amp;nbsp; You must interpret the findings &amp;mdash; statistical output has no meaning until a human connects it to the real world.
+
+---
+### Prompting a Coding Agent Effectively
+
+.font90[**The quality of your output depends on the quality of your prompt.**]
+
+.pull-left[
+.content-box-yellow[
+**<svg aria-hidden="true" role="img" viewBox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#D55E00;overflow:visible;position:relative;"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg> Weak**
+
+"Analyze this data."
+]
+]
+
+.pull-right[
+.content-box-green[
+**<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#009E73;overflow:visible;position:relative;"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Strong**
+
+"Load the CSV, show me the first 5 rows, then compute the mean and median of the sleep column and flag any values below 4 hours as outliers."
+]
+]
+
+&lt;div style="clear: both;"&gt;&lt;/div&gt;
+
+.font80[
+**Prompt best practices:**
+
+1. **Specify the task precisely:** what column, what operation, what output format.
+2. **Give context:** explain what the data represents and what question you're trying to answer.
+3. **Ask for explanations:** "Explain what each line of the code does" turns every analysis into a learning opportunity.
+4. **Challenge its output:** "Is this the right chart type for this data?" or "What assumptions does this method make?"
+]
+
+---
+### Hands-On: Agent-Assisted Data Investigation
+
+.font90[**Activity (small groups, 20 minutes):** you will use a coding agent to investigate a real dataset. Your job is to direct the agent, evaluate its outputs, and draw conclusions.]
+
+.font85[
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;1&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Pose a question&lt;/strong&gt;&lt;br&gt;
+  Choose a question your group cares about (e.g., "Is there a relationship between hours of sleep and GPA in this dataset?").&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;2&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Direct the agent&lt;/strong&gt;&lt;br&gt;
+  Write a precise prompt asking it to load the data, compute the relevant statistics, and produce a scatter plot.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;3&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Evaluate and challenge&lt;/strong&gt;&lt;br&gt;
+  Is the output correct? Are there outliers? Does the chart tell the right story? Ask the agent to adjust and explain its reasoning.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="chev-row"&gt;
+  &lt;div class="chev"&gt;4&lt;/div&gt;
+  &lt;div class="chev-text"&gt;&lt;strong&gt;Present your verdict&lt;/strong&gt;&lt;br&gt;
+  What does the data support? What does it not support? What would you need to strengthen the claim?&lt;/div&gt;
+&lt;/div&gt;
+]
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/remark-zoom.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false,
+  "ratio": "16:9",
+  "navigation": {
+    "scroll": false
+  }
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
