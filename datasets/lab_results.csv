@@ -1,0 +1,36 @@
+ID,Test,Result
+21,X-Ray,Clear
+4,Allergy Test,Negative
+1,Allergy Test,Low
+24,Blood Sugar,Negative
+9,Allergy Test,High
+8,Allergy Test,Clear
+8,Cholesterol,Normal
+5,COVID Test,Normal
+24,MRI,Clear
+4,X-Ray,High
+22,X-Ray,Low
+24,Cholesterol,Normal
+29,Cholesterol,High
+18,Allergy Test,Normal
+3,X-Ray,Positive
+19,Blood Sugar,Low
+14,Blood Sugar,Positive
+2,MRI,Clear
+1,Blood Sugar,Low
+3,X-Ray,High
+7,Allergy Test,Low
+8,X-Ray,Low
+17,Blood Pressure,High
+20,X-Ray,Clear
+1,Allergy Test,Low
+18,Blood Sugar,Clear
+7,COVID Test,Clear
+23,MRI,Clear
+21,Blood Pressure,Normal
+23,Blood Sugar,Negative
+18,MRI,Clear
+14,Blood Sugar,High
+8,Blood Pressure,Negative
+15,X-Ray,Clear
+19,Allergy Test,High

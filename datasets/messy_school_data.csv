@@ -1,0 +1,34 @@
+Student_ID,Full_Name,Grade,Gender,GPA,Absences,Email,Height_in,Weight_lb,Birth_Year,State,Club,Phone_Number,Parent_Consent,Lunch_Program
+3900,David Williams,12,Male,3.04,12,david.williams@gmail.com,64.2,159.0,2007,Florida,,(984) 852-5065,yes,Reduced
+2832,Ivan Smith,9,Male,2.89,6,ivan.smith@school.edu,72.5,155.2,2005,NY,none,(665) 251-8041,No,Free
+8179,Eva Williams,11,Male,2.51,4,eva.williams@school.edu,63.4,106.1,2009,NY,,(206) 999-3200,yes,Free
+9785,Alice Davis,9,Female,3.17,0,alice.davis@gmail.com,58.1,133.1,2009,NY,,(733) 982-6925,,Reduced
+5374,Frank Brown,9,Male,4.0,4,frank.brown@school.edu,65.3,107.3,2006,Texas,Science,(488) 376-4598,yes,Free
+5272,Grace Garcia,10,Female,,3,grace.garcia@gmail.com,,159.9,2007,Florida,Soccer,(787) 760-5915,no,Full
+4044,Ivan Johnson,9,Male,2.85,6,ivan.johnson@school.edu,70.9,134.5,2006,FL,Drama,(683) 352-1651,,Free
+1514,David Johnson,11,Male,2.41,4,david.johnson@school.edu,66.3,179.3,2006,NY,,(597) 319-9834,No,
+2796,Bob Smith,10,Male,2.99,1,bob.smith@school.edu,68.3,113.4,2008,IL,Drama,(494) 490-8668,,Full
+1958,Eva Brown,9,Female,3.06,4,eva.brown@gmail.com,65.4,90.4,2005,IL,Science,(614) 973-9701,No,Free
+3705,Charlie Davis,11,Female,,0,charlie.davis@gmail.com,66.3,138.4,2025,Texas,,(419) 508-7118,no,
+4733,Bob Smith,11,Male,2.29,5,,61.4,107.6,2005,Florida,Chess,(564) 750-6977,No,Full
+6038,Bob Garcia,10,Male,1.97,2,bob.garcia@gmail.com,63.2,181.7,2009,CA,Drama,,,Reduced
+4681,Bob Brown,9,Female,2.53,6,bob.brown@gmail.com,69.1,177.9,2009,IL,Soccer,(702) 325-1117,Yes,Free
+1653,Eva Garcia,11,Male,3.18,4,eva.garcia@school.edu,57.3,149.2,2006,Texs,Chess,(898) 673-7658,,Reduced
+9279,David Brown,9,Male,2.84,4,david.brown@school.edu,71.3,,2009,Florida,Soccer,(559) 703-5557,Yes,Reduced
+2790,Grace Garcia,10,Male,3.57,9,grace.garcia@gmail.com,64.7,,2009,Florida,Soccer,1234567890,no,Reduced
+1035,Charlie Miller,12,Female,2.97,9,charlie.miller@yahoo.com,54.5,174.7,2007,Florida,,(848) 902-8973,No,Reduced
+7669,David Davis,10,Male,2.66,4,david.davis@gmail.com,60.6,114.1,2008,NY,Science,(520) 578-1887,Yes,Free
+2604,Bob Davis,9,Male,3.25,3,bob.davis@gmail.com,66.4,196.1,2006,Texas,Science,(597) 592-4502,no,Free
+5552,Grace Garcia,10,Male,2.67,6,grace.garcia@yahoo.com,63.1,136.0,2005,CA,Science,123-4567-890,,Full
+2876,Ivan Smith,11,Female,3.15,0,ivan.smith@gmail.com,59.7,155.9,2007,Florida,Soccer,(564) 103-5315,,Reduced
+8508,Bob Smith,9,Male,2.63,6,,65.4,179.1,2006,Ny,Chess,(235) 457-2127,No,Full
+1634,Bob Miller,12,Male,2.98,1,bob.miller@gmail.com,69.6,172.6,2008,NY,Chess,(940) 914-4728,No,Free
+2512,Eva Smith,12,Female,,3,eva.smith@gmail.com,,125.9,2005,NY,Soccer,(752) 368-3647,no,
+5462,Bob Williams,11,Male,3.21,5,bob.williams@school.edu,25.0,143.0,2007,Texas,,(749) 973-5325,,
+5889,Ivan Johnson,10,Male,3.52,5,ivan.johnson@yahoo.com,64.5,141.0,2006,IL,none,(100) 713-6310,no,Free
+5506,Bob Smith,10,Male,3.35,4,bob.smith@gmail.com,67.6,195.7,2005,IL,Drama,(704) 532-1520,Yes,Free
+3287,Charlie Jones,10,Female,2.58,4,charlie.jones@school.edu,62.6,205.6,2009,Florida,none,(508) 470-4593,No,
+2604,Bob Davis,9,Male,3.25,3,,66.4,196.1,2006,Texas,Science,(597) 592-4502,no,Free
+6168,David Smith,12,Female,2.62,5,david.smith@gmail.com,60.4,161.3,2006,Cali,,(422) 317-9179,no,
+3287,Charlie Jones,10,Female,6.5,4,charlie.jones@school.edu,62.6,,2009,Florida,none,(508) 470-4593,No,
+4681,Bob Brown,9,Female,2.53,6,bob.brown@gmail.com,,177.9,2009,Illinois,Soccer,(702) 325-1117,Yes,Free
