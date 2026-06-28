@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/hhadah/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/0d2d847a-3ec7-4792-b458-c0665b517371/081eedd9-d7ab-4f61-a9ed-c8933743a33d/skills/pptx/**)",
+      "Bash(./extract-text \"/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/am/assets/day-7.pptx\")"
+    ]
+  }
+}

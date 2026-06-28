@@ -7,3 +7,9 @@
 
 # Office temp lock files
 ~$*
+
+# Source PowerPoint decks (large; not needed for the rendered site)
+*.pptx
+
+# knitr chunk cache (regenerated on knit)
+*_cache/

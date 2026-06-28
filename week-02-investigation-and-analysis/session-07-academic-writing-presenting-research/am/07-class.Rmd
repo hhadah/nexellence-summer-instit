@@ -1,0 +1,708 @@
+---
+title: "Research Methods"
+subtitle: "Day 7 · Academic Writing & Presenting Your Research"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+```
+
+
+```{css, echo=F}
+    /* 2x2 card grid used for "Characteristics" and "Tips" slides */
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+      margin-top: 0.8em;
+    }
+    .card {
+      flex: 1 1 44%;
+      background: #d9ecf9;
+      border-radius: 8px;
+      padding: 0.5em 0.9em;
+    }
+    .card h4 {
+      margin: 0 0 0.25em 0;
+      color: #0148A4;
+    }
+    .card p {
+      margin: 0;
+      font-size: 0.85em;
+    }
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+# Helper: a centered, inline countdown timer (click to start/pause/reset)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.6em auto;",
+    color_border = "#0148A4",
+    color_running_background = "#0148A4",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2.2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Feedback: Your Literature Review Drafts</h4></li>
+    <li><h4 class="white">The Research Story: Beginning, Middle, End</h4></li>
+    <li><h4 class="white">Academic Writing: Style &amp; Standards</h4></li>
+    <li><h4 class="white">Citing Your Sources</h4></li>
+    <li><h4 class="white">Building Your Presentation: Introduction Slides</h4></li>
+    <li><h4 class="white">Scientific Storytelling: The 90-Second Intro</h4></li>
+</ol>
+
+---
+### Welcome to Day 7!
+
+.pull-left[.font110[
+Today is about **communicating your research** &mdash; writing it up with academic rigor and presenting it with confidence.
+
+By the end of the morning you will be able to:
+
+- Recognize the **structure of a research paper** &mdash; from introduction to references
+- Write in a **formal, objective academic style**
+- **Cite sources** correctly and know what needs citing
+- Draft the **introduction slides** for your team presentation
+]]
+
+.pull-right[
+<img src="assets/07-writing.png" style="width:100%; border-radius:6px;">
+]
+
+---
+class: segue-yellow
+
+# Feedback: <br> Your Literature Review Drafts `r top_icon("comments")`
+
+---
+### Feedback Return: Literature Review Drafts `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 15 min
+
+.content-box-blue[
+Your marked-up **literature review drafts** are coming back to you.
+]
+
+As a class, let's look at **2&ndash;3 patterns** that showed up across many drafts:
+
+.pull-left[
+.content-box-green[
+**`r fontawesome::fa("thumbs-up", fill = "#009E73")` Common strengths**
+
+- Clear topics and genuine curiosity
+- Real sources, honestly summarized
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**`r fontawesome::fa("screwdriver-wrench", fill = "#4a7fb5")` Common areas to improve**
+
+- Organize by **theme**, not author
+- Connect each source back to **your** question
+- Tighten citations
+]
+]
+
+<div style="clear: both;"></div>
+
+.font90[.center[.purple[*Use this feedback as our shared checklist for academic writing standards today.*]]]
+
+---
+class: segue-green
+
+# The Research Story: <br> Beginning, Middle, End `r top_icon("book-open")`
+
+---
+### The Research Story `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 25 min
+
+.font90[Every research paper tells a **story** with the same parts. Each section answers **one question**:]
+
+.pull-left[.font85[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Introduction</strong> &mdash; <em>Why does this matter?</em></div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Literature Review</strong> &mdash; <em>What do we already know?</em></div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>Methods</strong> &mdash; <em>How did you study it?</em></div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text"><strong>Results</strong> &mdash; <em>What did you find?</em></div></div>
+]]
+
+.pull-right[.font85[
+<div class="chev-row-sm"><div class="chev-sm">5</div><div class="chev-text"><strong>Discussion</strong> &mdash; <em>What does it mean?</em></div></div>
+<div class="chev-row-sm"><div class="chev-sm">6</div><div class="chev-text"><strong>Conclusion</strong> &mdash; <em>So what? What's next?</em></div></div>
+<div class="chev-row-sm"><div class="chev-sm">7</div><div class="chev-text"><strong>References</strong> &mdash; <em>Whose work did you build on?</em></div></div>
+]]
+
+<div style="clear: both;"></div>
+
+--
+
+.content-box-yellow[
+.font90[**This is what you're working toward.** We'll look at a real published student research paper &mdash; the same arc, written by people your age.]
+]
+
+---
+class: segue-yellow
+
+# Academic Writing: <br> Style &amp; Standards `r top_icon("pen-fancy")`
+
+---
+### Academic Writing Characteristics
+
+<div class="card-grid">
+  <div class="card">
+    <h4>`r fontawesome::fa("user-tie", fill = "#0148A4")` Formal Tone</h4>
+    <p>Professional language &mdash; no slang or contractions. <em>"A survey was conducted"</em>, not <em>"I asked my friends."</em></p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("scale-balanced", fill = "#0148A4")` Objective Focus</h4>
+    <p>Evidence over opinion. <em>"The data suggest..."</em> instead of <em>"I think..."</em></p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("list-check", fill = "#0148A4")` Thorough Detail</h4>
+    <p>Enough information for others to replicate your work or evaluate your methods.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("quote-right", fill = "#0148A4")` Proper Citations</h4>
+    <p>Acknowledge all sources using a standard format &mdash; APA, MLA, or Chicago.</p>
+  </div>
+</div>
+
+--
+
+.content-box-blue[
+.font85[**Key principles:** one idea per sentence &middot; active voice when possible &middot; precise vocabulary &middot; third person in formal writing &middot; no filler phrases.]
+]
+
+---
+### Literature Review Template
+
+.pull-left[.font80[
+**Begin with a short introduction:**
+- What is your topic?
+- Why is it important?
+- Give the broad context of the problem.
+
+**Body:**
+- Share what other studies have found.
+- Organize by **themes, not by author**.
+
+**End with a summary:**
+- Summarize what was found.
+- Clarify how **your** project connects to past research.
+- Name the **patterns** you noticed and the **gaps** that remain.
+]]
+
+.pull-right[
+<img src="assets/07-litreview.png" style="width:85%; max-height:470px; object-fit:cover; border-radius:6px;">
+]
+
+---
+### Practice: Rewrite It in Academic Language `r fontawesome::fa("clock", fill="#fff", height="0.8em")`
+
+.content-box-blue[
+Rewrite each **everyday sentence** into **formal academic language**. Then compare versions as a class.
+]
+
+.font85[
+1. "I think social media is totally messing up how teens sleep."
+2. "We asked a bunch of kids and most of them said they were stressed."
+3. "Everybody knows that exercise is good for you."
+4. "The results were honestly kind of surprising to us."
+5. "This study is super important and could change everything."
+]
+
+.center[`r timer(5L)`]
+
+---
+class: segue-green
+
+# Citing Your Sources `r top_icon("quote-right")`
+
+---
+### Why Citing Matters
+
+.pull-left[.font90[
+**What is citing?**
+
+Citing your sources means **giving credit** to the original authors of the ideas, words, or data you use in your work.
+]]
+
+.pull-right[.font90[
+**We cite to:**
+
+- **Avoid plagiarism** &mdash; taking credit for someone else's work
+- **Show where** your information came from
+- **Help others find** those sources to learn more
+]]
+
+<div style="clear: both;"></div>
+
+.content-box-yellow[
+.font90[**Citing is part of being a trustworthy researcher.** It shows respect for others' work &mdash; and that you're serious about your own.]
+]
+
+---
+### What to Cite &mdash; and What Not To
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("check", fill = "#0148A4")` You should cite:**
+
+- Direct quotes (even short ones)
+- Paraphrased ideas (someone else's idea in your own words)
+- Statistics or data
+- Images, charts, or graphics you didn't create
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("xmark", fill = "#009E73")` You don't need to cite:**
+
+- Common knowledge (e.g., "Water freezes at 0&deg;C")
+- Your own original thoughts
+]
+]
+
+---
+### How to Cite
+
+.font85[There are different styles (**APA, MLA, Chicago**), but the basic idea is the same: name the **author, date**, and sometimes the **page** in your text &mdash; then list the full details at the end.]
+
+.content-box-blue[.font85[
+**In-text (APA):** "Teens who sleep less are more likely to report symptoms of depression" (Williams, 2021, p. 45).
+
+**References page:** Williams, A. (2021). *The Science of Teen Sleep.* TeenHealth Publishing.
+]]
+
+--
+
+.font85[**For online sources, never paste a bare link &mdash; include full source info:**]
+
+.pull-left[
+.content-box-red[
+**`r fontawesome::fa("xmark", fill = "#D55E00")` Not this**
+
+.font80[`https://example.com/article`]
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("check", fill = "#009E73")` Do this**
+
+.font80[Smith, J. (2022). *Climate change and food security.* National Environmental Journal. https://example.com/article]
+]
+]
+
+---
+### Tips for Citations
+
+<div class="card-grid">
+  <div class="card">
+    <h4>`r fontawesome::fa("pen-to-square", fill = "#0148A4")` Track as you go</h4>
+    <p>Write down author, title, date, and link the moment you find a source.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("hourglass-half", fill = "#0148A4")` Don't wait until the end</h4>
+    <p>Build citations in as you write &mdash; not the night before it's due.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("wand-magic-sparkles", fill = "#0148A4")` Use citation tools</h4>
+    <p>EasyBib, Zotero, or the built-in Google Docs citation feature help format correctly.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("circle-check", fill = "#0148A4")` Double-check the style</h4>
+    <p>Always match your teacher's required style guide.</p>
+  </div>
+</div>
+
+---
+class: segue-yellow
+
+# Building Your Presentation: <br> Introduction Slides `r top_icon("desktop")`
+
+---
+### Your Presentation Outline
+
+.font90[Your first slides set up the whole story. Each one has a clear job:]
+
+.pull-left[.font85[
+.content-box-blue[
+**`r fontawesome::fa("id-card", fill = "#0148A4")` Title Slide**
+
+Project title, presenters, date, institution. Add logos if you can.
+]
+.content-box-blue[
+**`r fontawesome::fa("globe", fill = "#0148A4")` Topic Slide**
+
+Name your global challenge, define it, and state why it matters. *Cite your sources.*
+]
+]]
+
+.pull-right[.font85[
+.content-box-green[
+**`r fontawesome::fa("book", fill = "#009E73")` Literature Review Slide**
+
+A few statements arranged by **themes** &mdash; what you know from the literature. *Cite your sources.*
+]
+.content-box-green[
+**`r fontawesome::fa("magnifying-glass", fill = "#009E73")` Research Question Slide**
+
+Your research question(s) &mdash; and a hypothesis if you have one.
+]
+]]
+
+---
+### Introduction Slides Workshop `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 30 min
+
+.content-box-blue[
+Using **Session 7 Mission Sheet &mdash; Part 1**, each team drafts its **four introduction slides**.
+]
+
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Title slide</strong> &mdash; project, team, date, institution.</div>
+</div>
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Introduction slide</strong> &mdash; topic + why it's important + a hook.</div>
+</div>
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Background / Literature slide</strong> &mdash; what's known, organized by theme, with citations.</div>
+</div>
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>Research Question slide</strong> &mdash; your question(s) and hypothesis.</div>
+</div>
+
+--
+
+.font90[.center[.purple[*Instructor circulates and gives real-time feedback.*]]]
+
+.center[`r timer(30L)`]
+
+---
+class: segue-green
+
+# Scientific Storytelling: <br> The 90-Second Intro `r top_icon("microphone")`
+
+---
+### The 90-Second Intro Practice `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 20 min
+
+.pull-left[.font90[
+Each team presents its **introduction slides** in **90 seconds**.
+
+.content-box-yellow[
+**No reading from the slides** &mdash; speak *to* the audience.
+]
+
+The class gives **one piece of feedback** per team:
+
+- `r fontawesome::fa("bolt", fill = "#0148A4")` **Most powerful moment**
+- `r fontawesome::fa("lightbulb", fill = "#0148A4")` **Needs more clarity**
+]]
+
+.pull-right[
+<img src="assets/07-litreview.png" style="width:80%; max-height:340px; object-fit:cover; border-radius:6px;">
+
+.center[`r timer(1L, 30L)`]
+]
+
+---
+class: segue-yellow
+
+# Homework &amp; After-Class Work `r top_icon("laptop-code")`
+
+---
+### After-Class Team Session `r fontawesome::fa("gear", fill="#0148A4", height="0.8em")` 3:15 &ndash; 5:15 PM
+
+.content-box-yellow[
+Teams work with a **TA / peer mentor** available. Produce a **tangible output before dinner** &mdash; *not free time.*
+]
+
+.font85[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">Complete <strong>Session 7 Part 1 Mission Sheet</strong> &mdash; content for <strong>Slides 1&ndash;4</strong> (Title, Introduction, Background Research, Research Question).</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Begin building <strong>Slides 1&ndash;2</strong> in Google Slides or PowerPoint &mdash; apply <strong>one visual design principle</strong> from today's session.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>DataCORE:</strong> create a <strong>correlation or grouped comparison plot</strong> for your data. Write a <strong>2-sentence interpretation</strong> of the pattern.</div></div>
+]
+
+--
+
+.content-box-green[
+.font90[**`r fontawesome::fa("flag-checkered", fill = "#009E73")` Team output due before dinner:** Slides 1&ndash;4 drafted &mdash; *content complete; design polish comes later.*]
+]
+
+---
+### Evening Work Period `r fontawesome::fa("book", fill="#0148A4", height="0.8em")` 7:00 &ndash; 9:00 PM
+
+.content-box-blue[
+**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.
+]
+
+.font85[
+- **Individual:** Complete **Session 7 Part 2 Mission Sheet** &mdash; content for **Slides 5&ndash;6** (Methods, Results). Insert your best chart.
+
+- **(RcS):** Draft the **Results** section of your written report &mdash; neutral, factual, past tense, **150&ndash;200 words**. *Save interpretation for the Discussion.*
+
+- Review the **'Research Story' handout:** verify your slide arc follows **Intro &rarr; Literature &rarr; Methods &rarr; Results &rarr; Discussion &rarr; Conclusion &rarr; References**.
+]
+
+---
+### Real-World PBL Case: Climate Science `r fontawesome::fa("fire", fill="#D55E00", height="0.8em")`
+
+.content-box-blue[
+**Does temperature rise affect wildfire frequency?**
+]
+
+.pull-left[.font85[
+**The data:**
+- **NOAA** temperature data
+- **NIFC** wildfire data
+
+**The analysis:**
+- Run a **correlation:** is average **summer temperature** associated with **annual acres burned**?
+- **Plot the trend** over **30 years**.
+]]
+
+.pull-right[.font85[
+**Interpret critically:**
+- Is this correlation **causal**?
+- What **confounds** exist?
+  - Drought
+  - Forest management policy
+  - Land-use changes
+]]
+
+<div style="clear: both;"></div>
+
+.content-box-yellow[
+.font90[**Correlation is not causation** &mdash; a strong association can hide a third variable driving both.]
+]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.html
+
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.html",
+       to = "~/Documents/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.pdf")
+to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.html")
+```
