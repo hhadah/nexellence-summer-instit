@@ -1,0 +1,462 @@
+---
+title: "DataCORE"
+subtitle: "Parallel Tracks — Core Analysis & Multiple Regression"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "60%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+sns.set_theme(style="whitegrid")
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+.chev-row { display: flex; align-items: center; gap: 0.9em; margin-bottom: 0.6em; }
+.chev { flex: 0 0 60px; height: 74px; background: #cfe8d8;
+  clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; font-size: 1.6em; color: #1a4731; }
+.chev-row-sm { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.3em; }
+.chev-sm { flex: 0 0 50px; height: 56px; background: #cfe8d8;
+  clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #1a4731; }
+.chev-text { flex: 1; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Foundation Track &mdash; Visualization + Core Analysis <span style="color:#2e8b57;">(1:00&ndash;2:45)</span></h4></li>
+    <li><h4>Scholars Track &mdash; Multiple Regression + Interpretation <span style="color:#2e8b57;">(1:00&ndash;2:45)</span></h4></li>
+    <li><h4>Scientific Storytelling &mdash; Figure + Interpretation Pairing <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+</ol>
+
+.font90[*Two tracks run **in parallel** today. **Foundation** builds the core chart-and-statistic for your question; **Scholars** fits a multiple regression and interprets it carefully. Both share the same data and the same closing exercise.*]
+
+---
+### `r fontawesome::fa("code-branch", height = "1em", fill = "#2e8b57")` Parallel tracks &mdash; pick your lane
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("seedling", fill = "#4a7fb5")` Foundation (RcF)**
+
+One clear chart + one key statistic, interpreted in plain language. The goal: a **defensible finding** you fully understand.
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("graduation-cap", fill = "#009E73")` Scholars (RcS)**
+
+Multiple regression with 2+ predictors, full output table, assumption checks, and a **"holding constant"** interpretation.
+]
+]
+
+<div style="clear: both;"></div>
+
+.font80[**Shared dataset:** the wage survey &mdash; `education`, `gender`, `region`, `experience_years`, `hourly_wage`.]
+
+```{python load-data, include=FALSE}
+wages = pd.read_csv("wages.csv")
+```
+
+```{r load-data-r, include=FALSE}
+wages <- read.csv("wages.csv")
+```
+
+---
+class: segue-green
+
+# 1:00 &ndash; 2:45 &middot; Foundation Track
+## .white[Visualization + Core Analysis]
+
+---
+### `r fontawesome::fa("chart-column", height = "1em", fill = "#2e8b57")` Option A &mdash; grouped bar chart
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5.6, fig.height=2.7, out.width="46%", results="hide"}
+tbl = wages.groupby(["education", "gender"])["hourly_wage"].mean().unstack()
+tbl.plot(kind="bar", color=sns.color_palette("colorblind", 2))
+plt.ylabel("Mean hourly wage ($)"); plt.xlabel("")
+plt.title("Mean wage by education and gender")
+plt.xticks(rotation=20); plt.legend(title="gender")
+plt.tight_layout(); plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5.6, fig.height=2.7, out.width="46%"}
+wages |> group_by(education, gender) |>
+  summarise(mean_wage = mean(hourly_wage), .groups = "drop") |>
+  ggplot(aes(education, mean_wage, fill = gender)) +
+  geom_col(position = "dodge") + scale_fill_viridis_d(end = 0.7) +
+  labs(x = NULL, y = "Mean hourly wage ($)") + theme_minimal()
+```
+]
+]
+
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; Use a grouped bar when your question compares a **numeric outcome across categories** (and sub-categories).]
+
+---
+### `r fontawesome::fa("chart-line", height = "1em", fill = "#2e8b57")` Option B &mdash; scatter with a trend line
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5.6, fig.height=2.7, out.width="46%", results="hide"}
+x = wages["experience_years"]; y = wages["hourly_wage"]
+m, b = np.polyfit(x, y, 1)                              # slope, intercept  #<<
+plt.scatter(x, y, alpha=0.5, color="#4a7fb5")
+plt.plot(np.sort(x), b + m*np.sort(x), color="#D55E00", lw=2)
+plt.xlabel("Years of experience"); plt.ylabel("Hourly wage ($)")
+plt.title(f"Trend: +${m:.2f}/hr per year")
+plt.tight_layout(); plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5.6, fig.height=2.7, out.width="46%"}
+ggplot(wages, aes(experience_years, hourly_wage)) +
+  geom_point(alpha = 0.5, color = "#4a7fb5") +
+  geom_smooth(method = "lm", se = FALSE, color = "#D55E00") +
+  labs(x = "Years of experience", y = "Hourly wage ($)") + theme_minimal()
+```
+]
+]
+
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; Use a scatter + trend line when both variables are **numeric** and you want to show a **relationship**.]
+
+---
+### `r fontawesome::fa("calculator", height = "1em", fill = "#2e8b57")` One key statistic &mdash; correlation or mean difference
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+r, p = stats.pearsonr(wages["experience_years"], wages["hourly_wage"])
+print(f"correlation (experience, wage): r = {r:.2f}, p = {p:.4f}")
+
+diff = (wages.loc[wages.gender=="Male","hourly_wage"].mean()
+        - wages.loc[wages.gender=="Female","hourly_wage"].mean())
+print(f"mean wage gap (Male - Female): ${diff:.2f}")
+```
+]
+.panel[.panel-name[R]
+```{r}
+ct <- cor.test(wages$experience_years, wages$hourly_wage)
+cat(sprintf("correlation (experience, wage): r = %.2f, p = %.4f\n",
+            ct$estimate, ct$p.value))
+diff <- mean(wages$hourly_wage[wages$gender=="Male"]) -
+        mean(wages$hourly_wage[wages$gender=="Female"])
+cat(sprintf("mean wage gap (Male - Female): $%.2f\n", diff))
+```
+]
+]
+
+.content-box-blue[
+.font82[`r fontawesome::fa("pen", fill = "#4a7fb5")` &nbsp; **Interpret in 2 sentences:** *"Experience and wage are positively related (r = `r sprintf("%.2f", py$r)`). On average, men in this sample earned about \$`r sprintf("%.2f", py$diff)`/hr more than women."*]
+]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI assist &mdash; then check it yourself
+
+.pull-left[
+.content-box-blue[
+.font82[
+**Prompt the AI:**
+
+*"What does a correlation of **0.42** mean in plain English?"*
+]
+]
+.font80[Then write your **own** one-sentence version &mdash; and compare.]
+]
+
+.pull-right[
+.content-box-green[
+.font80[
+**A good plain-English answer:**
+
+*"A correlation of 0.42 is a **moderate positive** link: when one variable goes up, the other **tends** to go up too &mdash; but only loosely. It explains about **`r round(0.42^2*100)`%** of the variation (r&sup2;), so much is left unexplained."*
+]
+]
+]
+
+<div style="clear: both;"></div>
+
+.content-box-yellow[
+.font82[`r fontawesome::fa("triangle-exclamation", fill = "#c08a00")` &nbsp; The AI is a **drafting partner, not an authority.** Verify its claim against what you know: does "moderate" match your scatter? Is the direction right? Correlation is **not** causation.]
+]
+
+---
+### `r fontawesome::fa("clipboard-check", height = "1em", fill = "#2e8b57")` Foundation Mission Sheet
+
+.content-box-blue[
+Complete the **Session 9 Foundation Mission Sheet** on your own data.
+]
+
+.font88[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Visualize</strong> one variable (histogram or bar).</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Compare</strong> two variables (grouped bar or scatter + trend).</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>Identify</strong> one outlier &mdash; and ask why it's there.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text"><strong>Write</strong> one key insight in plain language.</div></div>
+]
+
+.center[`r timer(45L)`]
+
+---
+class: segue-green
+
+# 1:00 &ndash; 2:45 &middot; Scholars Track
+## .white[Multiple Regression &amp; Interpretation]
+
+---
+### `r fontawesome::fa("layer-group", height = "1em", fill = "#2e8b57")` Why **multiple** regression?
+
+.pull-left[
+.font90[
+- Simple regression: one predictor (wage ~ experience).
+- But wage also depends on **education**. If experienced workers are also more educated, simple regression **confounds** the two.
+- Multiple regression estimates each predictor's effect **holding the others constant.**
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[`r fontawesome::fa("equals", fill = "#4a7fb5")` &nbsp; **wage = &beta;&#8320; + &beta;&#8321;&middot;experience + &beta;&#8322;&middot;education**
+
+Each **&beta;** is a *partial* slope &mdash; the effect of that variable with the rest held fixed.]
+]
+]
+
+.font80[**DV** = hourly wage &middot; **IVs** = years of experience **and** education level.]
+
+---
+### `r fontawesome::fa("table", height = "1em", fill = "#2e8b57")` Fit OLS with 2+ predictors
+
+.panelset[
+.panel[.panel-name[Python (statsmodels)]
+```{python}
+model = smf.ols("hourly_wage ~ experience_years + C(education)", data=wages).fit()
+print(model.summary().tables[1])
+```
+]
+.panel[.panel-name[R (base)]
+```{r}
+model <- lm(hourly_wage ~ experience_years + education, data = wages)
+round(summary(model)$coefficients, 4)
+```
+]
+]
+
+.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; `C(education)` / a factor adds one row **per category** (vs. a baseline). Each coefficient is that group's gap from the baseline, **holding experience constant.**]
+
+---
+### `r fontawesome::fa("list-ol", height = "1em", fill = "#2e8b57")` Read the full output
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+print(f"R-squared     = {model.rsquared:.3f}")
+print(f"Adj. R-squared= {model.rsquared_adj:.3f}")
+print(f"F-statistic   = {model.fvalue:.1f}   (p = {model.f_pvalue:.2e})")
+print(f"N             = {int(model.nobs)}")
+```
+]
+.panel[.panel-name[R]
+```{r}
+s <- summary(model)
+cat(sprintf("R-squared      = %.3f\n", s$r.squared))
+cat(sprintf("Adj. R-squared = %.3f\n", s$adj.r.squared))
+cat(sprintf("F-statistic    = %.1f (p = %.2e)\n",
+            s$fstatistic[1],
+            pf(s$fstatistic[1], s$fstatistic[2], s$fstatistic[3], lower.tail = FALSE)))
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; **Each coefficient:** the effect of that variable. **Std err / t / p:** is it distinguishable from 0? **R&sup2;:** variation explained. **F-stat:** is the model as a whole useful?]
+
+---
+### `r fontawesome::fa("comment", height = "1em", fill = "#2e8b57")` Say it the careful way
+
+```{python extract-coef, include=FALSE}
+b_exp = float(model.params["experience_years"])
+p_exp = float(model.pvalues["experience_years"])
+```
+
+.content-box-green[
+.font88[`r fontawesome::fa("quote-left", fill = "#2e8b57")` &nbsp; *"**Holding education constant,** each additional year of experience is associated with a **\$`r sprintf("%.2f", py$b_exp)`** change in hourly wage (p `r if (py$p_exp < 0.001) "< 0.001" else paste("=", sprintf("%.3f", py$p_exp))`)."*]
+]
+
+.pull-left[
+.content-box-blue[
+.font80[
+**The template:**<br>
+*"Holding **[controls]** constant, a one-unit increase in **[IV]** is associated with a **[coef]** unit change in **[DV]** (p = \_\_)."*
+]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font80[
+**"Associated with," not "causes."**<br>
+Even with controls, this is observational &mdash; unmeasured factors may remain.
+]
+]
+]
+
+---
+### `r fontawesome::fa("ruler-combined", height = "1em", fill = "#2e8b57")` Check the assumptions
+
+.panelset[
+.panel[.panel-name[Residuals · Python]
+```{python, fig.width=5.4, fig.height=2.6, out.width="44%", results="hide"}
+plt.scatter(model.fittedvalues, model.resid, alpha=0.5, color="#4a7fb5")
+plt.axhline(0, color="#D55E00", lw=2)
+plt.xlabel("Fitted values"); plt.ylabel("Residuals")
+plt.title("Residuals vs. fitted")
+plt.tight_layout(); plt.show()
+```
+]
+.panel[.panel-name[Q-Q · Python]
+```{python, fig.width=5.4, fig.height=2.6, out.width="44%", results="hide"}
+sm.qqplot(model.resid, line="s")
+plt.title("Normal Q-Q plot")
+plt.tight_layout(); plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=6.4, fig.height=2.7, out.width="62%"}
+par(mfrow = c(1, 2))
+plot(model, which = 1)   # residuals vs fitted
+plot(model, which = 2)   # normal Q-Q
+```
+]
+]
+
+.font80[`r fontawesome::fa("eye", fill = "#4a7fb5")` &nbsp; **Residuals vs. fitted:** want a shapeless cloud around 0 (no funnel, no curve). **Q-Q plot:** points near the line = roughly normal residuals.]
+
+---
+### `r fontawesome::fa("clipboard-check", height = "1em", fill = "#2e8b57")` Scholars Mission Sheet
+
+.content-box-green[
+Complete the **Session 9 Scholars Mission Sheet** on your own data.
+]
+
+.font88[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">Choose a <strong>variable pair</strong> (DV + key IV) plus at least one <strong>control</strong>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">State the <strong>relationship found</strong> &mdash; coefficient, sign, significance.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Write the <strong>plain-language</strong> "holding constant" interpretation.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text">Name <strong>one causal limitation</strong> &mdash; what could still confound it?</div></div>
+]
+
+.center[`r timer(45L)`]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Figure + Interpretation Pairing]
+
+---
+### `r fontawesome::fa("link", height = "1em", fill = "#2e8b57")` Make them a matched pair
+
+.pull-left[
+.font90[
+A great results slide is a **chart + one sentence** that fit together perfectly.
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">Write a <strong>1-sentence interpretation</strong> of your strongest chart.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Read it aloud <strong>without</strong> showing the chart &mdash; does it stand on its own?</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Now show the chart &mdash; does it <strong>prove</strong> the sentence?</div></div>
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font82[
+**The interpretation tells the audience what to see; the chart proves it.**
+
+*Example:* the sentence *"Wages rise steadily with experience"* paired with a scatter that clearly trends up.
+]
+]
+
+.center[`r timer(15L)`]
+]
+
+---
+class: segue-green
+
+# .white[Foundation or Scholars, the discipline is the same:]
+## .white[a clear finding, an honest interpretation, a chart that proves it.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-09-data-analysis-patterns-hypotheses/pm/09-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-09-data-analysis-patterns-hypotheses/pm/09-pm-datacore.pdf")
+```
