@@ -1,0 +1,517 @@
+---
+title: "DataCORE"
+subtitle: "Advanced Pandas, Publication-Quality Figures & Tables"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "60%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_theme(style="whitegrid")
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Advanced Pandas &mdash; GroupBy, Pivot Tables, Merging <span style="color:#2e8b57;">(1:00&ndash;2:00)</span></h4></li>
+    <li><h4>Publication-Quality Figures <span style="color:#2e8b57;">(2:00&ndash;2:45)</span></h4></li>
+    <li><h4>Scientific Storytelling &mdash; Table Captions <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+</ol>
+
+.font90[*This morning you met your data. This afternoon you **slice it by groups**, build **publication-ready tables and figures**, and learn to **caption** them like a journal article.*]
+
+---
+class: segue-green
+
+# 1:00 &ndash; 2:00 &middot; Advanced Pandas
+## .white[GroupBy, Pivot Tables &amp; Merging]
+
+---
+### `r fontawesome::fa("arrows-turn-right", height = "1em", fill = "#2e8b57")` From one variable to **many**
+
+.pull-left[
+.font90[
+- So far: one variable at a time (a mean, a histogram).
+- Real analysis asks **comparative** questions: *does the pattern differ **by group**?*
+- Three workhorse tools do almost all of it:
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font82[
+`r fontawesome::fa("layer-group", fill = "#4a7fb5")` **groupby** &mdash; summaries within each group<br>
+`r fontawesome::fa("table-cells", fill = "#4a7fb5")` **pivot_table** &mdash; publication-style tables<br>
+`r fontawesome::fa("code-merge", fill = "#4a7fb5")` **merge** &mdash; combine two datasets on a key
+]
+]
+]
+
+.font80[**Our data:** the same wage survey &mdash; `education`, `gender`, `region`, `experience_years`, `hourly_wage`.]
+
+---
+### `r fontawesome::fa("file-csv", height = "1em", fill = "#2e8b57")` Load the data
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+wages = pd.read_csv("wages.csv")
+print(wages.head())
+print("N =", len(wages))
+```
+]
+.panel[.panel-name[R]
+```{r}
+wages <- read.csv("wages.csv")
+head(wages)
+nrow(wages)                                  # pandas: len(wages)
+```
+]
+]
+
+.font80[`r fontawesome::fa("table-columns", fill = "#4a7fb5")` &nbsp; One row per worker. We'll summarise **across** workers, grouped by their characteristics.]
+
+---
+### `r fontawesome::fa("layer-group", height = "1em", fill = "#2e8b57")` GroupBy &mdash; multi-level summaries
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+print(wages.groupby(["education", "gender"])["hourly_wage"]   # group by TWO keys  #<<
+           .agg(["mean", "std", "count"]).round(2))
+```
+]
+.panel[.panel-name[R]
+```{r}
+wages |>
+  group_by(education, gender) |>                              # group by TWO keys  #<<
+  summarise(mean = round(mean(hourly_wage), 2),
+            std  = round(sd(hourly_wage), 2),
+            count = n(), .groups = "drop")
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; Grouping by **two** keys gives one row per *combination*. `agg([...])` computes several statistics at once &mdash; mean, spread, and sample size together.]
+
+---
+### `r fontawesome::fa("table-cells", height = "1em", fill = "#2e8b57")` Pivot table &mdash; a publication-style layout
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+print(pd.pivot_table(wages, values="hourly_wage",
+                     index="education", columns="gender",
+                     aggfunc="mean").round(2))
+```
+]
+.panel[.panel-name[R]
+```{r}
+wages |>
+  group_by(education, gender) |>
+  summarise(mean_wage = round(mean(hourly_wage), 2), .groups = "drop") |>
+  tidyr::pivot_wider(names_from = gender, values_from = mean_wage)
+```
+]
+]
+
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; A pivot turns **groups into rows and columns** &mdash; the exact shape of a results table you'd drop into a paper or slide.]
+
+---
+### `r fontawesome::fa("code-merge", height = "1em", fill = "#2e8b57")` Merge &mdash; combine two datasets on a key
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+region_info = pd.read_csv("region_info.csv")          # cost of living by region
+merged = pd.merge(wages, region_info, on="region")    # join on the shared key  #<<
+print(merged.head())
+```
+]
+.panel[.panel-name[R]
+```{r}
+region_info <- read.csv("region_info.csv")            # cost of living by region
+merged <- merge(wages, region_info, by = "region")    # join on the shared key  #<<
+head(merged)
+```
+]
+]
+
+.font80[`r fontawesome::fa("key", fill = "#4a7fb5")` &nbsp; Merging matches rows by a **shared key** (here `region`) &mdash; the same way you'd join county health data to county income data on a **FIPS code**.]
+
+---
+class: segue-green
+
+# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Task
+## .white[Ask Your Data a Grouped Question]
+
+---
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Which groupby matters for **your** question? &mdash; ~12 min
+
+.pull-left[
+.font90[
+1. Pick the **grouping variable** most relevant to your research question.
+2. Run `df.groupby('group')['outcome'].agg(['mean','std','count'])` (Python) **or** the `group_by() |> summarise()` (R).
+3. **Stretch:** group by **two** variables, or build a `pivot_table`.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[
+**Then answer in one sentence:**
+
+*"Grouped by **[variable]**, the **[outcome]** was highest for **[group]** (mean = \_\_) and lowest for **[group]** (mean = \_\_)."*
+
+What does that tell you about your question?
+]
+]
+
+.center[`r timer(12L)`]
+]
+
+---
+class: segue-green
+
+# 2:00 &ndash; 2:45 &middot; Publication-Quality Figures
+## .white[Charts You'd Show at a Conference]
+
+---
+### `r fontawesome::fa("award", height = "1em", fill = "#2e8b57")` One rule
+
+.content-box-red[
+.font100[`r fontawesome::fa("triangle-exclamation", fill = "#fff")` &nbsp; **If you would be embarrassed to show this chart in a conference presentation, do not put it in your slides.**]
+]
+
+.three-col[
+.col[
+.content-box-blue[
+.font80[
+**Readable**<br>
+Clear axis labels with units, a title, legible font sizes.
+]
+]
+]
+.col[
+.content-box-green[
+.font80[
+**Honest**<br>
+Show uncertainty (error bars); don't truncate axes to exaggerate.
+]
+]
+]
+.col[
+.content-box-yellow[
+.font80[
+**Accessible**<br>
+Colorblind-safe palettes; don't rely on red/green alone.
+]
+]
+]
+]
+
+.font80[`r fontawesome::fa("palette", fill = "#4a7fb5")` &nbsp; We'll upgrade a plain chart step by step: **palette &rarr; error bars &rarr; annotation &rarr; export at 300 DPI.**]
+
+---
+### `r fontawesome::fa("palette", height = "1em", fill = "#2e8b57")` Colorblind-safe palettes
+
+.panelset[
+.panel[.panel-name[Python (seaborn)]
+```{python, fig.width=5.6, fig.height=2.8, out.width="48%", results="hide"}
+order = wages.groupby("education")["hourly_wage"].mean().sort_values()
+colors = sns.color_palette("colorblind", len(order))      # colorblind-safe  #<<
+order.plot(kind="bar", color=colors)
+plt.ylabel("Mean hourly wage ($)"); plt.xlabel("")
+plt.title("Mean wage by education")
+plt.xticks(rotation=20); plt.tight_layout(); plt.show()
+```
+]
+.panel[.panel-name[R (ggplot2)]
+```{r, fig.width=5.6, fig.height=2.8, out.width="48%"}
+wages |> group_by(education) |>
+  summarise(mean_wage = mean(hourly_wage)) |>
+  ggplot(aes(reorder(education, mean_wage), mean_wage, fill = education)) +
+  geom_col() + scale_fill_viridis_d() +                   # colorblind-safe  #<<
+  labs(x = NULL, y = "Mean hourly wage ($)", title = "Mean wage by education") +
+  theme_minimal() + theme(legend.position = "none")
+```
+]
+]
+
+.font80[`r fontawesome::fa("eye", fill = "#4a7fb5")` &nbsp; `seaborn`'s **"colorblind"** palette and ggplot's **viridis** are designed to stay distinguishable for color-vision deficiencies.]
+
+---
+### `r fontawesome::fa("grip-lines-vertical", height = "1em", fill = "#2e8b57")` Error bars &mdash; show the uncertainty
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5.6, fig.height=2.8, out.width="48%", results="hide"}
+g = wages.groupby("education")["hourly_wage"]
+means = g.mean(); ses = g.std() / np.sqrt(g.count())      # standard error  #<<
+means.plot(kind="bar", yerr=ses, capsize=4, color="#4a7fb5")
+plt.ylabel("Mean hourly wage ($)"); plt.xlabel("")
+plt.title("Mean wage by education (±1 SE)")
+plt.xticks(rotation=20); plt.tight_layout(); plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5.6, fig.height=2.8, out.width="48%"}
+wages |> group_by(education) |>
+  summarise(mean = mean(hourly_wage),
+            se = sd(hourly_wage) / sqrt(n())) |>           # standard error  #<<
+  ggplot(aes(education, mean)) +
+  geom_col(fill = "#4a7fb5") +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.2) +
+  labs(x = NULL, y = "Mean hourly wage ($)") + theme_minimal()
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; A bar without error bars hides how **certain** the average is. **mean &plusmn; 1 SE** is the standard add-on.]
+
+---
+### `r fontawesome::fa("location-dot", height = "1em", fill = "#2e8b57")` Annotate the point that matters
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, fig.width=5.6, fig.height=2.5, out.width="42%", results="hide"}
+x = wages["experience_years"]; y = wages["hourly_wage"]
+plt.scatter(x, y, alpha=0.5, color="#4a7fb5")
+i = y.idxmax()                                            # highest earner  #<<
+plt.annotate("highest earner", (x[i], y[i]), xytext=(x[i]-13, y[i]+1),
+             arrowprops=dict(arrowstyle="->", color="#D55E00"))
+plt.xlabel("Years of experience"); plt.ylabel("Hourly wage ($)")
+plt.tight_layout(); plt.show()
+```
+]
+.panel[.panel-name[R]
+```{r, fig.width=5.6, fig.height=2.5, out.width="42%"}
+i <- which.max(wages$hourly_wage)                          # highest earner  #<<
+plot(wages$experience_years, wages$hourly_wage, col = "#4a7fb5",
+     xlab = "Years of experience", ylab = "Hourly wage ($)")
+points(wages$experience_years[i], wages$hourly_wage[i], col = "#D55E00", pch = 19)
+text(wages$experience_years[i], wages$hourly_wage[i],
+     "highest earner", pos = 2, col = "#D55E00")
+```
+]
+]
+
+.font80[`r fontawesome::fa("comment", fill = "#4a7fb5")` &nbsp; One well-placed label guides the eye to your **key data point** &mdash; far better than making the viewer hunt for it.]
+
+---
+### `r fontawesome::fa("floppy-disk", height = "1em", fill = "#2e8b57")` Export at 300 DPI for slides &amp; print
+
+.panelset[
+.panel[.panel-name[Python]
+```{python, eval=FALSE}
+plt.savefig("fig1_wage_by_education.png",
+            dpi=300, bbox_inches="tight")     # crisp; no clipped labels  #<<
+```
+]
+.panel[.panel-name[R]
+```{r, eval=FALSE}
+ggsave("fig1_wage_by_education.png",
+       width = 6, height = 4, dpi = 300)       # crisp; sized in inches  #<<
+```
+]
+]
+
+.content-box-yellow[
+.font85[`r fontawesome::fa("file-image", fill = "#c08a00")` &nbsp; Give every figure a **descriptive file name** (`fig1_wage_by_education.png`, not `Untitled.png`) and a **caption**. `bbox_inches="tight"` stops axis labels from being cut off.]
+]
+
+---
+class: segue-green
+
+# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Task
+## .white[Finalize Your Summit Figures]
+
+---
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Your 2&ndash;3 best charts &mdash; ~12 min
+
+.pull-left[
+.font90[
+1. Choose the **2&ndash;3 charts** that best answer your research question.
+2. Upgrade each: **colorblind-safe palette**, clear labels with **units**, a title.
+3. Add **error bars** or **annotate** the key point where it helps.
+4. **Save** each at **300 DPI** with a descriptive file name.
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[
+**Each chart needs:**
+
+- A descriptive **file name**
+- A one-line **caption**
+- A reason it's in the deck &mdash; *what question does it answer?*
+]
+]
+
+.center[`r timer(12L)`]
+]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Table Captions]
+
+---
+### `r fontawesome::fa("table-list", height = "1em", fill = "#2e8b57")` A table is useless without a caption
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+print(wages.groupby("education")["hourly_wage"]
+           .agg(["mean", "median", "std", "min", "max"]).round(2))
+```
+]
+.panel[.panel-name[R]
+```{r}
+wages |> group_by(education) |>
+  summarise(mean = round(mean(hourly_wage), 2),
+            median = median(hourly_wage),
+            std = round(sd(hourly_wage), 2),
+            min = min(hourly_wage), max = max(hourly_wage))
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-question", fill = "#4a7fb5")` &nbsp; A reader who sees only this table should still know **what it shows, where it came from, and one thing to notice.** That's the caption's job.]
+
+---
+### `r fontawesome::fa("feather-pointed", height = "1em", fill = "#2e8b57")` APA table format
+
+.content-box-green[
+.font88[`r fontawesome::fa("quote-left", fill = "#2e8b57")` &nbsp; **Table 1.** *Hourly wages by education level (N = 220 workers).* **Note.** Data from the 2023 wage survey; values are in U.S. dollars per hour. Mean hourly wage rises with education, from \$22 (high school) to \$35 (graduate).]
+]
+
+.pull-left[
+.content-box-blue[
+.font80[
+**The shape:**<br>
+*"Table 1. **[Descriptive title]**. Note. **[Source and any key definitions]**."*
+]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font80[
+**Why it matters:**<br>
+APA table format is the **standard** in the social and health sciences &mdash; titles above the table, notes below.
+]
+]
+]
+
+---
+### `r fontawesome::fa("pen-fancy", height = "1em", fill = "#2e8b57")` Write your table's caption &mdash; now
+
+.pull-left[
+.font90[
+Write a caption for **your** summary-statistics table:
+
+.content-box-blue[
+.font80[*"Table 1. **[descriptive title]**. Note. **[source, sample, definitions]**; **[one notable pattern]**."*]
+]
+
+Read it to a partner who hasn't seen your data.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[
+`r fontawesome::fa("circle-check", fill = "#c08a00")` **Checklist:**
+
+- Descriptive **title** (not just "Table 1")?
+- **Sample / N** stated?
+- **Source &amp; year**?
+- Units / key **definitions**?
+- **One pattern** worth noticing?
+]
+]
+
+.center[`r timer(10L)`]
+]
+
+---
+class: segue-green
+
+# .white[You can now group, pivot, merge, and visualize.]
+## .white[Publication-quality means readable, honest, and accessible.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-08-understanding-data-beginning-analysis/pm/08-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-08-understanding-data-beginning-analysis/pm/08-pm-datacore.pdf")
+```

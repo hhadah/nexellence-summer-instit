@@ -1,0 +1,737 @@
+---
+title: "Research Methods"
+subtitle: "Day 8 · Understanding Data & Beginning Analysis"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+```
+
+
+```{css, echo=F}
+    /* 2x2 card grid used for "Characteristics" and "Tips" slides */
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+      margin-top: 0.8em;
+    }
+    .card {
+      flex: 1 1 44%;
+      background: #d9ecf9;
+      border-radius: 8px;
+      padding: 0.5em 0.9em;
+    }
+    .card h4 {
+      margin: 0 0 0.25em 0;
+      color: #0148A4;
+    }
+    .card p {
+      margin: 0;
+      font-size: 0.85em;
+    }
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+# Helper: a centered, inline countdown timer (click to start/pause/reset)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.6em auto;",
+    color_border = "#0148A4",
+    color_running_background = "#0148A4",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2.2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Introduction Presentations: "The Beginning"</h4></li>
+    <li><h4 class="white">What Is Data? Types &amp; Sources</h4></li>
+    <li><h4 class="white">Data Quality &amp; Common Mistakes</h4></li>
+    <li><h4 class="white">Accuracy in Data Recording</h4></li>
+    <li><h4 class="white">Data Warm-Up &amp; Your Data Story</h4></li>
+</ol>
+
+---
+### Welcome to Day 8!
+
+.pull-left[.font90[
+Today you meet **your data** &mdash; and start turning it into findings.
+
+By the end of the day you will be able to:
+
+- Build **intuition about patterns** in your team's dataset
+- Present the **introduction** of your project with stage comfort
+- Recognize **types of data, common errors,** and recording best practices
+- Begin connecting **data findings to your research question**
+]]
+
+.pull-right[
+<img src="assets/08-data.png" style="width:100%; border-radius:6px;">
+]
+
+---
+class: segue-yellow
+
+# Introduction Presentations: <br> "The Beginning" `r top_icon("microphone")`
+
+---
+### Introduction Presentations `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 40 min
+
+.content-box-blue[
+Each team presents its **introduction slides** (from the Session 7 homework).
+]
+
+.pull-left[.font90[
+**Structured feedback format:**
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>2 minutes</strong> to present.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>2 minutes</strong> of peer feedback using the <strong>Presentation Feedback Checklist</strong> (Session 6 tool).</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">The instructor adds <strong>one specific observation</strong> per team.</div></div>
+]]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("comments", fill = "#c08a00")` &nbsp; Feedback is **specific and kind** &mdash; name one thing that worked and one thing to sharpen.]
+]
+
+.center[`r timer(40L)`]
+]
+
+---
+class: segue-green
+
+# What Is Data? <br> Types &amp; Sources `r top_icon("database")`
+
+---
+### Focus of Day 8
+
+.pull-left[.font100[
+.content-box-blue[
+**`r fontawesome::fa("layer-group", fill = "#4a7fb5")` Understanding** different types of data.
+]
+.content-box-blue[
+**`r fontawesome::fa("scale-balanced", fill = "#4a7fb5")` Avoiding** biases in data collection.
+]
+.content-box-blue[
+**`r fontawesome::fa("pen-to-square", fill = "#4a7fb5")` Recording** data: best practices.
+]
+.content-box-blue[
+**`r fontawesome::fa("toolbox", fill = "#4a7fb5")` Reporting** data: tools to use.
+]
+]]
+
+.pull-right[
+<img src="assets/08-charts.png" style="width:100%; border-radius:6px;">
+]
+
+---
+### What Is Data?
+
+<div class="three-col">
+  <div class="col">
+    <p>`r fontawesome::fa("magnifying-glass-chart", height = "2.4em", fill = "#4a7fb5")`</p>
+    <p><strong>Evidence</strong></p>
+    <p class="font80">Information collected to examine hypotheses, address questions, or describe phenomena.</p>
+  </div>
+  <div class="col">
+    <p>`r fontawesome::fa("cube", height = "2.4em", fill = "#4a7fb5")`</p>
+    <p><strong>Foundation</strong></p>
+    <p class="font80">Transforms uncertainty into insight grounded in observable reality.</p>
+  </div>
+  <div class="col">
+    <p>`r fontawesome::fa("clipboard-check", height = "2.4em", fill = "#4a7fb5")`</p>
+    <p><strong>Replicable Conclusions</strong></p>
+    <p class="font80">Moves beyond opinion toward supported, replicable conclusions.</p>
+  </div>
+</div>
+
+---
+### Quantitative vs. Qualitative Data
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("hashtag", fill = "#4a7fb5")` Quantitative**
+
+.font85[Information that can be **measured or counted** &mdash; expressed in numbers.]
+
+- Test scores
+- Survey ratings
+- Hours spent on homework
+- Growth measurements
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("comment-dots", fill = "#009E73")` Qualitative**
+
+.font85[**Descriptive, non-numerical** information &mdash; provides context and depth.]
+
+- Open-ended survey responses
+- Observational notes
+- Interview narratives
+- Written explanations
+]
+]
+
+---
+### A Balanced Approach
+
+<div class="three-col">
+  <div class="col">
+    <p>`r fontawesome::fa("ruler-combined", height = "2.2em", fill = "#4a7fb5")`</p>
+    <p><strong>Quantitative Precision</strong></p>
+    <p class="font80">Measures patterns with numerical accuracy.</p>
+  </div>
+  <div class="col">
+    <p>`r fontawesome::fa("comments", height = "2.2em", fill = "#009E73")`</p>
+    <p><strong>Qualitative Depth</strong></p>
+    <p class="font80">Explains the <em>"why"</em> behind the patterns.</p>
+  </div>
+  <div class="col">
+    <p>`r fontawesome::fa("object-group", height = "2.2em", fill = "#c08a00")`</p>
+    <p><strong>Integrated Research</strong></p>
+    <p class="font80">Combines approaches for a comprehensive understanding.</p>
+  </div>
+</div>
+
+--
+
+.content-box-yellow[
+.font90[**The best projects mix both** &mdash; numbers show *what* is happening; words and context explain *why*.]
+]
+
+---
+### Primary vs. Secondary Data
+
+.pull-left[
+.content-box-blue[
+**`r fontawesome::fa("person-digging", fill = "#4a7fb5")` Primary Data**
+
+.font85[Information you collect **directly**, through your own effort.]
+
+- Experiments
+- Surveys
+- Interviews
+- Observations
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("box-archive", fill = "#009E73")` Secondary Data**
+
+.font85[Information that **already exists**, collected by others.]
+
+- Books &amp; articles
+- Websites
+- Databases
+- Government / agency records
+]
+]
+
+---
+### When to Use Each Type
+
+<div class="three-col">
+  <div class="col">
+    <div class="content-box-blue">
+    <p><strong>`r fontawesome::fa("1", fill="#4a7fb5")` Use Primary When…</strong></p>
+    <p class="font80">Your question is specific and unique &middot; you need fresh data nobody has &middot; you want control over how it's collected.</p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="content-box-green">
+    <p><strong>`r fontawesome::fa("2", fill="#009E73")` Use Secondary When…</strong></p>
+    <p class="font80">The information already exists &middot; you need to save time &middot; you need broader context.</p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="content-box-yellow">
+    <p><strong>`r fontawesome::fa("3", fill="#c08a00")` Best Practice</strong></p>
+    <p class="font80">Many strong projects use <strong>both</strong> types for a fuller understanding.</p>
+    </div>
+  </div>
+</div>
+
+---
+### Data Structure &amp; Source
+
+.pull-left[.font85[
+**Structure &mdash; how it spans time:**
+
+.content-box-blue[
+- **Cross-sectional:** many units at **one** point in time (a snapshot).
+- **Longitudinal:** the **same** units tracked **over time** (a movie).
+]
+]]
+
+.pull-right[.font85[
+**Source &mdash; where it comes from:**
+
+.content-box-green[
+- **Administrative:** records kept for operations (school enrollment, tax records).
+- **Survey:** collected by asking people questions.
+- **Experimental:** generated under controlled, randomized conditions.
+]
+]]
+
+<div style="clear: both;"></div>
+
+.font90[.center[.purple[*Knowing the structure and source tells you what claims the data can &mdash; and cannot &mdash; support.*]]]
+
+---
+### Data Quality Issues to Watch For
+
+.font85[
+.content-box-blue[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Missing data** &mdash; *why* it's missing matters:
+
+- **Missing at random** &mdash; gaps unrelated to the value itself; usually less harmful.
+- **Missing not at random** &mdash; the missingness is *related* to the value (e.g., high earners skip the income question). This **biases** your results.
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("ruler-horizontal", fill = "#c08a00")` Measurement error** &mdash; the recorded value differs from the true value (faulty instrument, vague question, typos).
+]
+
+.content-box-green[
+**`r fontawesome::fa("clock-rotate-left", fill = "#009E73")` Historical limitations** &mdash; old data may use different definitions, categories, or methods than today &mdash; compare with care.
+]
+]
+
+---
+class: segue-yellow
+
+# Data Quality &amp; <br> Common Mistakes `r top_icon("exclamation")`
+
+---
+### Common Mistakes in Research
+
+.pull-left[.font90[
+We can make mistakes at **every stage**:
+
+- **Selecting participants** &rarr; *selection bias*
+- **Collecting data** &rarr; *measurement &amp; response bias*
+- **Analyzing data** &rarr; *confirmation bias*
+- **Reporting results** &rarr; *reporting bias*
+]]
+
+.pull-right[
+<img src="assets/08-survey.png" style="max-height:500px; border-radius:6px;">
+]
+
+---
+### Biased Sampling &amp; Why Random Sampling Helps
+
+.pull-left[.font85[
+.content-box-yellow[
+**`r fontawesome::fa("xmark", fill = "#D55E00")` Biased sampling**
+
+*Example:* only surveying students who play sports about their favorite activities.
+
+**Fix:** include students with diverse interests and backgrounds &mdash; use **random sampling** where possible.
+]
+]]
+
+.pull-right[.font85[
+.content-box-green[
+**`r fontawesome::fa("shuffle", fill = "#009E73")` Why random sampling helps**
+
+- **Representative results** &mdash; findings reflect the whole population.
+- **Reduced bias** &mdash; everyone has an equal chance of selection.
+- **Statistical validity** &mdash; supports more accurate analysis.
+]
+]]
+
+---
+### Fixing Biased (Leading) Questions
+
+.font90[A **leading question** pushes the respondent toward an answer. Rewrite it to be **neutral**.]
+
+.font80[
+| `r fontawesome::fa("xmark", fill = "#D55E00")` Biased question | `r fontawesome::fa("check", fill = "#009E73")` Neutral alternative |
+|---|---|
+| "Don't you agree that school starts too early?" | "What time do you think school should start?" |
+| "Why is the new lunch policy so unfair?" | "What are your thoughts on the new lunch policy?" |
+| "How much do you hate doing homework?" | "How would you describe your experience with homework?" |
+| "Wouldn't you prefer more recess time?" | "What is your opinion about the current recess time?" |
+]
+
+---
+### Confirmation Bias
+
+.pull-left[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("eye-low-vision", fill = "#c08a00")` The trap**
+
+Only noticing the data that **supports** your hypothesis &mdash; and overlooking the rest.
+]
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**`r fontawesome::fa("magnifying-glass", fill = "#009E73")` The fix**
+
+Actively look for evidence that **contradicts** your expectations. Let the data change your mind.
+]
+]]
+
+<div style="clear: both;"></div>
+
+.font90[.center[.purple[*A good researcher tries to prove themselves **wrong** &mdash; not just right.*]]]
+
+---
+class: segue-green
+
+# Accuracy in <br> Data Recording `r top_icon("pen")`
+
+---
+### Why Accurate Recording Matters
+
+.pull-left[.font90[
+.content-box-blue[
+**`r fontawesome::fa("circle-check", fill = "#4a7fb5")` Valid conclusions** &mdash; accurate data leads to trustworthy findings.
+]
+.content-box-green[
+**`r fontawesome::fa("clone", fill = "#009E73")` Replicable research** &mdash; others can verify and build on your work.
+]
+.content-box-yellow[
+**`r fontawesome::fa("scale-balanced", fill = "#c08a00")` Research integrity** &mdash; honest recording reflects scientific ethics.
+]
+]]
+
+.pull-right[
+<img src="assets/08-recording.png" style="width:100%; border-radius:6px;">
+]
+
+---
+### Data Recording Best Practices
+
+<div class="card-grid">
+  <div class="card">
+    <h4>`r fontawesome::fa("bolt", fill = "#0148A4")` Record Immediately</h4>
+    <p>Don't rely on memory &mdash; write down observations right away.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("table-list", fill = "#0148A4")` Use Standardized Forms</h4>
+    <p>Create consistent templates for data collection.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("camera", fill = "#0148A4")` Document Visually</h4>
+    <p>Take photos or videos when appropriate.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("cloud-arrow-up", fill = "#0148A4")` Back Up Your Data</h4>
+    <p>Keep multiple copies in different locations.</p>
+  </div>
+</div>
+
+---
+class: segue-yellow
+
+# Data Warm-Up &amp; <br> Your Data Story `r top_icon("table")`
+
+---
+### Session 8 Mission Sheet: Data Warm-Up `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 30 min
+
+.content-box-blue[
+As a team, **explore your dataset** using the Session 8 Mission Sheet.
+]
+
+.font85[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Count</strong> the rows and columns.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Describe</strong> your key variables.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Note <strong>one surprising observation</strong>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text">Note any <strong>missing or unusual values</strong>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">5</div><div class="chev-text">Calculate the <strong>mean and range</strong> of one numerical variable.</div></div>
+]
+
+.center[`r timer(30L)`]
+
+---
+### Scientific Storytelling: Data Story Opening Lines `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 15 min
+
+.pull-left[.font90[
+Write the **opening line** of your Results section. It must be **specific and factual**:
+]
+
+.content-box-green[
+.font85[*"Our dataset contains **[N]** observations from **[source, year]**. The average **[DV]** in our sample is **[value]**."*]
+]
+
+.font90[Then **read it aloud** &mdash; practice precision.]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("bullseye", fill = "#c08a00")` &nbsp; **Precise, not vague.** "About 500-ish students" `r fontawesome::fa("arrow-right", fill="#c08a00")` "Our dataset contains **512** students surveyed in **2023**."]
+]
+
+.center[`r timer(15L)`]
+]
+
+---
+class: segue-green
+
+# Homework &amp; After-Class Work `r top_icon("laptop-code")`
+
+---
+### After-Class Team Session `r fontawesome::fa("gear", fill="#0148A4", height="0.8em")` 3:15 &ndash; 5:15 PM
+
+.content-box-yellow[
+Teams work with a **TA / peer mentor** available. Produce a **tangible output before dinner** &mdash; *not free time.*
+]
+
+.font85[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Data Warm-Up Mission Sheet:</strong> complete all 4 sections with your actual dataset &mdash; variable table, initial observations, descriptive stats, curiosity questions.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Build a <strong>descriptive statistics summary table</strong> (Python/Excel): mean, median, SD, range for all key numerical variables.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Identify and document any <strong>data quality issues</strong> (missing values, outliers, format errors) in your <strong>data cleaning log</strong>.</div></div>
+]
+
+--
+
+.content-box-green[
+.font88[**`r fontawesome::fa("flag-checkered", fill = "#009E73")` Team output due before dinner:** descriptive statistics table + data cleaning log + completed Session 8 Mission Sheet.]
+]
+
+---
+### Evening Work Period `r fontawesome::fa("book", fill="#0148A4", height="0.8em")` 7:00 &ndash; 9:00 PM
+
+.pull-left[.font82[
+**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.
+
+- **Individual DataCORE Journal:** describe the **shape** of your data distribution. Is it skewed? Are there outliers? What might explain them?
+
+- **(RcS):** create a **correlation matrix** for your key variables. Screenshot and annotate &mdash; which correlations are strongest? Do they make sense theoretically?
+
+- **Slide update:** revise your **Methods slide** with what you now know about your data &mdash; be specific about dataset name, timeframe, and sample.
+]]
+
+.pull-right[
+<img src="assets/08-homework.png" style="width:92%; max-height:470px; object-fit:cover; border-radius:6px;">
+]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+to_pdf(from = "08-class.html", to = "08-class.pdf")
+```
