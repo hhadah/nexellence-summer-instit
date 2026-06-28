@@ -1,0 +1,409 @@
+---
+title: "DataCORE"
+subtitle: "Final Analysis, AI Results Check & Portfolio Prep"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "60%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import statsmodels.formula.api as smf
+sns.set_theme(style="whitegrid")
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+.card-grid { display: flex; flex-wrap: wrap; gap: 0.7em; margin-top: 0.6em; }
+.card { flex: 1 1 30%; background: #e7f3ec; border-radius: 8px; padding: 0.5em 0.8em; }
+.card h4 { margin: 0 0 0.2em 0; color: #2e8b57; font-size: 0.95em; }
+.card p { margin: 0; font-size: 0.8em; }
+.chev-row-sm { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.3em; }
+.chev-sm { flex: 0 0 50px; height: 56px; background: #cfe8d8;
+  clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #1a4731; }
+.chev-text { flex: 1; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Final Analysis + AI Results Check <span style="color:#2e8b57;">(1:00&ndash;1:45)</span></h4></li>
+    <li><h4>Final Dataset Documentation &amp; Portfolio Prep <span style="color:#2e8b57;">(1:45&ndash;2:45)</span></h4></li>
+    <li><h4>Scientific Storytelling &mdash; Final Chart Set Selection <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+</ol>
+
+.font90[*Today you don't learn a new technique &mdash; you **finish.** One clean run, an honest error-check, and a portfolio you'd be proud to show at the Research Summit.*]
+
+```{python load-data, include=FALSE}
+wages = pd.read_csv("wages.csv")
+```
+
+```{r load-data-r, include=FALSE}
+wages <- read.csv("wages.csv")
+```
+
+---
+class: segue-green
+
+# 1:00 &ndash; 1:45 &middot; Final Analysis
+## .white[&amp; AI Results Check]
+
+---
+### `r fontawesome::fa("arrows-rotate", height = "1em", fill = "#2e8b57")` Run it clean &mdash; exactly once
+
+.pull-left[
+.font90[
+Before you trust a result, prove it **reproduces**:
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Restart</strong> the kernel / session (clear memory).</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Run top to bottom</strong> with no skipping.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Confirm <strong>every number</strong> still appears &mdash; no errors, no leftovers.</div></div>
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("triangle-exclamation", fill = "#c08a00")` &nbsp; If it only works when you run cells **out of order**, it isn't a finished analysis &mdash; it's a lucky accident.]
+]
+]
+
+.font80[**Every code block carries a one-line comment** explaining its purpose &mdash; that's what makes it a portfolio piece.]
+
+---
+### `r fontawesome::fa("list-check", height = "1em", fill = "#2e8b57")` A clean, commented pipeline
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+wages = pd.read_csv("wages.csv")             # load the raw data
+wages = wages.dropna()                       # drop incomplete rows
+gap = (wages.loc[wages.gender=="Male","hourly_wage"].mean()
+       - wages.loc[wages.gender=="Female","hourly_wage"].mean())   # gender wage gap
+r, p = stats.pearsonr(wages.experience_years, wages.hourly_wage)   # experience-wage link
+print(f"N = {len(wages)}, gap = ${gap:.2f}, r = {r:.2f} (p = {p:.4f})")
+```
+]
+.panel[.panel-name[R]
+```{r}
+wages <- read.csv("wages.csv")               # load the raw data
+wages <- na.omit(wages)                       # drop incomplete rows
+gap <- mean(wages$hourly_wage[wages$gender=="Male"]) -
+       mean(wages$hourly_wage[wages$gender=="Female"])   # gender wage gap
+ct <- cor.test(wages$experience_years, wages$hourly_wage) # experience-wage link
+cat(sprintf("N = %d, gap = $%.2f, r = %.2f (p = %.4f)\n",
+            nrow(wages), gap, ct$estimate, ct$p.value))
+```
+]
+]
+
+.font80[`r fontawesome::fa("comment", fill = "#4a7fb5")` &nbsp; Notice: **one comment per line of intent.** A stranger (or future you) can read it top to bottom and follow the logic.]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI results check &mdash; an honest second opinion
+
+.pull-left[
+.content-box-blue[
+.font82[
+**Paste your key results into the AI and ask:**
+
+*"Are there any obvious errors or red flags in these results?"*
+]
+]
+.font80[Then compare its critique to **your own judgment.**]
+]
+
+.pull-right[
+.content-box-green[
+.font80[
+**The AI is good at catching:**
+- Impossible values (a negative age, r &gt; 1)
+- Mismatched units or decimal slips
+- Claims stronger than the numbers support
+]
+]
+.content-box-yellow[
+.font80[
+**It can miss:**
+- Context only *you* know (how data was collected)
+- Whether the test fits the question
+]
+]
+]
+
+<div style="clear: both;"></div>
+
+.font80[`r fontawesome::fa("scale-balanced", fill = "#4a7fb5")` &nbsp; **Does it flag anything you missed? Does it miss anything important?** You are still the analyst &mdash; the AI is the reviewer.]
+
+---
+### `r fontawesome::fa("vials", height = "1em", fill = "#2e8b57")` .b[RcS] &mdash; robustness: drop a control, re-run
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+full = smf.ols("hourly_wage ~ experience_years + C(education) + C(gender)",
+               data=wages).fit()                                   # full model
+reduced = smf.ols("hourly_wage ~ experience_years + C(gender)",
+                  data=wages).fit()                                # drop education
+print(f"experience coef  (full)    = {full.params['experience_years']:.3f}")
+print(f"experience coef  (reduced) = {reduced.params['experience_years']:.3f}")
+```
+]
+.panel[.panel-name[R]
+```{r}
+full <- lm(hourly_wage ~ experience_years + education + gender, data = wages) # full
+reduced <- lm(hourly_wage ~ experience_years + gender, data = wages)  # drop education
+cat(sprintf("experience coef (full)    = %.3f\n", coef(full)["experience_years"]))
+cat(sprintf("experience coef (reduced) = %.3f\n", coef(reduced)["experience_years"]))
+```
+]
+]
+
+```{python rb-extract, include=FALSE}
+b_full = float(full.params["experience_years"])
+b_red  = float(reduced.params["experience_years"])
+pct = abs(b_red - b_full) / abs(b_full) * 100
+```
+
+.content-box-yellow[
+.font82[`r fontawesome::fa("magnifying-glass", fill = "#c08a00")` &nbsp; Dropping **education** moves the experience coefficient by about **`r sprintf("%.0f", py$pct)`%**. If a control swings your main coefficient a lot, that sensitivity **is a limitation** &mdash; document it honestly.]
+]
+
+---
+class: segue-green
+
+# 1:45 &ndash; 2:45 &middot; Portfolio Prep
+## .white[Your Analysis as a Research Artifact]
+
+---
+### `r fontawesome::fa("box-open", height = "1em", fill = "#2e8b57")` Your portfolio is an artifact, not a folder of files
+
+<div class="card-grid">
+  <div class="card">
+    <h4>`r fontawesome::fa("file-code", fill = "#2e8b57")` Commented notebook</h4>
+    <p>Every code block has a one-line comment explaining its purpose.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("image", fill = "#2e8b57")` Exported figures</h4>
+    <p>PNG, 300 DPI, descriptive file names.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("table", fill = "#2e8b57")` Summary table</h4>
+    <p>Formatted statistics table with an APA caption.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("broom", fill = "#2e8b57")` Data cleaning log</h4>
+    <p>What you changed, why, and what you chose <em>not</em> to change.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("robot", fill = "#2e8b57")` AI usage log</h4>
+    <p>Tools used, prompts that worked, errors the AI made.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("file-pdf", fill = "#2e8b57")` Exported PDF</h4>
+    <p>The notebook as a PDF &mdash; what you display at the Summit.</p>
+  </div>
+</div>
+
+---
+### `r fontawesome::fa("table", height = "1em", fill = "#2e8b57")` Summary statistics table + caption
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+summary = wages.groupby("education")["hourly_wage"].agg(
+    ["count", "mean", "median", "std"]).round(2)   # summary stats by group
+print(summary)
+```
+]
+.panel[.panel-name[R]
+```{r}
+wages |> group_by(education) |>
+  summarise(count = n(), mean = round(mean(hourly_wage),2),
+            median = median(hourly_wage), std = round(sd(hourly_wage),2))
+```
+]
+]
+
+.content-box-green[
+.font85[`r fontawesome::fa("quote-left", fill = "#2e8b57")` &nbsp; **Table 1.** *Hourly wage by education level (N = 220).* **Note.** Data from the 2023 wage survey; values in U.S. dollars per hour.]
+]
+
+---
+### `r fontawesome::fa("clipboard-list", height = "1em", fill = "#2e8b57")` Two logs that make you credible
+
+.pull-left[
+.content-box-blue[
+.font80[
+**`r fontawesome::fa("broom", fill = "#4a7fb5")` Data cleaning log**
+
+| Step | Why |
+|---|---|
+| Dropped 6 blank rows | No wage recorded |
+| Recoded "M/F" &rarr; gender | Consistent labels |
+| Kept 3 high wages | Real, not errors |
+]
+]]
+
+.pull-right[
+.content-box-yellow[
+.font80[
+**`r fontawesome::fa("robot", fill = "#c08a00")` AI usage log**
+
+| Prompt | Outcome |
+|---|---|
+| "Explain r = 0.42" | Useful plain-English |
+| "Write my groupby" | Worked after 1 fix |
+| "Is this causal?" | Over-claimed &mdash; corrected |
+]
+]]
+
+<div style="clear: both;"></div>
+
+.font82[`r fontawesome::fa("circle-check", fill = "#4a7fb5")` &nbsp; Logging what you changed **and** how you used AI is honesty, not bureaucracy &mdash; it lets anyone retrace your steps.]
+
+---
+### `r fontawesome::fa("floppy-disk", height = "1em", fill = "#2e8b57")` Export figures &amp; notebook
+
+.panelset[
+.panel[.panel-name[Figure · Python]
+```{python, eval=FALSE}
+plt.savefig("fig1_experience_wage_scatter.png",
+            dpi=300, bbox_inches="tight")     # 300 DPI, descriptive name
+```
+]
+.panel[.panel-name[Figure · R]
+```{r, eval=FALSE}
+ggsave("fig1_experience_wage_scatter.png",
+       width = 6, height = 4, dpi = 300)        # 300 DPI, sized in inches
+```
+]
+.panel[.panel-name[Notebook PDF]
+```{r, eval=FALSE}
+# Jupyter:   File > Download as > PDF,  or:
+#   jupyter nbconvert --to pdf analysis.ipynb
+# R Markdown / Quarto:
+#   quarto render analysis.qmd --to pdf
+```
+]
+]
+
+.content-box-blue[
+.font85[`r fontawesome::fa("file-pdf", fill = "#4a7fb5")` &nbsp; The **exported PDF** is the deliverable you display at the Research Summit &mdash; code, output, figures, and your comments in one clean document.]
+]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Final Chart Set Selection]
+
+---
+### `r fontawesome::fa("filter", height = "1em", fill = "#2e8b57")` Lock your 2&ndash;3 Summit charts
+
+.font90[For each candidate chart, ask three questions. If it fails one &mdash; **simplify or cut it.**]
+
+<div class="three-col">
+  <div class="col">
+    <div class="content-box-blue">
+    <p><strong>`r fontawesome::fa("bullseye", fill="#4a7fb5")` 1. Relevant?</strong></p>
+    <p class="font80">Does it <strong>directly answer</strong> your research question?</p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="content-box-green">
+    <p><strong>`r fontawesome::fa("eye", fill="#009E73")` 2. Readable?</strong></p>
+    <p class="font80">Is it legible at <strong>presentation size</strong>, from the back of the room?</p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="content-box-yellow">
+    <p><strong>`r fontawesome::fa("stopwatch", fill="#c08a00")` 3. Explainable?</strong></p>
+    <p class="font80">Can you explain it in <strong>under 30 seconds</strong>?</p>
+    </div>
+  </div>
+</div>
+
+--
+
+.content-box-blue[
+.font90[`r fontawesome::fa("award", fill = "#4a7fb5")` &nbsp; **A clear, simple chart beats a complex one every time.** When in doubt, cut a variable, not a viewer.]
+]
+
+.center[`r timer(15L)`]
+
+---
+class: segue-green
+
+# .white[One clean run. An honest check. A portfolio you'd show anyone.]
+## .white[That's what turns analysis into research.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-10-synthesizing-findings/pm/10-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-10-synthesizing-findings/pm/10-pm-datacore.pdf")
+```
