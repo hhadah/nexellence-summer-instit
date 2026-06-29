@@ -64,7 +64,7 @@ xaringanExtra::use_panelset()
 class: segue-green
 
 # 1:00 &ndash; 1:20 &middot; Orientation
-## Tools & Environment
+## .white[Tools & Environment]
 
 ---
 ### `r fontawesome::fa("laptop-code", height = "1em", fill = "#2e8b57")` DataCORE Orientation
@@ -102,7 +102,7 @@ print("Hello, Research!")   #<<
 class: segue-green
 
 # 1:20 &ndash; 2:20 &middot; Exploring Your First Dataset
-## NBA Home Advantage
+## .white[NBA Home Advantage]
 
 ---
 ### `r fontawesome::fa("table", height = "1em", fill = "#2e8b57")` Step 1 &middot; Load & peek at the data
@@ -112,7 +112,7 @@ class: segue-green
 .panelset[
 .panel[.panel-name[Python]
 ```{python}
-import pandas as pd
+import pandas as pd # load pandas library #<<
 df = pd.read_csv("nba_home_away.csv")
 print(df.head())       # first 5 rows   #<<
 ```
@@ -123,7 +123,7 @@ df.shape        # rows = games, cols = fields   #<<
 ]
 .panel[.panel-name[R]
 ```{r}
-library(tidyverse)
+library(tidyverse) # load tidyverse library #<<
 df <- read_csv("nba_home_away.csv")
 head(df)        # first 5 rows   #<<
 ```
@@ -214,7 +214,7 @@ ggplot(rates, aes(side, rate, fill = side)) +
 ---
 class: segue-green
 
-# 2:20 &ndash; 2:45 &middot; AI as a Coding Assistant
+# .white[2:20 &ndash; 2:45 &middot; AI as a Coding Assistant]
 
 ---
 ### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` You asked the AI for a "win percentage" column...
@@ -266,7 +266,7 @@ home_win_pct
 class: segue-green
 
 # 2:45 &ndash; 3:00 &middot; Scientific Storytelling
-## Data Captions
+## .white[Data Captions]
 
 ---
 ### `r fontawesome::fa("comment-dots", height = "1em", fill = "#2e8b57")` Write a 2-sentence caption for your chart
