@@ -26,11 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
-
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
 BibOptions(check.entries = FALSE, 
@@ -270,15 +265,6 @@ xaringanExtra::use_panelset()
 .rcx .sr-only,.con .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 ```
 
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">Welcome & Bingo Icebreaker</h4></li>
-    <li><h4 class="white">What is Research? Opinion vs. Evidence</h4></li>
-    <li><h4 class="white">Global Challenges & Team Formation</h4></li>
-</ol>
-
----
 ## Welcome to **RESEARCH METHODS** by ResearchCORE!
 
 ### Hands-on, fast-paced experience where you will be researchers tackling real-world problems.
@@ -363,6 +349,19 @@ grid.raster(img)
 #### As you understand how the world works, you can change it for better! 
 
 ]
+
+---
+### CTD Honor Code
+
+#### In order to create a safe and successful learning community, I commit to:
+
+#### - Act with personal and academic integrity;
+#### - Participate fully in program activities and complete my own work to the best of my ability;
+#### - Treat all individuals – staff, students, and community members – with respect, including those of different races, cultures, religions, national origins, genders, sexual orientations, ages and abilities;
+#### - Treat all facilities and property with respect and care;
+#### - Observe all program rules and respect the authority of staff members.
+
+#### I understand that my actions will shape our community, and that my membership in the community depends on my honoring this code.
 
 ---
 class: segue-green
@@ -719,68 +718,6 @@ Transforming curiosity into a clear, specific question to explore.
 .center[.font150[<strong style="color:#0148A4;">WHAT ARE YOU CURIOUS ABOUT?</strong>]]
 
 ---
-class: segue-green
-
-# Opinion vs. Research
-
----
-### The Difference Between Opinion and Research
-
-.pull-left[
-.content-box-yellow[
-### `r fontawesome::fa("comment", height = "1em")` Opinion
-
-What you think or feel about something, based on personal perspective.
-
-- **Subjective**
-- Based on personal belief
-- May lack supporting evidence
-]
-]
-
-.pull-right[
-.content-box-blue[
-### `r fontawesome::fa("flask", height = "1em", fill = "#4a7fb5")` Research
-
-Systematic investigation that produces evidence-based conclusions.
-
-- **Objective**
-- Based on data and evidence
-- Follows methodical processes
-]
-]
-
----
-### Examples of Opinion
-
-.font110[
-- `r fontawesome::fa("comment", fill = "#FFC520")` Everyone should stop using social media completely.
-
-- `r fontawesome::fa("comment", fill = "#FFC520")` It's better to study late at night than early in the morning.
-
-- `r fontawesome::fa("comment", fill = "#FFC520")` Recycling doesn't make much of a difference to the planet.
-
-- `r fontawesome::fa("comment", fill = "#FFC520")` Fast food should be banned in school cafeterias.
-
-- `r fontawesome::fa("comment", fill = "#FFC520")` Climate change is too big of a problem for individuals to make a difference.
-]
-
----
-### Examples of Research Statements
-
-.font80[
-- `r fontawesome::fa("flask", fill = "#4a7fb5")` According to the **CDC's 2021 Youth Risk Behavior Survey**, which surveyed over 14,000 U.S. high school students, nearly **30% reported feeling persistently sad or hopeless** during the past year.
-
-- `r fontawesome::fa("flask", fill = "#4a7fb5")` A 2020 global survey by **Pew Research Center** involving more than 13,000 adults in 13 countries found that 73% saw climate change as a major threat to their country.
-
-- `r fontawesome::fa("flask", fill = "#4a7fb5")` A **randomized controlled sleep study at UC Berkeley** found that **teens who slept at least 8 hours** performed significantly better on memory tasks than those with less sleep. The study involved **105 adolescents aged 13&ndash;17**. *(Lopez et al., Sleep Research Journal, 2018)*
-
-- `r fontawesome::fa("flask", fill = "#4a7fb5")` The **World Health Organization**, based on data from dozens of national health agencies, estimates that **air pollution causes 7 million premature deaths worldwide each year**. *(WHO, 2021)*
-
-- `r fontawesome::fa("flask", fill = "#4a7fb5")` In a **Common Sense Media survey** of 1,306 teens aged 13&ndash;17, 25% reported that social media had a mostly negative impact on their mental health. *(Common Sense Media, 2021)*
-]
-
----
 ### A Key Attitude of a Researcher: Inquisition
 
 <br>
@@ -1054,7 +991,7 @@ class: segue-green
 <div class="chev-text"><strong>Share Findings</strong></div>
 </div>
 
-**The final deliverables:** A research proposal by Day 9 and a formal presentation by Day 10.
+**The final deliverables:** A research proposal by Day 12 and a formal presentation by Day 15.
 ]
 
 ---
@@ -1377,8 +1314,6 @@ What does it mean? What comes next?
 ]
 ]
 ]
-
-.font90[`r fontawesome::fa("comments", fill = "#4a7fb5")` &nbsp; **In pairs:** take one of your topic interests and tell a **60-second story spine** of a research project you'd want to do.]
 
 ```{r timer-spine, echo=FALSE, message=FALSE, cache=FALSE}
 countdown(minutes = 15, seconds = 0, top = 0, play_sound = FALSE)
