@@ -2,6 +2,7 @@
 title: "DataCORE"
 subtitle: "Exploring Data with Code"
 # author: "Hussain Hadah (he/him)"
+date: "June 29th, 2026"
 output:
   xaringan::moon_reader:
     css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
@@ -17,7 +18,7 @@ output:
         scroll: false
 ---
 layout: true
-<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | June 29th, 2026</div>
 
 <!--- footer -->
 
