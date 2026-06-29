@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(cd /Users/hhadah/Projects/GiT/nexellence-summer-instit && ls -la week-02-investigation-and-analysis/session-06-planning-a-study-deepening-lit-review/am/ && echo \"---PARENT---\" && ls week-02-investigation-and-analysis/session-06-planning-a-study-deepening-lit-review/)",
-      "Bash(cd /Users/hhadah/Projects/GiT/nexellence-summer-instit && find . -name \"*.Rmd\" | head -50)"
-    ]
-  }
-}
