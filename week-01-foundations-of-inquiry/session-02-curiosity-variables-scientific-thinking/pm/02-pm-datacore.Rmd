@@ -2,6 +2,7 @@
 title: "DataCORE"
 subtitle: "Python, Pandas & Your Team Dataset"
 # author: "Hussain Hadah (he/him)"
+date: "June 30th, 2026"
 output:
   xaringan::moon_reader:
     css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
@@ -17,7 +18,7 @@ output:
         scroll: false
 ---
 layout: true
-<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | June 30th, 2026</div>
 
 <!--- footer -->
 
@@ -338,7 +339,7 @@ Practice in-text citation: **(Author, Year)**.
 .font80[`r fontawesome::fa("people-arrows", fill = "#4a7fb5")` &nbsp; Read aloud. Is every definition **specific** and **citable**?]
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
 
 to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-02-curiosity-variables-scientific-thinking/pm/02-pm-datacore.html",
