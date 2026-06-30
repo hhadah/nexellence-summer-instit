@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 ---
 
 layout: true
-&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | DataCORE | 21 June 2026&lt;/div&gt;
+&lt;div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;"&gt;Nexellence Institute | DataCORE | 30 June 2026&lt;/div&gt;
 
 &lt;!--- footer --&gt;
 
@@ -196,6 +196,50 @@ std   : 9.47
 .font80[<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> &amp;nbsp; `df.describe()` (pandas) / `summary(df)` (R) gives all of these at once.]
 
 ---
+### <svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#2e8b57;overflow:visible;position:relative;"><path d="M152.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 113C-2.3 103.6-2.3 88.4 7 79s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zm0 160c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 273c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zM224 96c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zM160 416c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H192c-17.7 0-32-14.3-32-32zM48 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg> Categorical stats: frequencies and percentages
+
+.panelset[
+.panel[.panel-name[Python]
+
+``` python
+cat_counts = df["study_method"].value_counts(dropna=False).rename("frequency")
+cat_percent = (df["study_method"].value_counts(dropna=False, normalize=True) * 100).round(1).rename("percent")
+cat_table = pd.concat([cat_counts, cat_percent], axis=1)
+print(cat_table)
+```
+
+```
+              frequency  percent
+study_method                    
+solo                  7     35.0
+group                 7     35.0
+tutor                 6     30.0
+```
+]
+.panel[.panel-name[R]
+
+``` r
+cat_table &lt;- df %&gt;%
+  count(study_method, name = "frequency") %&gt;%
+  mutate(percent = round(100 * frequency / sum(frequency), 1))
+
+cat_table
+```
+
+```
+# A tibble: 3 × 3
+  study_method frequency percent
+  &lt;chr&gt;            &lt;int&gt;   &lt;dbl&gt;
+1 group                7      35
+2 solo                 7      35
+3 tutor                6      30
+```
+]
+]
+
+.font80[<svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#4a7fb5;overflow:visible;position:relative;"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> &amp;nbsp; Use this for any categorical variable (e.g., `grade_level`, `study_method`) to report how many observations are in each group and what share of the sample each group represents.]
+
+---
 ### <svg aria-hidden="true" role="img" viewBox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#2e8b57;overflow:visible;position:relative;"><path d="M522.1 62.4c16.8-5.6 25.8-23.7 20.2-40.5S518.6-3.9 501.9 1.6l-113 37.7C375 15.8 349.3 0 320 0c-44.2 0-80 35.8-80 80c0 3 .2 5.9 .5 8.8L117.9 129.6c-16.8 5.6-25.8 23.7-20.2 40.5s23.7 25.8 40.5 20.2l135.5-45.2c4.5 3.2 9.3 5.9 14.4 8.2V480c0 17.7 14.3 32 32 32H512c17.7 0 32-14.3 32-32s-14.3-32-32-32H352V153.3c21-9.2 37.2-27 44.2-49l125.9-42zM439.6 288L512 163.8 584.4 288H439.6zM512 384c62.9 0 115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L536.1 109.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L392.7 273.1c-5.7 9.8-9.3 21.1-6.7 32.1C396.8 350 449.1 384 512 384zM129.2 291.8L201.6 416H56.7l72.4-124.2zM3.2 433.1C14 478 66.3 512 129.2 512s115.2-34 126-78.9c2.6-11-1-22.3-6.7-32.1L153.2 237.8c-5-8.6-14.2-13.8-24.1-13.8s-19.1 5.3-24.1 13.8L9.9 401.1c-5.7 9.8-9.3 21.1-6.7 32.1z"/></svg> What each number tells you
 
 .three-col[
@@ -242,7 +286,7 @@ plt.xlabel("Test score"); plt.ylabel("Number of students")
 plt.show()
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-6-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-8-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 .panel[.panel-name[R]
 
@@ -253,7 +297,7 @@ ggplot(df, aes(test_score)) +
        x = "Test score", y = "Number of students")
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-7-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-9-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 ]
 
@@ -304,7 +348,7 @@ plt.ylabel("Test score")
 plt.show()
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-8-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-10-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 .panel[.panel-name[R]
 
@@ -314,7 +358,7 @@ ggplot(df, aes(y = test_score)) +
   labs(title = "Test Scores -- Boxplot", y = "Test score")
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-9-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-11-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 ]
 
@@ -413,7 +457,7 @@ plt.xlabel("Hours of sleep"); plt.ylabel("Number of students")
 plt.show()
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-10-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-12-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 .panel[.panel-name[R]
 
@@ -424,7 +468,7 @@ ggplot(df, aes(hours_of_sleep)) +
        x = "Hours of sleep", y = "Number of students")
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-11-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-13-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 ]
 
@@ -445,7 +489,7 @@ _ = plt.xticks(rotation=0)
 plt.show()
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-12-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-14-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 .panel[.panel-name[R]
 
@@ -456,7 +500,7 @@ ggplot(df, aes(study_method)) +
        x = "Study method", y = "Number of students")
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-13-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-15-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 ]
 
@@ -475,7 +519,7 @@ plt.xlabel("Hours of sleep (IV)"); plt.ylabel("Test score (DV)")
 plt.show()
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-14-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-16-1.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 .panel[.panel-name[R]
 
@@ -486,7 +530,7 @@ ggplot(df, aes(hours_of_sleep, test_score)) +
        x = "Hours of sleep (IV)", y = "Test score (DV)")
 ```
 
-&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-15-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-pm-datacore_files/figure-html/unnamed-chunk-17-3.png" alt="" width="45%" style="display: block; margin: auto;" /&gt;
 ]
 ]
 

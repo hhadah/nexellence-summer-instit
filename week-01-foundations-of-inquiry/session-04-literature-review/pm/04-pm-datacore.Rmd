@@ -146,6 +146,31 @@ cat("std   :", round(sd(dv, na.rm = TRUE), 2), "\n")     # spread               
 .font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; `df.describe()` (pandas) / `summary(df)` (R) gives all of these at once.]
 
 ---
+### `r fontawesome::fa("list-check", height = "1em", fill = "#2e8b57")` Categorical stats: frequencies and percentages
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+cat_counts = df["study_method"].value_counts(dropna=False).rename("frequency")
+cat_percent = (df["study_method"].value_counts(dropna=False, normalize=True) * 100).round(1).rename("percent")
+cat_table = pd.concat([cat_counts, cat_percent], axis=1)
+print(cat_table)
+```
+]
+.panel[.panel-name[R]
+```{r}
+cat_table <- df %>%
+  count(study_method, name = "frequency") %>%
+  mutate(percent = round(100 * frequency / sum(frequency), 1))
+
+cat_table
+```
+]
+]
+
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; Use this for any categorical variable (e.g., `grade_level`, `study_method`) to report how many observations are in each group and what share of the sample each group represents.]
+
+---
 ### `r fontawesome::fa("scale-unbalanced", height = "1em", fill = "#2e8b57")` What each number tells you
 
 .three-col[
@@ -610,7 +635,7 @@ class: segue-green
 ## .white[Tomorrow: comparing groups & testing relationships.]
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
 
 to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-04-literature-review/pm/04-pm-datacore.html",
