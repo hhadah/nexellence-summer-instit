@@ -636,9 +636,7 @@ class: segue-green
 ## .white[A real claim names its number, its size, and its limits.]
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
-
-to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/pm/07-pm-datacore.html",
-       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/pm/07-pm-datacore.pdf")
+to_pdf(from = "07-pm-datacore.html", to = "07-pm-datacore.pdf")
 ```

@@ -2,7 +2,7 @@
 title: "Research Methods"
 subtitle: "Day 7 · Academic Writing & Presenting Your Research"
 # author: "Hussain Hadah (he/him)"
-# date: "`r format(Sys.time(), '%d %B %Y')`"
+date: "July 7, 2026"
 output:
   xaringan::moon_reader:
     css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
@@ -20,7 +20,7 @@ output:
         scroll: false # disable slide transitions by scrolling
 ---
 layout: true
-<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | July 7, 2026</div>
 
 <!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
 
@@ -698,11 +698,8 @@ Teams work with a **TA / peer mentor** available. Produce a **tangible output be
 .font90[**Correlation is not causation** &mdash; a strong association can hide a third variable driving both.]
 ]
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
-library(renderthis)
-# https://hhadah.github.io/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.html
 
-to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.html",
-       to = "~/Documents/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.pdf")
-to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/07-class.html")
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+library(renderthis)
+to_pdf(from = "07-class.html", to = "07-class.pdf")
 ```

@@ -17,7 +17,7 @@ output:
         scroll: false
 ---
 layout: true
-<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | July 10, 2026</div>
 
 <!--- footer -->
 
@@ -401,7 +401,7 @@ class: segue-green
 ## .white[That's what turns analysis into research.]
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
 
 to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-10-synthesizing-findings/pm/10-pm-datacore.html",

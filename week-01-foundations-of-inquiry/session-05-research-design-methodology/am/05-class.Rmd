@@ -2,7 +2,7 @@
 title: "Research Methods"
 subtitle: "Day 5: Research Design & Methodology"
 # author: "Hussain Hadah (he/him)"
-# date: "`r format(Sys.time(), '%d %B %Y')`"
+date: "July 3, 2026"
 output:
   xaringan::moon_reader:
     css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
@@ -20,7 +20,7 @@ output:
         scroll: false # disable slide transitions by scrolling
 ---
 layout: true
-<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | July 3, 2026</div>
 
 <!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
 
@@ -952,11 +952,11 @@ This case directly illustrates the difference between **observational** and **ex
 ]
 ]
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
 # https://hhadah.github.io/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.html
 
-to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.html",
-       to = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.pdf")
-to_pdf(from = "~/Documents/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/05-class.html")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/am/05-class.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/am/05-class.pdf")
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/am/05-class.html")
 ```

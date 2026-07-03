@@ -17,7 +17,7 @@ output:
         scroll: false
 ---
 layout: true
-<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | `r format(Sys.time(), '%d %B %Y')`</div>
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | July 3, 2026</div>
 
 <!--- footer -->
 
@@ -576,7 +576,7 @@ class: segue-green
 ## .white[Tomorrow: comparing groups & testing relationships.]
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
 
 to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-01-foundations-of-inquiry/session-05-research-design-methodology/pm/05-pm-datacore.html",
