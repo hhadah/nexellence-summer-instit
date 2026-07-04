@@ -162,6 +162,102 @@ xaringanExtra::use_panelset()
       margin-bottom: 0.4em;
     }
 
+    /* ===== Sampling ball animations ===== */
+    .samp-stage { position: relative; text-align: center; margin-top: 0.4em; }
+
+    .samp-pop {
+      display: grid;
+      grid-template-columns: repeat(8, 30px);
+      gap: 14px;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .samp-ball {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #b9c4cf;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 16px; line-height: 1;
+      box-shadow: inset 0 -3px 4px rgba(0,0,0,.12);
+    }
+    .samp-star { color: #FFC83D; }
+
+    /* balls that get selected drop into the tray, then loop back */
+    .samp-ball.pick {
+      animation: samp-drop 5s ease-in-out infinite;
+      animation-delay: var(--d, 0s);
+    }
+    /* selected balls that also change colour (random / convenience / purposive) */
+    .samp-ball.recolor {
+      animation: samp-drop 5s ease-in-out infinite,
+                 samp-fill 5s ease-in-out infinite;
+      animation-delay: var(--d, 0s), var(--d, 0s);
+    }
+    /* persistent selection ring (stratified / purposive) */
+    .samp-ball.ring {
+      outline: 3px solid #0148A4;
+      outline-offset: 2px;
+    }
+
+    @keyframes samp-drop {
+      0%, 12%   { transform: translateY(0) scale(1); }
+      26%       { transform: translateY(0) scale(1.2); }
+      52%, 80%  { transform: translateY(var(--drop, 150px)) scale(1); }
+      96%, 100% { transform: translateY(0) scale(1); }
+    }
+    @keyframes samp-fill {
+      0%, 18%   { background: #b9c4cf; }
+      30%, 82%  { background: #0148A4; }
+      96%, 100% { background: #b9c4cf; }
+    }
+
+    .samp-tray {
+      height: 88px;
+      margin: 20px auto 0;
+      max-width: 560px;
+      border: 2px dashed #0148A4;
+      border-radius: 10px;
+      background: #eef4fb;
+      position: relative;
+    }
+    .samp-tray-label {
+      position: absolute; top: 6px; left: 12px;
+      font-size: 13px; color: #0148A4; font-weight: bold;
+    }
+    .samp-caption {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #5a3e9e;
+    }
+
+    /* cluster sampling: bordered groups */
+    .samp-clusters {
+      display: flex; gap: 18px;
+      justify-content: center;
+      position: relative; z-index: 2;
+    }
+    .samp-cluster {
+      border: 2px solid #cbd5e0;
+      border-radius: 10px;
+      padding: 8px 10px 4px;
+      background: #f7f9fc;
+    }
+    .samp-cluster.picked {
+      border-color: #0148A4;
+      background: #e4eef9;
+    }
+    .samp-cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 30px);
+      gap: 10px;
+    }
+    .samp-cluster-cap {
+      font-size: 12px; color: #555;
+      margin-top: 6px; text-align: center;
+    }
+
 ```
 
 ```{r countdown-setup, echo=FALSE}
@@ -182,6 +278,93 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 }
 ```
 
+```{r sampling-helpers, echo=FALSE}
+library(htmltools)
+
+# One ball in the population grid.
+.samp_ball <- function(pick = FALSE, color = NULL, ring = FALSE,
+                       recolor = FALSE, star = FALSE, delay = 0, drop = 150) {
+  cls <- "samp-ball"
+  if (pick)    cls <- paste(cls, "pick")
+  if (recolor) cls <- paste(cls, "recolor")
+  if (ring)    cls <- paste(cls, "ring")
+  sty <- sprintf("--d:%.2fs;--drop:%dpx;", delay, as.integer(drop))
+  if (!is.null(color)) sty <- paste0(sty, sprintf("background:%s;", color))
+  inner <- if (star) '<span class="samp-star">&#9733;</span>' else ""
+  sprintf('<div class="%s" style="%s">%s</div>', cls, sty, inner)
+}
+
+# Wrap the animated middle section in a stage + a "Sample" tray + caption.
+.samp_wrap <- function(middle, caption = "", tray = "Sample") {
+  htmltools::HTML(sprintf(
+    '<div class="samp-stage">%s<div class="samp-tray"><span class="samp-tray-label">%s</span></div><div class="samp-caption">%s</div></div>',
+    middle, tray, caption))
+}
+
+# Build a population grid; `spec(r, c)` returns a list describing each ball.
+.samp_grid <- function(spec, nrow = 3, ncol = 8, caption = "") {
+  pitch <- 44; ord <- 0; cells <- character(0)
+  for (r in 0:(nrow - 1)) for (c in 0:(ncol - 1)) {
+    s <- spec(r, c); if (is.null(s)) s <- list()
+    pk <- isTRUE(s$pick); dl <- 0
+    if (pk) { dl <- ord * 0.22; ord <- ord + 1 }
+    dr <- (nrow - 1 - r) * pitch + 84
+    cells <- c(cells, .samp_ball(pick = pk, color = s$color, ring = isTRUE(s$ring),
+                                 recolor = isTRUE(s$recolor), star = isTRUE(s$star),
+                                 delay = dl, drop = dr))
+  }
+  .samp_wrap(sprintf('<div class="samp-pop">%s</div>', paste(cells, collapse = "")), caption)
+}
+
+.samp_inset <- function(P) function(r, c) any(vapply(P, function(x) x[1] == r && x[2] == c, logical(1)))
+
+samp_random <- function() {
+  hit <- .samp_inset(list(c(0,1), c(0,5), c(1,3), c(1,7), c(2,0), c(2,6)))
+  .samp_grid(function(r, c) if (hit(r, c)) list(pick = TRUE, recolor = TRUE) else list(),
+             caption = "Every ball has an <b>equal chance</b> &mdash; picks land anywhere at random.")
+}
+
+samp_stratified <- function() {
+  rc  <- c("#0148A4", "#E69F00", "#009E73")   # one colour per stratum (row)
+  hit <- .samp_inset(list(c(0,2), c(0,5), c(1,1), c(1,6), c(2,3), c(2,7)))
+  .samp_grid(function(r, c) {
+    base <- list(color = rc[r + 1])
+    if (hit(r, c)) c(base, list(pick = TRUE, ring = TRUE)) else base
+  }, caption = "Split into <b>subgroups (strata)</b> by colour, then sample from <b>each</b> one.")
+}
+
+samp_convenience <- function() {
+  hit <- .samp_inset(list(c(1,0), c(1,1), c(2,0), c(2,1), c(2,2)))
+  .samp_grid(function(r, c) if (hit(r, c)) list(pick = TRUE, recolor = TRUE) else list(),
+             caption = "Just grab whoever is <b>closest / easiest to reach</b> &mdash; often not representative.")
+}
+
+samp_purposive <- function() {
+  hit <- .samp_inset(list(c(0,3), c(1,1), c(1,6), c(2,4)))
+  .samp_grid(function(r, c) if (hit(r, c)) list(pick = TRUE, ring = TRUE, recolor = TRUE, star = TRUE) else list(),
+             caption = "<b>Deliberately</b> choose specific cases (&#9733;) that fit the research need.")
+}
+
+samp_cluster <- function() {
+  clusters <- 4; nr <- 3; nc <- 2; picked <- c(2, 4); ord <- 0
+  boxes <- character(0)
+  for (k in 1:clusters) {
+    isp <- k %in% picked; balls <- character(0)
+    for (r in 0:(nr - 1)) for (cc in 0:(nc - 1)) {
+      dl <- 0; if (isp) { dl <- ord * 0.16; ord <- ord + 1 }
+      dr <- (nr - 1 - r) * 44 + 92
+      balls <- c(balls, .samp_ball(pick = isp, recolor = isp, delay = dl, drop = dr))
+    }
+    cls <- if (isp) "samp-cluster picked" else "samp-cluster"
+    boxes <- c(boxes, sprintf(
+      '<div class="%s"><div class="samp-cluster-grid">%s</div><div class="samp-cluster-cap">Group %d</div></div>',
+      cls, paste(balls, collapse = ""), k))
+  }
+  .samp_wrap(sprintf('<div class="samp-clusters">%s</div>', paste(boxes, collapse = "")),
+             caption = "Randomly pick <b>whole groups</b> (e.g. entire classrooms) &mdash; then study everyone in them.")
+}
+```
+
 
 # .text-shadow[.white[Outline for Today]]
 
@@ -193,6 +376,11 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
     <li><h4 class="white">Finalize &amp; Present the Literature Review</h4></li>
     <li><h4 class="white">Scientific Storytelling: Slide Practice</h4></li>
 </ol>
+
+---
+class: segue-yellow
+
+# Let's start with checking in on the weekend's HW
 
 ---
 ### Welcome to Week 2 &mdash; Welcome to Day 6!
@@ -415,6 +603,58 @@ Since studying everyone or everything is usually impossible, researchers select 
 ]
 
 ---
+class: segue-yellow
+
+# Sampling in Action `r top_icon("users")`
+
+.font120[.center[*Watch how each method draws balls from the population.*]]
+
+---
+### Random Sampling
+
+.font90[Everyone in the population has an **equal chance** of being selected.]
+
+```{r, echo=FALSE}
+samp_random()
+```
+
+---
+### Stratified Sampling
+
+.font90[Divide the population into **strata** (subgroups), then sample from **each** stratum.]
+
+```{r, echo=FALSE}
+samp_stratified()
+```
+
+---
+### Cluster Sampling
+
+.font90[Randomly select **entire groups**, then include everyone inside the chosen groups.]
+
+```{r, echo=FALSE}
+samp_cluster()
+```
+
+---
+### Convenience Sampling
+
+.font90[Select whoever is **easiest to reach** &mdash; fast, but prone to bias.]
+
+```{r, echo=FALSE}
+samp_convenience()
+```
+
+---
+### Purposive Sampling
+
+.font90[**Deliberately** target specific cases (&#9733;) chosen for the research need.]
+
+```{r, echo=FALSE}
+samp_purposive()
+```
+
+---
 ### Sampling Examples
 
 <div class="card-grid">
@@ -582,44 +822,6 @@ Then present your **3-part mini literature review**:
 .right[`r timer(30L)`]
 
 ]]
-
----
-### Homework &amp; After-Class Team Session
-
-.pull-left[.font80[
-**Homework**
-
-- Finish **Handout 4: Research Design Blueprint**.
-- Continue your **literature review** &mdash; make sure you have resources that speak to **why your topic is important** (you'll need this for your presentation!).
-- Keep tracking your resources in the **Source Tracker** and share notes with your team.
-]]
-
-.pull-right[.font80[
-**After-Class Team Session** `r fontawesome::fa("clock", fill="#0148A4", height="0.8em")` 3:15 &ndash; 5:15 PM
-
-.content-box-yellow[
-Teams work with **TA / peer mentor** available. Produce a **tangible output** before dinner &mdash; *not free time*.
-]
-
-- **Session 6 Mission Sheet:** begin drafting the literature review as a team &mdash; **Beginning, Middle, Ending** structure.
-- **Divide the writing:** one member drafts Beginning, one Middle, one Ending. **Combine and revise together** before dinner.
-]]
-
----
-### Evening Work Period `r fontawesome::fa("clock", fill="#0148A4", height="0.8em")` 7:00 &ndash; 9:00 PM
-
-.content-box-blue[
-**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.
-]
-
-.font85[
-- **Individual:** revise your assigned lit review section &mdash; clarity, proper citations, logical flow. **Cross-check every in-text citation** against the reference list.
-
-- **(RcS):** add **1&ndash;2 additional sources** to strengthen the **Middle** section. Each source: 2&ndash;3 sentences connecting it to your variables.
-
-- Complete the **"Evidence of Importance"** handout &mdash; **2 sources** showing why your study matters, with paraphrased summaries and citations.
-]
-
 
 ---
 class: segue-green
