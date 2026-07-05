@@ -690,47 +690,6 @@ Write the **opening line** of your Results section. It must be **specific and fa
 .center[`r timer(15L)`]
 ]
 
----
-class: segue-green
-
-# Homework &amp; After-Class Work `r top_icon("laptop-code")`
-
----
-### After-Class Team Session `r fontawesome::fa("gear", fill="#0148A4", height="0.8em")` 3:15 &ndash; 5:15 PM
-
-.content-box-yellow[
-Teams work with a **TA / peer mentor** available. Produce a **tangible output before dinner** &mdash; *not free time.*
-]
-
-.font85[
-<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Data Warm-Up Mission Sheet:</strong> complete all 4 sections with your actual dataset &mdash; variable table, initial observations, descriptive stats, curiosity questions.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Build a <strong>descriptive statistics summary table</strong> (Python/Excel): mean, median, SD, range for all key numerical variables.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Identify and document any <strong>data quality issues</strong> (missing values, outliers, format errors) in your <strong>data cleaning log</strong>.</div></div>
-]
-
---
-
-.content-box-green[
-.font88[**`r fontawesome::fa("flag-checkered", fill = "#009E73")` Team output due before dinner:** descriptive statistics table + data cleaning log + completed Session 8 Mission Sheet.]
-]
-
----
-### Evening Work Period `r fontawesome::fa("book", fill="#0148A4", height="0.8em")` 7:00 &ndash; 9:00 PM
-
-.pull-left[.font82[
-**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.
-
-- **Individual DataCORE Journal:** describe the **shape** of your data distribution. Is it skewed? Are there outliers? What might explain them?
-
-- **(RcS):** create a **correlation matrix** for your key variables. Screenshot and annotate &mdash; which correlations are strongest? Do they make sense theoretically?
-
-- **Slide update:** revise your **Methods slide** with what you now know about your data &mdash; be specific about dataset name, timeframe, and sample.
-]]
-
-.pull-right[
-<img src="assets/08-homework.png" style="width:92%; max-height:470px; object-fit:cover; border-radius:6px;">
-]
-
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
 to_pdf(from = "08-class.html", to = "08-class.pdf")

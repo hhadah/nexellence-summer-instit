@@ -502,51 +502,6 @@ Answer three key questions:
 .center[`r timer(20L)`]
 ]
 
----
-class: segue-green
-
-# Homework &amp; After-Class Work `r top_icon("laptop-code")`
-
----
-### After-Class Team Session `r fontawesome::fa("gear", fill="#0148A4", height="0.8em")` 3:15 &ndash; 5:15 PM
-
-.content-box-yellow[
-Teams work with a **TA / peer mentor** available. Produce a **tangible output before dinner** &mdash; *not free time.*
-]
-
-.font85[
-<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Session 10 Mission Sheet:</strong> write your synthesis &mdash; conclusion sentence, comparison to one literature source, one limitation, one next step.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Draft the Discussion slide:</strong> "What do our results mean?" &mdash; connect each finding to at least one source from your literature review.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>DataCORE:</strong> run any remaining analyses; export all final charts as PNG with descriptive names (e.g. <code>fig1_income_health_scatter.png</code>).</div></div>
-]
-
---
-
-.content-box-green[
-.font88[**`r fontawesome::fa("flag-checkered", fill = "#009E73")` Team output due before dinner:** draft Discussion slide + completed Session 10 Mission Sheet.]
-]
-
----
-### Evening Work Period `r fontawesome::fa("book", fill="#0148A4", height="0.8em")` 7:00 &ndash; 9:00 PM
-
-.pull-left[.font85[
-**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.
-
-- **Individual:** draft your **Discussion paragraph** &mdash; did results support your hypothesis? How do findings compare to the literature? **(200&ndash;250 words)**
-
-- **(RcS):** add a **Discussion/Conclusion** section to your written report with **&ge; 2 literature comparisons (with citations)**. Target **300&ndash;400 words.**
-]]
-
-.pull-right[.font85[
-.content-box-blue[
-**`r fontawesome::fa("users", fill = "#4a7fb5")` Team slide check** *(async is fine):*
-
-- Are all charts **labeled**?
-- Does the **story flow**?
-- Identify **3 specific things** to fix in tomorrow's session.
-]
-]]
-
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
 to_pdf(from = "10-class.html", to = "10-class.pdf")

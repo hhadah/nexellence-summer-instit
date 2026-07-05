@@ -628,45 +628,6 @@ The class gives **one piece of feedback** per team:
 ]
 
 ---
-class: segue-yellow
-
-# Homework &amp; After-Class Work `r top_icon("laptop-code")`
-
----
-### After-Class Team Session `r fontawesome::fa("gear", fill="#0148A4", height="0.8em")` 3:15 &ndash; 5:15 PM
-
-.content-box-yellow[
-Teams work with a **TA / peer mentor** available. Produce a **tangible output before dinner** &mdash; *not free time.*
-]
-
-.font85[
-<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">Complete <strong>Session 7 Part 1 Mission Sheet</strong> &mdash; content for <strong>Slides 1&ndash;4</strong> (Title, Introduction, Background Research, Research Question).</div></div>
-<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Begin building <strong>Slides 1&ndash;2</strong> in Google Slides or PowerPoint &mdash; apply <strong>one visual design principle</strong> from today's session.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>DataCORE:</strong> create a <strong>correlation or grouped comparison plot</strong> for your data. Write a <strong>2-sentence interpretation</strong> of the pattern.</div></div>
-]
-
---
-
-.content-box-green[
-.font90[**`r fontawesome::fa("flag-checkered", fill = "#009E73")` Team output due before dinner:** Slides 1&ndash;4 drafted &mdash; *content complete; design polish comes later.*]
-]
-
----
-### Evening Work Period `r fontawesome::fa("book", fill="#0148A4", height="0.8em")` 7:00 &ndash; 9:00 PM
-
-.content-box-blue[
-**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.
-]
-
-.font85[
-- **Individual:** Complete **Session 7 Part 2 Mission Sheet** &mdash; content for **Slides 5&ndash;6** (Methods, Results). Insert your best chart.
-
-- **(RcS):** Draft the **Results** section of your written report &mdash; neutral, factual, past tense, **150&ndash;200 words**. *Save interpretation for the Discussion.*
-
-- Review the **'Research Story' handout:** verify your slide arc follows **Intro &rarr; Literature &rarr; Methods &rarr; Results &rarr; Discussion &rarr; Conclusion &rarr; References**.
-]
-
----
 ### Real-World PBL Case: Climate Science `r fontawesome::fa("fire", fill="#D55E00", height="0.8em")`
 
 .content-box-blue[

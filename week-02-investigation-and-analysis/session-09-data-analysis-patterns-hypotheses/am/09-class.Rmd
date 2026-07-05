@@ -639,50 +639,6 @@ Write **three result sentences** about your data &mdash; with **precise numbers*
 
 .center[`r timer(15L)`]
 
----
-class: segue-green
-
-# Homework &amp; After-Class Work `r top_icon("laptop-code")`
-
----
-### After-Class Team Session `r fontawesome::fa("gear", fill="#0148A4", height="0.8em")` 3:15 &ndash; 5:15 PM
-
-.content-box-yellow[
-Teams work with a **TA / peer mentor** available. Produce a **tangible output before dinner** &mdash; *not free time.*
-]
-
-.font85[
-<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Session 9 Mission Sheet (RcF):</strong> visualize one variable, compare two variables, identify outliers, write one key insight.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Session 9 Mission Sheet (RcS):</strong> variable-pair analysis, compute the correlation coefficient, write a 2-sentence interpretation, identify one causal limitation.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Create <strong>2&ndash;3 publication-quality charts</strong> for your Results slides &mdash; clean axes, titles, colorblind-friendly palette, source caption.</div></div>
-]
-
---
-
-.content-box-green[
-.font88[**`r fontawesome::fa("flag-checkered", fill = "#009E73")` Team output due before dinner:** final analysis charts exported as PNG + both mission sheets complete.]
-]
-
----
-### Evening Work Period `r fontawesome::fa("book", fill="#0148A4", height="0.8em")` 7:00 &ndash; 9:00 PM
-
-.pull-left[.font85[
-**Individual + partner work** during CTD RTA study hours. TA available for drop-in questions.
-
-- **Individual:** write a **3&ndash;5 sentence results paragraph** summarizing your key finding in plain language. Read it aloud &mdash; does it make sense **without** the chart?
-
-- **(RcS):** run your **regression / multivariate analysis**. Paste the coefficient table into your notebook and **annotate** what each coefficient means in plain language.
-]]
-
-.pull-right[.font85[
-.content-box-blue[
-**Update your Results slides:**
-
-- Insert your **best 2 charts**.
-- Add **captions**.
-- Make sure the slide **text adds interpretation** &mdash; not just a repeat of what the chart shows.
-]
-]]
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
