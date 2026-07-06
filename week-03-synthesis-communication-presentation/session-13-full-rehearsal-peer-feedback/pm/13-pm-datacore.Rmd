@@ -1,0 +1,270 @@
+---
+title: "DataCORE"
+subtitle: "Concept Review, Technical Rehearsal & Summit Ready Check"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | July 15, 2026</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "60%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_theme(style="whitegrid")
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+.card-grid { display: flex; flex-wrap: wrap; gap: 0.7em; margin-top: 0.6em; }
+.card { flex: 1 1 30%; background: #e7f3ec; border-radius: 8px; padding: 0.5em 0.8em; }
+.card h4 { margin: 0 0 0.2em 0; color: #2e8b57; font-size: 0.95em; }
+.card p { margin: 0; font-size: 0.8em; }
+.chev-row-sm { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.3em; }
+.chev-sm { flex: 0 0 50px; height: 56px; background: #cfe8d8;
+  clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #1a4731; }
+.chev-text { flex: 1; }
+```
+
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Research Concept Review Game <span style="color:#2e8b57;">(1:00&ndash;1:45)</span></h4></li>
+    <li><h4>Full Technical Rehearsal + Q&A Prep <span style="color:#2e8b57;">(1:45&ndash;2:45)</span></h4></li>
+    <li><h4>Scientific Storytelling &mdash; Summit Ready Check <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+</ol>
+
+.font90[*One last sweep for misconceptions, one final run under Summit conditions, and a check that every box is ticked before the big day.*]
+
+```{python load-data, include=FALSE}
+wages = pd.read_csv("wages.csv")
+```
+
+---
+class: segue-green
+
+# 1:00 &ndash; 1:45 &middot; Research
+## .white[Concept Review Game]
+
+---
+### `r fontawesome::fa("gamepad", height = "1em", fill = "#2e8b57")` A competitive final scan for misconceptions
+
+.pull-left[
+.font90[
+**Kahoot** or **Quizlet Live** &mdash; teams compete on key concepts from all 14 sessions:
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("dna", fill = "#2e8b57")`</div><div class="chev-text">Hypothesis vs. theory · types of variables</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("code-branch", fill = "#2e8b57")`</div><div class="chev-text">Correlation vs. causation · p-value meaning</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("quote-right", fill = "#2e8b57")`</div><div class="chev-text">Citation format · research design terms</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("robot", fill = "#2e8b57")`</div><div class="chev-text">AI literacy concepts</div></div>
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font82[`r fontawesome::fa("bullhorn", fill = "#c08a00")` &nbsp; **Instructor watches the scoreboard.** Any concept where class accuracy is low gets a **2-minute clarification on the spot** &mdash; these are exactly the gaps adult guests probe in Summit Q&A.]
+]
+]
+
+---
+### `r fontawesome::fa("circle-check", height = "1em", fill = "#2e8b57")` Concept quick-check &mdash; get these right
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Correlation &ne; Causation</h4>
+    <p>Two things moving together doesn't mean one causes the other.</p>
+  </div>
+  <div class="card">
+    <h4>p-value</h4>
+    <p>Probability of data this extreme *if the null were true* &mdash; not "chance the result is real."</p>
+  </div>
+  <div class="card">
+    <h4>Hypothesis vs. Theory</h4>
+    <p>A hypothesis is a testable guess; a theory is a well-supported explanation.</p>
+  </div>
+  <div class="card">
+    <h4>Variable types</h4>
+    <p>Categorical vs. numeric; independent (cause) vs. dependent (effect).</p>
+  </div>
+  <div class="card">
+    <h4>Citation</h4>
+    <p>Every in-text cite appears in References, in one consistent style.</p>
+  </div>
+  <div class="card">
+    <h4>AI literacy</h4>
+    <p>AI assists and can be wrong; you verify, and you disclose its use.</p>
+  </div>
+</div>
+
+---
+### `r fontawesome::fa("chart-line", height = "1em", fill = "#2e8b57")` Self-check: what does a correlation *not* prove?
+
+.pull-left[
+```{python corr-demo, echo=FALSE, out.width="98%", fig.width=5.2, fig.height=3.4}
+import numpy as np
+r = np.corrcoef(wages.experience_years, wages.hourly_wage)[0, 1]
+fig, ax = plt.subplots()
+ax.scatter(wages.experience_years, wages.hourly_wage, alpha=0.5, s=14, color="#2e8b57")
+ax.set_title(f"Experience & wage move together (r = {r:.2f})", fontsize=13, fontweight="bold")
+ax.set_xlabel("Experience (years)", fontsize=12)
+ax.set_ylabel("Hourly wage ($)", fontsize=12)
+plt.tight_layout(); plt.show()
+```
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("circle-question", fill = "#c08a00")` &nbsp; A positive **r** tells you experience and wage rise together. It does **not** prove experience *causes* higher wages &mdash; education, age, or the type of job could drive both.]
+]
+.content-box-green[
+.font82[`r fontawesome::fa("check", fill = "#009E73")` &nbsp; In Q&A, say what the number **is** (an association) and what it **isn't** (proof of cause).]
+]
+]
+
+.center[`r timer(45L)`]
+
+---
+class: segue-green
+
+# 1:45 &ndash; 2:45 &middot; Full Technical
+## .white[Rehearsal + Q&A Prep]
+
+---
+### `r fontawesome::fa("display", height = "1em", fill = "#2e8b57")` One final run &mdash; in Summit conditions
+
+.pull-left[
+.font90[
+No more practice mode. This run is the real thing:
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("tv", fill = "#2e8b57")`</div><div class="chev-text">Slides up on the <strong>big screen</strong>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("person", fill = "#2e8b57")`</div><div class="chev-text">Team <strong>stands</strong> and presents, in speaking order.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("microphone-lines", fill = "#2e8b57")`</div><div class="chev-text">Instructor plays an <strong>audience member</strong>.</div></div>
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` &nbsp; Rehearse the **transitions between speakers** &mdash; the awkward hand-off is where most teams lose time and momentum.]
+]
+]
+
+---
+### `r fontawesome::fa("fire", height = "1em", fill = "#2e8b57")` One hard question per team
+
+.font85[The instructor asks the kind of question a sharp guest will ask:]
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("arrows-rotate", fill = "#2e8b57")`</div><div class="chev-text"><em>"How do you know it isn't the reverse &mdash; that Y causes X?"</em></div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("scale-unbalanced", fill = "#2e8b57")`</div><div class="chev-text"><em>"What would change your conclusion?"</em></div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("users-between-lines", fill = "#2e8b57")`</div><div class="chev-text"><em>"Did you test whether this holds for different subgroups?"</em></div></div>
+
+.content-box-yellow[
+.font85[`r fontawesome::fa("handshake-angle", fill = "#c08a00")` &nbsp; **When you can't fully answer:** *"That's a great question. Our study didn't address that directly, but based on what we found&hellip;"* A professional, honest response beats a made-up answer.]
+]
+
+.center[`r timer(60L)`]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Summit Ready Check]
+
+---
+### `r fontawesome::fa("clipboard-check", height = "1em", fill = "#2e8b57")` The Summit Ready checklist
+
+.pull-left[.font88[
+Run it as a class &mdash; every item gets a &check;:
+
+.content-box-green[
+- Title slide with **full team names**
+- **References** slide present
+- **AI attribution** statement included
+- **Every chart has a caption**
+- All members **know their speaking part**
+- Presentation is **under 12 minutes**
+]
+]]
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("triangle-exclamation", fill = "#c08a00")` Any unchecked box = emergency fix**
+
+Anything not ticked gets **5 minutes of focused attention** before 3:00 PM. Better to catch it now than on the Summit stage.
+]
+]]
+
+.center[`r timer(15L)`]
+
+---
+class: segue-green
+
+# .white[Rehearsed. Pressure-tested. Ready.]
+## .white[Next time you present, it's the Summit.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-13-full-rehearsal-peer-feedback/pm/13-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-13-full-rehearsal-peer-feedback/pm/13-pm-datacore.pdf")
+```

@@ -1,0 +1,438 @@
+---
+title: "Research Methods"
+subtitle: "Day 13 · Session 13: Full Rehearsal & Peer Feedback"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#0148A4",
+    color_running_background = "#0148A4",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+      margin-top: 0.6em;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Full Dress Rehearsal &mdash; Round 1</h4></li>
+    <li><h4 class="white">Feedback Integration Time</h4></li>
+    <li><h4 class="white">Scientific Storytelling: Q&A Practice</h4></li>
+</ol>
+
+---
+class: segue-yellow
+
+# Session 13: Full Rehearsal <br> & Peer Feedback `r top_icon("chalkboard-teacher")`
+
+---
+### Learning Objectives
+
+.font90[
+#### `r fontawesome::fa("clock", height = "1em", fill = "#4a7fb5")` &nbsp; Complete a full dress rehearsal with timed delivery
+Present start to finish, on the clock &mdash; just like the Summit.
+
+#### `r fontawesome::fa("comments", height = "1em", fill = "#4a7fb5")` &nbsp; Give and receive structured, specific, constructive feedback
+Trade feedback that names *what* and *where*, not just "good job."
+
+#### `r fontawesome::fa("screwdriver-wrench", height = "1em", fill = "#4a7fb5")` &nbsp; Identify and implement one concrete improvement
+Turn the feedback into a real change before you leave the room.
+
+#### `r fontawesome::fa("face-smile", height = "1em", fill = "#4a7fb5")` &nbsp; Build confidence and reduce presentation anxiety
+The cure for nerves is reps. Today is a full rep in a safe room.
+]
+
+---
+class: segue-yellow
+
+# Morning: ResearchCORE `r top_icon("sun")`
+
+---
+class: segue-green
+
+# Full Dress Rehearsal <br> &mdash; Round 1 `r top_icon("users")`
+
+---
+### Full Dress Rehearsal &mdash; Round 1 (90 min)
+
+.pull-left[.font90[
+Each team presents to a **small group of 2&ndash;3 other teams + one instructor.**
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("stopwatch", fill = "#0148A4")`</div><div class="chev-text"><strong>Timed strictly:</strong> 10&ndash;12 min presentation + 3 min Q&A.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("clipboard-check", fill = "#0148A4")`</div><div class="chev-text">Audience uses the <strong>Presentation Feedback Checklist</strong>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("comment-dots", fill = "#0148A4")`</div><div class="chev-text">After each talk: <strong>2 minutes</strong> of structured feedback.</div></div>
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("hourglass-half", fill = "#4a7fb5")` This is a full rep**
+
+No stopping, no restarts. If something breaks, keep going &mdash; that's exactly the skill the Summit demands.
+]
+]]
+
+.center[`r timer(12L)`]
+
+---
+### The Presentation Feedback Checklist
+
+.pull-left[.font85[
+As you watch, score each area:
+
+.content-box-blue[
+- **Story** &mdash; clear question &rarr; findings &rarr; takeaway?
+- **Slides** &mdash; one idea each, readable, captioned?
+- **Delivery** &mdash; pace, eye contact, smooth hand-offs?
+- **Evidence** &mdash; claims backed by the data shown?
+- **Timing** &mdash; within 10&ndash;12 minutes?
+]
+]]
+
+.pull-right[.font85[
+.content-box-green[
+**`r fontawesome::fa("pen", fill = "#009E73")` Take notes *during*, not after**
+
+Jot the exact slide or moment. "Slide 6's chart had no title" beats "the middle felt unclear" &mdash; specifics are what the team can act on.
+]
+]]
+
+---
+### How to Give Feedback That Helps
+
+.font90[Use the two-part frame &mdash; one genuine strength, one specific fix:]
+
+.pull-left[
+.content-box-green[
+.font90[**`r fontawesome::fa("thumbs-up", fill = "#009E73")` "One thing that was really strong was&hellip;"**
+
+Name the specific moment so the team knows to keep it.]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font90[**`r fontawesome::fa("wrench", fill = "#c08a00")` "One thing that could be clearer is&hellip;"**
+
+Point to one concrete, fixable thing &mdash; not a vague feeling.]
+]
+]
+
+--
+
+.content-box-blue[
+.font85[`r fontawesome::fa("heart", fill = "#4a7fb5")` &nbsp; **Feedback is a gift, kindly given.** Critique the slide, never the person &mdash; and always leave the team with something to *do*.]
+]
+
+---
+class: segue-green
+
+# Feedback Integration Time `r top_icon("tools")`
+
+---
+### Feedback Integration Time (30 min)
+
+.pull-left[.font90[
+Turn Round 1 feedback into real changes:
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Review</strong> all the feedback your team received.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Pick the <strong>top 3 specific improvements</strong> &mdash; highest impact first.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>Divide responsibility:</strong> who makes which change?</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text"><strong>Implement</strong> before the timer runs out.</div></div>
+]]
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("filter", fill = "#c08a00")` You can't fix everything &mdash; pick 3**
+
+A room full of notes is overwhelming. Three concrete fixes, actually done, beat thirty ideas left undone.
+]
+]]
+
+.center[`r timer(30L)`]
+
+---
+class: segue-yellow
+
+# Scientific Storytelling: <br> Q&A Practice `r top_icon("question-circle")`
+
+---
+### The 5 Questions Audiences Always Ask
+
+.font85[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>"Why did you choose this topic?"</strong> &mdash; have your origin story ready.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>"How do you know this relationship is real, not coincidence?"</strong> &mdash; point to your evidence and caveats.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>"What would you do differently with more time?"</strong> &mdash; name your top limitation and next step.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text"><strong>"Who could use these findings?"</strong> &mdash; connect to a real audience.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">5</div><div class="chev-text"><strong>"What surprised you most?"</strong> &mdash; share the moment the data changed your mind.</div></div>
+]
+
+.content-box-green[
+.font85[`r fontawesome::fa("users-gear", fill = "#2e8b57")` &nbsp; **Brainstorm your answers in advance** and decide *who* on the team fields each type of question.]
+]
+
+.center[`r timer(20L)`]
+
+---
+### Fielding a Question Gracefully
+
+.pull-left[.font90[
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("ear-listen", fill = "#0148A4")`</div><div class="chev-text"><strong>Listen fully</strong> &mdash; let them finish before you answer.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("repeat", fill = "#0148A4")`</div><div class="chev-text"><strong>Restate</strong> the question so everyone hears it.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("bullseye", fill = "#0148A4")`</div><div class="chev-text"><strong>Answer briefly</strong>, then stop &mdash; don't ramble.</div></div>
+]]
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("handshake-angle", fill = "#c08a00")` When you don't know**
+
+*"That's a great question. Our study didn't address that directly, but based on what we found&hellip;"*
+
+An honest answer beats a made-up one, every time.
+]
+]]
+
+---
+### Session 13: What You Can Do Now
+
+.font80[
+**Rehearsal & delivery:**
+
+- Deliver your **entire presentation** within a strict 10&ndash;12 minute window and hold a 3-minute Q&A without losing your footing.
+
+**Feedback, both directions:**
+
+- Give feedback with the two-part frame &mdash; one specific strength, one concrete fix &mdash; and receive it without defensiveness.
+- Turn a room of notes into your **top 3 improvements**, assign them, and implement them on a timer.
+
+**Q&A confidence:**
+
+- Prepare answers to the five questions every audience asks, and field an unexpected question honestly with the *"great question&hellip; based on what we found"* bridge.
+]

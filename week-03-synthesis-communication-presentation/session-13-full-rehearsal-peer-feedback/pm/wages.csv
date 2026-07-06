@@ -1,0 +1,221 @@
+education,gender,region,experience_years,hourly_wage
+Bachelor,Male,Rural,10,28.54
+Associate,Male,Urban,11,28.03
+Graduate,Female,Suburban,4,31.56
+Bachelor,Female,Urban,16,24.9
+High School,Male,Urban,16,27.83
+Graduate,Female,Suburban,2,26.16
+Bachelor,Male,Rural,17,27.03
+Bachelor,Female,Suburban,26,33.91
+High School,Female,Urban,13,22.02
+Associate,Male,Suburban,10,22.78
+Associate,Male,Urban,11,29.61
+Graduate,Male,Rural,16,32.91
+Bachelor,Female,Suburban,0,21.1
+Bachelor,Female,Urban,13,27.88
+Associate,Female,Urban,9,23.3
+High School,Female,Urban,25,28.04
+Bachelor,Male,Rural,11,25.72
+High School,Female,Suburban,24,27.52
+Bachelor,Male,Suburban,4,27.0
+Bachelor,Male,Suburban,16,26.15
+Bachelor,Female,Suburban,14,22.43
+Associate,Female,Urban,6,22.06
+Graduate,Male,Rural,13,35.14
+Graduate,Female,Urban,20,38.57
+Bachelor,Female,Suburban,10,26.81
+High School,Female,Suburban,0,15.12
+Associate,Female,Suburban,12,26.33
+High School,Male,Rural,6,15.14
+High School,Male,Urban,10,19.25
+Bachelor,Male,Suburban,11,26.45
+Bachelor,Female,Urban,0,24.82
+Graduate,Female,Suburban,1,32.83
+Associate,Male,Urban,15,27.37
+Associate,Male,Urban,8,17.59
+Associate,Male,Urban,0,16.55
+High School,Female,Urban,17,20.88
+High School,Female,Urban,14,20.42
+Associate,Male,Suburban,7,22.34
+High School,Male,Suburban,3,18.47
+Bachelor,Female,Urban,18,31.0
+Associate,Male,Urban,14,31.66
+Bachelor,Female,Urban,29,34.79
+Bachelor,Male,Suburban,15,28.99
+Associate,Male,Urban,15,30.28
+Bachelor,Female,Urban,11,23.94
+Bachelor,Male,Urban,18,35.85
+Associate,Male,Suburban,16,28.03
+High School,Male,Urban,21,27.48
+Bachelor,Male,Suburban,8,33.68
+High School,Male,Suburban,9,19.06
+High School,Male,Suburban,9,27.64
+High School,Male,Suburban,18,24.38
+Bachelor,Male,Suburban,22,30.81
+Bachelor,Female,Urban,9,28.17
+Bachelor,Female,Suburban,9,23.01
+Bachelor,Male,Suburban,14,28.89
+Associate,Male,Urban,10,27.77
+Bachelor,Male,Suburban,19,35.33
+High School,Female,Urban,0,13.91
+High School,Female,Suburban,6,20.26
+Bachelor,Male,Suburban,7,31.85
+Associate,Male,Rural,0,24.1
+Bachelor,Male,Rural,5,27.94
+Bachelor,Male,Suburban,6,32.06
+Bachelor,Female,Suburban,11,21.33
+Bachelor,Male,Suburban,20,32.98
+Bachelor,Male,Urban,10,28.23
+Associate,Male,Rural,5,22.13
+High School,Female,Suburban,12,17.97
+Associate,Male,Urban,19,30.02
+High School,Female,Urban,5,24.17
+Associate,Male,Rural,6,21.66
+Graduate,Female,Urban,16,38.42
+High School,Male,Urban,10,22.26
+High School,Female,Urban,17,23.79
+High School,Female,Urban,12,21.32
+High School,Female,Urban,17,24.98
+Bachelor,Female,Suburban,5,28.38
+Bachelor,Female,Urban,12,34.57
+Bachelor,Female,Rural,11,27.34
+Bachelor,Female,Rural,3,24.64
+Associate,Male,Urban,1,18.77
+Bachelor,Female,Urban,17,31.27
+High School,Male,Suburban,10,24.51
+High School,Female,Urban,5,20.92
+High School,Male,Urban,11,24.13
+Bachelor,Male,Rural,20,35.84
+Associate,Female,Rural,0,18.47
+High School,Male,Suburban,2,21.74
+Bachelor,Male,Urban,6,30.13
+High School,Male,Suburban,22,25.76
+Bachelor,Male,Suburban,14,32.37
+Associate,Male,Urban,17,20.27
+Associate,Male,Suburban,4,23.53
+Associate,Male,Urban,4,12.13
+Bachelor,Male,Urban,15,27.73
+Associate,Male,Suburban,12,27.35
+High School,Female,Urban,16,24.63
+High School,Male,Urban,11,19.73
+Graduate,Female,Rural,14,31.42
+Graduate,Female,Rural,13,37.64
+Bachelor,Male,Suburban,17,31.1
+High School,Male,Rural,18,31.28
+Graduate,Female,Rural,1,27.84
+Bachelor,Female,Urban,0,25.21
+Bachelor,Female,Urban,19,37.62
+Associate,Female,Urban,20,28.82
+High School,Female,Urban,5,14.94
+High School,Female,Suburban,0,14.05
+Graduate,Male,Urban,13,38.24
+Associate,Female,Suburban,19,22.08
+High School,Male,Urban,25,28.93
+Associate,Female,Urban,16,24.22
+Bachelor,Female,Rural,9,28.41
+High School,Male,Urban,6,21.31
+Graduate,Female,Urban,12,34.4
+Bachelor,Male,Urban,10,30.66
+Bachelor,Female,Suburban,5,25.36
+Associate,Male,Suburban,26,34.17
+Bachelor,Female,Suburban,24,30.0
+Bachelor,Male,Urban,20,32.17
+Bachelor,Female,Urban,6,30.13
+High School,Female,Rural,18,20.18
+Associate,Female,Suburban,16,20.57
+High School,Female,Suburban,15,22.57
+Associate,Female,Suburban,21,28.83
+Associate,Female,Suburban,16,20.2
+High School,Male,Urban,17,26.88
+High School,Female,Urban,16,25.45
+Bachelor,Male,Suburban,14,32.5
+High School,Female,Urban,0,17.92
+Graduate,Male,Rural,13,31.36
+Bachelor,Female,Suburban,8,27.06
+Associate,Female,Suburban,3,18.28
+Bachelor,Male,Rural,24,33.26
+High School,Female,Suburban,24,27.99
+Graduate,Female,Rural,22,42.03
+Associate,Female,Suburban,14,29.94
+Bachelor,Male,Rural,21,37.66
+High School,Female,Urban,12,20.95
+Associate,Female,Suburban,13,24.88
+Associate,Male,Suburban,4,24.75
+Graduate,Male,Urban,15,39.64
+Bachelor,Male,Urban,12,32.32
+Associate,Female,Rural,3,20.89
+High School,Male,Suburban,12,22.21
+Associate,Female,Urban,11,22.02
+Bachelor,Female,Urban,25,33.82
+Associate,Male,Urban,18,32.13
+High School,Female,Urban,12,21.31
+Bachelor,Female,Rural,14,28.79
+Graduate,Male,Urban,12,40.04
+High School,Male,Urban,11,22.25
+Bachelor,Male,Suburban,4,29.22
+High School,Male,Urban,11,24.66
+Bachelor,Male,Urban,7,25.7
+High School,Female,Suburban,3,20.37
+Bachelor,Male,Suburban,16,30.6
+Bachelor,Male,Rural,15,25.45
+Bachelor,Female,Suburban,0,19.06
+High School,Female,Suburban,11,16.08
+Graduate,Female,Suburban,19,37.12
+High School,Female,Rural,19,21.07
+High School,Male,Suburban,19,24.47
+Bachelor,Male,Rural,12,31.38
+Associate,Female,Suburban,6,21.69
+Bachelor,Female,Rural,4,24.21
+Bachelor,Female,Urban,14,31.51
+Associate,Male,Suburban,15,29.22
+Graduate,Female,Urban,21,32.6
+High School,Female,Suburban,20,22.23
+Bachelor,Male,Suburban,11,22.97
+High School,Female,Rural,3,14.87
+Graduate,Female,Rural,10,31.89
+High School,Male,Urban,14,28.15
+High School,Male,Suburban,11,25.75
+Associate,Female,Suburban,8,22.15
+Graduate,Male,Urban,14,37.2
+Graduate,Male,Urban,8,37.65
+Bachelor,Male,Urban,8,28.41
+Graduate,Male,Suburban,14,37.3
+Graduate,Female,Suburban,9,35.61
+Bachelor,Female,Rural,14,25.92
+Associate,Male,Suburban,14,29.38
+Bachelor,Female,Rural,4,25.37
+Bachelor,Female,Urban,9,24.89
+Associate,Male,Suburban,22,33.52
+High School,Female,Urban,4,19.94
+Bachelor,Male,Suburban,0,25.33
+High School,Female,Rural,0,10.96
+Graduate,Female,Rural,12,30.05
+High School,Female,Rural,12,17.08
+High School,Male,Urban,11,25.19
+Bachelor,Female,Urban,20,29.84
+High School,Male,Urban,0,19.9
+High School,Male,Urban,15,21.28
+Bachelor,Male,Suburban,23,34.7
+Graduate,Female,Suburban,4,30.55
+High School,Male,Suburban,9,28.87
+Associate,Female,Rural,7,15.64
+Bachelor,Female,Suburban,6,29.81
+Graduate,Male,Rural,10,34.98
+Bachelor,Male,Urban,22,37.72
+High School,Male,Urban,25,30.13
+High School,Female,Suburban,10,20.32
+High School,Female,Rural,25,24.16
+High School,Male,Urban,12,28.55
+Bachelor,Female,Suburban,24,31.74
+High School,Male,Suburban,11,25.57
+Bachelor,Female,Urban,13,27.69
+Bachelor,Female,Urban,15,30.46
+Bachelor,Female,Rural,34,33.27
+High School,Female,Suburban,18,23.96
+Bachelor,Female,Urban,7,31.67
+Bachelor,Male,Rural,19,32.3
+Bachelor,Male,Urban,9,29.92
+High School,Male,Rural,9,16.48
+High School,Male,Urban,18,25.87
+Graduate,Female,Suburban,12,28.7
+Associate,Female,Urban,14,22.78
