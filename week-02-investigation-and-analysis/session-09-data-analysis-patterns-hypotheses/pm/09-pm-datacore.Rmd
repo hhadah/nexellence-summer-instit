@@ -92,8 +92,7 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 # .text-shadow[Afternoon: DataCORE]
 
 <ol>
-    <li><h4>Foundation Track &mdash; Visualization + Core Analysis <span style="color:#2e8b57;">(1:00&ndash;2:45)</span></h4></li>
-    <li><h4>Scholars Track &mdash; Multiple Regression + Interpretation <span style="color:#2e8b57;">(1:00&ndash;2:45)</span></h4></li>
+    <li><h4>Multiple Regression + Interpretation <span style="color:#2e8b57;">(1:00&ndash;2:45)</span></h4></li>
     <li><h4>Scientific Storytelling &mdash; Figure + Interpretation Pairing <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
 </ol>
 
