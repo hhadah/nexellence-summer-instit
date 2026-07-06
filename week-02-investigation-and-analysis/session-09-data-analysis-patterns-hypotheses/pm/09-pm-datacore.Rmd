@@ -96,25 +96,12 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
     <li><h4>Scientific Storytelling &mdash; Figure + Interpretation Pairing <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
 </ol>
 
-.font90[*Two tracks run **in parallel** today. **Foundation** builds the core chart-and-statistic for your question; **Scholars** fits a multiple regression and interprets it carefully. Both share the same data and the same closing exercise.*]
-
 ---
-### `r fontawesome::fa("code-branch", height = "1em", fill = "#2e8b57")` Parallel tracks &mdash; pick your lane
 
-.pull-left[
-.content-box-blue[
-**`r fontawesome::fa("seedling", fill = "#4a7fb5")` Foundation (RcF)**
-
-One clear chart + one key statistic, interpreted in plain language. The goal: a **defensible finding** you fully understand.
-]
-]
-
-.pull-right[
 .content-box-green[
-**`r fontawesome::fa("graduation-cap", fill = "#009E73")` Scholars (RcS)**
+**`r fontawesome::fa("graduation-cap", fill = "#009E73")`**
 
 Multiple regression with 2+ predictors, full output table, assumption checks, and a **"holding constant"** interpretation.
-]
 ]
 
 <div style="clear: both;"></div>
@@ -132,7 +119,7 @@ wages <- read.csv("wages.csv")
 ---
 class: segue-green
 
-# 1:00 &ndash; 2:45 &middot; Scholars Track
+# 1:00 &ndash; 2:45
 ## .white[Multiple Regression &amp; Interpretation]
 
 ---
