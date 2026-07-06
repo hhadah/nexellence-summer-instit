@@ -2,7 +2,7 @@
 title: "Research Methods"
 subtitle: "Day 12 · Session 12: Research Ethics, Final Slide Polish & References"
 # author: "Hussain Hadah (he/him)"
-# date: "`r format(Sys.time(), '%d %B %Y')`"
+date: "July 14, 2026"
 output:
   xaringan::moon_reader:
     css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
@@ -20,9 +20,9 @@ output:
         scroll: false # disable slide transitions by scrolling
 ---
 layout: true
-<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | July 14, 2026</div>
 
-<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+<!--- `r rmarkdown::metadata$subtitle` | July 14, 2026-->
 
 ---
 

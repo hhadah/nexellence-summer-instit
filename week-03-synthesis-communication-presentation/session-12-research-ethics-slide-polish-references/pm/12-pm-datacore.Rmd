@@ -1,6 +1,7 @@
 ---
 title: "DataCORE"
 subtitle: "Reproducibility, Slide Sync & AI Attribution"
+date: "July 14, 2026"
 # author: "Hussain Hadah (he/him)"
 output:
   xaringan::moon_reader:
