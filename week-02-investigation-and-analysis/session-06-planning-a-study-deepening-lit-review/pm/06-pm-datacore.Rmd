@@ -220,6 +220,9 @@ wages |>                                     # pandas: df.groupby(...).agg(...)
 .panelset[
 .panel[.panel-name[Python (scipy)]
 ```{python}
+from scipy import stats
+import statsmodels.formula.api as smf
+
 men   = wages.loc[wages["gender"] == "Male",   "hourly_wage"]
 women = wages.loc[wages["gender"] == "Female", "hourly_wage"]
 
