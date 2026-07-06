@@ -1,6 +1,7 @@
 ---
 title: "DataCORE"
 subtitle: "Robustness, Interactive Visualization & Figure Captions"
+date: "July 13, 2026"
 # author: "Hussain Hadah (he/him)"
 output:
   xaringan::moon_reader:
