@@ -829,6 +829,62 @@ class: segue-green
 # Scientific Storytelling: <br> Slide Practice `r top_icon("chalkboard-teacher")`
 
 ---
+### Storytelling: Find Your Throughline
+
+.content-box-purple[
+The **throughline** is the **single core idea** that runs through your entire presentation &mdash; the thread your audience can follow from your first slide to your last. Every slide should **move that one idea forward**.
+]
+
+For your literature review, the throughline connects three moves:
+
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Background</strong> &mdash; "Here is what we already know about this topic&hellip;"</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Gap</strong> &mdash; "&hellip;but here is what we still <em>don't</em> know&hellip;"</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>Research Question</strong> &mdash; "&hellip;and that is exactly what our study asks."</div>
+</div>
+
+--
+
+.content-box-yellow[
+**Test it:** can you state your throughline in **one sentence**? If a slide doesn't push that sentence forward, cut it or fix it.
+]
+
+---
+### Presenting: Eye Contact &amp; Gestures
+
+.font95[Your slides carry the content &mdash; **your body carries the story**. Two tools make the biggest difference:]
+
+<div class="card-grid">
+  <div class="card">
+    <h4>`r fontawesome::fa("eye", fill = "#0148A4")` Talk to People, Not Slides</h4>
+    <p>Glance at the slide, then turn back and speak <em>to the audience</em>. If you read the slide, they will too &mdash; and stop listening to you.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("users-viewfinder", fill = "#0148A4")` Scan the Whole Room</h4>
+    <p>Hold eye contact with one person for a full thought (about 3&ndash;5 seconds), then move to someone else. Don't lock onto one friendly face.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("hands", fill = "#0148A4")` Gesture with Purpose</h4>
+    <p>Use open palms and natural hand movements to show size, number, and contrast ("on one hand&hellip; on the other"). Point to the part of the slide you're discussing.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("person", fill = "#0148A4")` Avoid Closed Positions</h4>
+    <p>Keep hands out of pockets, arms uncrossed, and notes down. When you're not gesturing, let your hands rest calmly at your sides.</p>
+  </div>
+</div>
+
+.font90[.center[.purple[*Eye contact builds trust; gestures add emphasis &mdash; together they keep your audience on your throughline.*]]]
+
+---
 ### Scientific Storytelling: Literature Review Slide Practice `r fontawesome::fa("clock", fill="#fff", height="0.8em")`
 
 .font100[Convert your literature review into **2 slides**:]
@@ -856,7 +912,7 @@ class: segue-green
 --
 
 .content-box-yellow[
-**`r fontawesome::fa("user-group", fill = "#4a7fb5")` Practice presenting these two slides with a partner.**
+**`r fontawesome::fa("user-group", fill = "#4a7fb5")` Practice presenting these two slides with a partner** &mdash; keep your **throughline** clear, and practice **eye contact and gestures** as you speak.
 ]
 
 .center[`r timer(10L)`]
