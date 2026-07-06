@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n -i \"regression\\\\|inference\\\\|t-test\\\\|storytelling\\\\|literature review\" /Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-07-academic-writing-presenting-research/am/07-class.Rmd | head -40)",
+      "Bash(grep -rn -i \"regression\" /Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/session-08-understanding-data-beginning-analysis --include=\"*.Rmd\" | head -20; ls /Users/hhadah/Projects/GiT/nexellence-summer-instit/week-02-investigation-and-analysis/)"
+    ]
+  }
+}

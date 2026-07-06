@@ -26,11 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
-
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
 BibOptions(check.entries = FALSE,
@@ -259,19 +254,6 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 }
 ```
 
-
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">Feedback: Your Literature Review Drafts</h4></li>
-    <li><h4 class="white">The Research Story: Beginning, Middle, End</h4></li>
-    <li><h4 class="white">Academic Writing: Style &amp; Standards</h4></li>
-    <li><h4 class="white">Citing Your Sources</h4></li>
-    <li><h4 class="white">Building Your Presentation: Introduction Slides</h4></li>
-    <li><h4 class="white">Scientific Storytelling: The 90-Second Intro</h4></li>
-</ol>
-
----
 ### Welcome to Day 7!
 
 .pull-left[.font110[
@@ -289,42 +271,6 @@ By the end of the morning you will be able to:
 <img src="assets/07-writing.png" style="width:100%; border-radius:6px;">
 ]
 
----
-class: segue-yellow
-
-# Feedback: <br> Your Literature Review Drafts `r top_icon("comments")`
-
----
-### Feedback Return: Literature Review Drafts `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 15 min
-
-.content-box-blue[
-Your marked-up **literature review drafts** are coming back to you.
-]
-
-As a class, let's look at **2&ndash;3 patterns** that showed up across many drafts:
-
-.pull-left[
-.content-box-green[
-**`r fontawesome::fa("thumbs-up", fill = "#009E73")` Common strengths**
-
-- Clear topics and genuine curiosity
-- Real sources, honestly summarized
-]
-]
-
-.pull-right[
-.content-box-yellow[
-**`r fontawesome::fa("screwdriver-wrench", fill = "#4a7fb5")` Common areas to improve**
-
-- Organize by **theme**, not author
-- Connect each source back to **your** question
-- Tighten citations
-]
-]
-
-<div style="clear: both;"></div>
-
-.font90[.center[.purple[*Use this feedback as our shared checklist for academic writing standards today.*]]]
 
 ---
 class: segue-green
@@ -332,7 +278,8 @@ class: segue-green
 # The Research Story: <br> Beginning, Middle, End `r top_icon("book-open")`
 
 ---
-### The Research Story `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 25 min
+### The Research Story `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 
+
 
 .font90[Every research paper tells a **story** with the same parts. Each section answers **one question**:]
 
@@ -347,9 +294,13 @@ class: segue-green
 <div class="chev-row-sm"><div class="chev-sm">5</div><div class="chev-text"><strong>Discussion</strong> &mdash; <em>What does it mean?</em></div></div>
 <div class="chev-row-sm"><div class="chev-sm">6</div><div class="chev-text"><strong>Conclusion</strong> &mdash; <em>So what? What's next?</em></div></div>
 <div class="chev-row-sm"><div class="chev-sm">7</div><div class="chev-text"><strong>References</strong> &mdash; <em>Whose work did you build on?</em></div></div>
+
+.center[`r timer(25L)`]
+
 ]]
 
 <div style="clear: both;"></div>
+
 
 --
 
@@ -571,10 +522,10 @@ Your research question(s) &mdash; and a hypothesis if you have one.
 ]]
 
 ---
-### Introduction Slides Workshop `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 30 min
+### Introduction Slides Workshop `r fontawesome::fa("clock", fill="#fff", height="0.8em")`
 
 .content-box-blue[
-Using **Session 7 Mission Sheet &mdash; Part 1**, each team drafts its **four introduction slides**.
+Each team drafts its **four introduction slides**.
 ]
 
 <div class="chev-row">
@@ -596,7 +547,6 @@ Using **Session 7 Mission Sheet &mdash; Part 1**, each team drafts its **four in
 
 --
 
-.font90[.center[.purple[*Instructor circulates and gives real-time feedback.*]]]
 
 .center[`r timer(30L)`]
 

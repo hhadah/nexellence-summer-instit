@@ -1,6 +1,6 @@
 ---
 title: "DataCORE"
-subtitle: "Statistical Inference, Regression & Results Language"
+subtitle: "Scientific Storytelling: From Literature Review to Results Language"
 # author: "Hussain Hadah (he/him)"
 output:
   xaringan::moon_reader:
@@ -25,29 +25,9 @@ layout: true
 
 ```{r setup, include=FALSE}
 library(knitr)
-library(reticulate)
-use_virtualenv("r-reticulate", required = TRUE)
-suppressMessages(library(tidyverse))
-options(readr.show_col_types = FALSE)
 opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
                fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
                out.width = "62%")
-```
-
-```{python py-setup, include=FALSE}
-import pandas as pd
-import numpy as np
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from scipy import stats
-import statsmodels.formula.api as smf
-pd.set_option("display.width", 100)
-pd.set_option("display.max_columns", 12)
-```
-
-```{r xaringan-panelset, echo=FALSE, eval=TRUE}
-xaringanExtra::use_panelset()
 ```
 
 ```{r countdown-setup, echo=FALSE}
@@ -69,505 +49,268 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 
 ```{css, echo=FALSE, eval=TRUE}
 .remark-code, .remark-inline-code { font-size: 0.72em; }
-.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
 .three-col { display: flex; gap: 1.5em; margin-top: 1em; }
 .three-col .col { flex: 1; }
-.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+.mock-slide { border: 2px solid #4a7fb5; border-radius: 8px; padding: 0.6em 0.9em;
+              background: #ffffff; box-shadow: 2px 2px 6px rgba(0,0,0,0.15); }
+.mock-slide h4 { margin: 0 0 0.3em 0; color: #0148A4; }
 ```
 
-# .text-shadow[Afternoon: DataCORE]
+# .text-shadow[Afternoon: Scientific Storytelling]
 
 <ol>
-    <li><h4>Statistical Inference &mdash; Is the Difference Real? <span style="color:#2e8b57;">(1:00&ndash;2:00)</span></h4></li>
-    <li><h4>Regression &mdash; Predicting One Thing from Another <span style="color:#2e8b57;">(2:00&ndash;2:45)</span></h4></li>
-    <li><h4>Scientific Storytelling &mdash; Results Language <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+    <li><h4>The Setup &mdash; Your Literature Review as a Story <span style="color:#2e8b57;">(1:00&ndash;1:45)</span></h4></li>
+    <li><h4>Practice &mdash; Your Two Slides, Out Loud <span style="color:#2e8b57;">(1:45&ndash;2:45)</span></h4></li>
+    <li><h4>The Payoff &mdash; Results Language <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
 </ol>
 
-.font90[*This morning you wrote up what you **found**. This afternoon you test whether the pattern is **real** &mdash; then say it in language a policy audience can act on.*]
+.font90[*This morning you learned the **rules** of academic writing. This afternoon you learn the **craft**: turning your literature review into two slides an audience can follow &mdash; and your findings into one sentence they can act on.*]
 
 ---
 class: segue-green
 
-# 1:00 &ndash; 2:00 &middot; Statistical Inference
-## .white[From "Describing" to "Making a Claim"]
+# 1:00 &ndash; 1:45 &middot; The Setup
+## .white[Your Literature Review as a Story]
 
 ---
-### `r fontawesome::fa("arrows-turn-right", height = "1em", fill = "#2e8b57")` The big shift today
+### `r fontawesome::fa("book-open", height = "1em", fill = "#2e8b57")` Why storytelling? Because nobody remembers a list
 
 .pull-left[
 .font90[
-**Describing** (what you did this week):
-- "Men earned **\$27.91/hr**, women **\$25.63/hr**."
-- A fact about *this* sample. No argument yet.
+Every good research talk is a **story** with the same beats:
 
-**Inferring** (today):
-- "Is that **\$2.28 gap real** in the wider world &mdash; or just luck of who we sampled?"
-- A *claim* that could be **wrong**, so we test it.
+1. **Setting** &mdash; here's the world and what we know about it *(background)*
+2. **Tension** &mdash; but here's what we **don't** know *(the gap)*
+3. **Quest** &mdash; so we asked this question *(research question)*
+4. **Resolution** &mdash; and here's what we found *(results)*
 ]
 ]
 
 .pull-right[
 .content-box-blue[
-.font85[`r fontawesome::fa("dice", fill = "#4a7fb5")` &nbsp; Every sample wobbles. Two groups will **almost never** have identical averages by chance alone. Inference asks: **is this gap bigger than the wobble?**]
+.font85[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; Your audience won't remember your fourth citation. They **will** remember the tension: *"we know A and B &mdash; but nobody knows C, so we asked&hellip;"*]
+]
+]
+
+.font85[Today we practice the two moments where storytelling matters most: the **setup** (literature &rarr; gap &rarr; question) and the **payoff** (results).]
+
+---
+### `r fontawesome::fa("filter", height = "1em", fill = "#2e8b57")` The funnel: a chapter becomes two slides
+
+.pull-left[
+.font90[
+Your literature review is **pages** long. Your presentation gets **two slides**:
+
+.content-box-blue[
+.font85[**Slide 1 &mdash; Background**<br>
+Key **definitions** + **2&ndash;3 cited findings**. What the audience must know to care about your question.]
+]
+
+.content-box-green[
+.font85[**Slide 2 &mdash; Gap + Research Question**<br>
+What's **missing** from what we know &mdash; and the **question** that follows from it.]
+]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("compress", fill = "#c08a00")` &nbsp; This is not "shrinking" your literature review &mdash; it's **distilling** it. You keep only what sets up the question. Everything else stays in the written report.]
 ]
 ]
 
 ---
-### `r fontawesome::fa("comment", height = "1em", fill = "#2e8b57")` Three terms, in plain English
+### `r fontawesome::fa("layer-group", height = "1em", fill = "#2e8b57")` Anatomy of the Background slide
 
-.three-col[
-.col[
-.content-box-blue[
-.font80[
-**p-value**<br>
-*"If there were really **no** difference, how surprising is the gap I got?"* A **small** p (&lt; 0.05) = "this would be surprising by chance, so I doubt 'no difference'."
-]
-]
-]
-.col[
-.content-box-green[
-.font80[
-**Confidence interval**<br>
-*"A plausible **range** for the true value."* "The gap is about \$2.30, give or take &mdash; somewhere between \$1 and \$3.50." The range matters more than one number.
-]
-]
-]
-.col[
-.content-box-yellow[
-.font80[
-**Statistically significant**<br>
-Just means *"unlikely to be pure chance"* (small p). It does **NOT** mean big, important, or causal.
-]
-]
+.pull-left[
+.font88[
+**1. Key definitions (1&ndash;2 terms)**
+- Only terms your audience **needs** &mdash; not a glossary.
+- One line each, in your own words.
+
+**2. What we know (2&ndash;3 cited findings)**
+- Organized by **theme**, not by author.
+- One finding per line &mdash; **no paragraphs**.
+- Each ends with a citation: **(Author, Year)**.
 ]
 ]
 
+.pull-right[
 .content-box-red[
-.font85[`r fontawesome::fa("triangle-exclamation", fill = "#fff")` &nbsp; **"Significant" &ne; "large" &ne; "important."** With enough data, a trivial \$0.05 gap can be "significant." Always ask **how big**, not just *is it significant.*]
+.font85[`r fontawesome::fa("triangle-exclamation", fill = "#fff")` &nbsp; **The #1 mistake:** pasting sentences from your written review onto the slide. A slide is a **billboard**, not a page. If it takes more than 5 seconds to read a line, cut it.]
+]
 ]
 
 ---
-### `r fontawesome::fa("scale-unbalanced", height = "1em", fill = "#2e8b57")` What a p-value is &mdash; and is **not**
+### `r fontawesome::fa("eye", height = "1em", fill = "#2e8b57")` Worked example &mdash; the wildfire PBL case
+
+.font80[From this morning's climate case: *Does temperature rise affect wildfire frequency?*]
+
+.mock-slide[
+#### Background: Temperature & Wildfires
+.font80[
+**Key terms:** &nbsp;*Acres burned* = total area destroyed by wildfire per year &nbsp;&middot;&nbsp; *Fire season* = months when large fires occur
+
+**What we know:**
+- Global average temperature has risen about 1.1&deg;C since pre-industrial times (IPCC, 2021)
+- Fire seasons in the western U.S. have grown longer and more severe since the 1980s (Westerling, 2016)
+- Drought and forest management also shape fire risk &mdash; temperature is not the only factor (Abatzoglou & Williams, 2016)
+]
+]
+
+.font80[`r fontawesome::fa("check", fill = "#2e8b57")` &nbsp; Two terms defined. Three findings, one line each, each cited. A stranger can read this slide in **20 seconds** and be ready for your question.]
+
+---
+### `r fontawesome::fa("puzzle-piece", height = "1em", fill = "#2e8b57")` Anatomy of the Gap + Research Question slide
 
 .pull-left[
-.content-box-green[
-.font80[
-**A p-value IS:**
-- The chance of a gap **this big or bigger** *if the groups were truly equal.*
-- Small p `r fontawesome::fa("arrow-right", fill="#2e8b57")` evidence **against** "no difference."
-]
-]
-]
+.font88[
+**1. The gap (1&ndash;2 sentences)**
+- What do the studies you cited **not** answer?
+- Point back at your Background slide: the gap should feel **inevitable** after it.
 
-.pull-right[
-.content-box-yellow[
-.font80[
-**A p-value is NOT:**
-- The probability your hypothesis is true.
-- The probability the result was "a fluke."
-- A measure of **how big** the effect is.
-]
-]
-]
-
-.font85[`r fontawesome::fa("ruler-horizontal", fill = "#4a7fb5")` &nbsp; Convention: **p &lt; 0.05** = "statistically significant." It's a useful line in the sand &mdash; **not** a law of nature.]
-
----
-### `r fontawesome::fa("file-csv", height = "1em", fill = "#2e8b57")` Our PBL data &mdash; the wage survey
-
-.panelset[
-.panel[.panel-name[Python]
-```{python}
-wages = pd.read_csv("wages.csv")
-print(wages.head())
-print("N =", len(wages), "workers")
-```
-]
-.panel[.panel-name[R]
-```{r}
-wages <- read.csv("wages.csv")
-head(wages)
-nrow(wages)                                  # pandas: len(wages)
-```
-]
-]
-
-.font80[`r fontawesome::fa("table-columns", fill = "#4a7fb5")` &nbsp; Each row is a worker: their **education**, **gender**, **region**, **years of experience**, and **hourly wage**.]
-
----
-### `r fontawesome::fa("magnifying-glass-chart", height = "1em", fill = "#2e8b57")` First, **describe** the two groups
-
-.panelset[
-.panel[.panel-name[Python]
-```{python}
-print(wages.groupby("gender")["hourly_wage"].agg(["mean", "std", "count"]).round(2))
-```
-]
-.panel[.panel-name[R]
-```{r}
-wages |>                                     # pandas: df.groupby(...).agg(...)
-  group_by(gender) |>
-  summarise(mean = mean(hourly_wage), std = sd(hourly_wage), count = n())
-```
-]
-]
-
-.font80[`r fontawesome::fa("circle-question", fill = "#4a7fb5")` &nbsp; Men average more here. But the groups **overlap** a lot (look at the std). Is the gap **real**, or could two random groups differ this much? `r fontawesome::fa("arrow-right", fill="#2e8b57")` **run the test.**]
-
----
-### `r fontawesome::fa("vials", height = "1em", fill = "#2e8b57")` .b[RcF] &mdash; a two-group t-test with `ttest_ind()`
-
-.panelset[
-.panel[.panel-name[Python (scipy)]
-```{python}
-men   = wages.loc[wages["gender"] == "Male",   "hourly_wage"]
-women = wages.loc[wages["gender"] == "Female", "hourly_wage"]
-
-t_stat, p_val = stats.ttest_ind(men, women)        # compare two group means  #<<
-print(f"difference in means: ${men.mean() - women.mean():.2f}")
-print(f"t-statistic: {t_stat:.2f}")
-print(f"p-value:     {p_val:.4f}")
-```
-]
-.panel[.panel-name[R (base)]
-```{r}
-men   <- wages$hourly_wage[wages$gender == "Male"]
-women <- wages$hourly_wage[wages$gender == "Female"]
-
-t.test(hourly_wage ~ gender, data = wages, var.equal = TRUE)   # same test  #<<
-```
-]
-]
-
-.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; Independent-samples t-test: **two separate groups**. R's `t.test()` even prints the **confidence interval** for the gap. *(R lists Female first, so its `t` shows the opposite sign &mdash; same size, same p.)*]
-
----
-### `r fontawesome::fa("comment-dots", height = "1em", fill = "#2e8b57")` Read the output &mdash; real, or chance?
-
-.pull-left[
-.font85[
-- **p &lt; 0.05?** `r fontawesome::fa("arrow-right", fill="#2e8b57")` the gap is **statistically significant** &mdash; unlikely to be pure chance.
-- **p &gt; 0.05?** `r fontawesome::fa("arrow-right", fill="#D55E00")` we **can't rule out chance** &mdash; "no significant difference."
+**2. The research question (verbatim)**
+- Word-for-word the question your team wrote &mdash; don't paraphrase it live.
+- Add your **hypothesis** if you have one.
 ]
 ]
 
 .pull-right[
 .content-box-blue[
-.font80[`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` &nbsp; Significant **does not** mean the gap is large or that *gender* caused it. Older workers earn more &mdash; if one group is more experienced, that could drive the gap. **Hold that thought for regression.**]
-]
-]
+.font85[`r fontawesome::fa("link", fill = "#4a7fb5")` &nbsp; The magic sentence connecting the two slides:
 
-.font80[`r fontawesome::fa("circle-check", fill = "#2e8b57")` &nbsp; Sentence: *"Men earned significantly more per hour than women (t = `r sprintf("%.2f", py$t_stat)`, p = `r sprintf("%.3f", py$p_val)`)."*]
+*"Because we don't yet know **[gap]**, we ask: **[research question]**."*
 
----
-### `r fontawesome::fa("ruler", height = "1em", fill = "#2e8b57")` .b[RcS] &mdash; how **big** is it? Cohen's d
-
-.font85[A p-value says *"probably real."* **Effect size** says *"this big."* Cohen's d = the gap measured in standard deviations.]
-
-.panelset[
-.panel[.panel-name[Python]
-```{python}
-def cohens_d(a, b):
-    n1, n2 = len(a), len(b)
-    pooled_sd = np.sqrt(((n1-1)*a.std()**2 + (n2-1)*b.std()**2) / (n1+n2-2))
-    return (a.mean() - b.mean()) / pooled_sd
-
-print(f"Cohen's d = {cohens_d(men, women):.2f}")
-```
-]
-.panel[.panel-name[R]
-```{r}
-cohens_d <- function(a, b) {
-  n1 <- length(a); n2 <- length(b)
-  pooled_sd <- sqrt(((n1-1)*var(a) + (n2-1)*var(b)) / (n1+n2-2))
-  (mean(a) - mean(b)) / pooled_sd
-}
-sprintf("Cohen's d = %.2f", cohens_d(men, women))
-```
-]
-]
-
-.three-col[
-.col[.content-box-green[.font75[**~0.2** small]]]
-.col[.content-box-yellow[.font75[**~0.5** medium]]]
-.col[.content-box-blue[.font75[**~0.8** large]]]
-]
-
-.font80[`r fontawesome::fa("quote-left", fill = "#4a7fb5")` &nbsp; Report **both**: *"significant (p &lt; 0.05), a small-to-medium effect (d &asymp; 0.4)."* The p earns credibility; d tells you if anyone should care.]
-
----
-### `r fontawesome::fa("layer-group", height = "1em", fill = "#2e8b57")` .b[RcS] &mdash; 3+ groups? One-way ANOVA
-
-.font85[A t-test compares **two** groups. To compare **education levels** (four groups) at once, use **ANOVA** &mdash; "are *any* of these group means different?"]
-
-.panelset[
-.panel[.panel-name[Python (scipy)]
-```{python}
-groups = [g["hourly_wage"].values for _, g in wages.groupby("education")]
-f_stat, p_anova = stats.f_oneway(*groups)   # one-way ANOVA across all groups  #<<
-print(f"F = {f_stat:.2f},  p = {p_anova:.3g}")
-print(wages.groupby("education")["hourly_wage"].mean().round(2).to_string())
-```
-]
-.panel[.panel-name[R (base)]
-```{r}
-fit <- aov(hourly_wage ~ education, data = wages)  # one-way ANOVA  #<<
-summary(fit)
-aggregate(hourly_wage ~ education, data = wages, FUN = mean)
-```
-]
-]
-
-.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; A small p says *"at least one group differs"* &mdash; **not which one.** Follow up by looking at the group means (the gradient by education is clear here).]
-
----
-### `r fontawesome::fa("landmark", height = "1em", fill = "#2e8b57")` PBL application &mdash; interpret for a **policy audience**
-
-.pull-left[
-.font85[
-You just tested the wage gap. Now translate it for someone who **sets policy**, not someone who reads p-values:
-
-- Lead with the **plain finding** and its **size in dollars**.
-- Report significance as a **confidence statement**, not jargon.
-- Name the **caveat** (it's an association &mdash; experience and education may differ between groups).
-]
-]
-
-.pull-right[
-.content-box-green[
-.font82[`r fontawesome::fa("comment", fill = "#2e8b57")` &nbsp; *"In this sample, men earned about \$2.30 more per hour than women. The difference is **larger than we'd expect from chance alone** (p &lt; 0.05) &mdash; but it does not yet prove **why**: groups may differ in experience or education."*]
+If that sentence doesn't flow, one of the two slides needs work.]
 ]
 ]
 
 ---
-class: segue-green
+### `r fontawesome::fa("eye", height = "1em", fill = "#2e8b57")` Worked example &mdash; Gap + Research Question
 
-# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Task
-## .white[Is Your Group Difference Significant?]
-
----
-### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Run the test on your data &mdash; ~12 min
-
-.pull-left[
-.font90[
-1. Pick **two groups** in your dataset (or use `region`: Urban vs Rural).
-2. Run the t-test &mdash; `stats.ttest_ind()` (Python) **or** `t.test()` (R).
-3. Report the **difference**, the **p-value**, and **Cohen's d**.
-4. **Stretch:** 3+ groups? `stats.f_oneway()` (Python) / `aov()` (R).
-]
-]
-
-.pull-right[
-.content-box-blue[
-.font85[
-**Write one sentence for a policy audience:**
-
-*"Group A earned \$\_\_ more than Group B. This difference **was / was not** statistically significant (p = \_\_), a **small / medium / large** effect."*
-]
-]
-
-.center[`r timer(12L)`]
-]
-
----
-class: segue-green
-
-# 2:00 &ndash; 2:45 &middot; Regression
-## .white[Predicting One Thing from Another]
-
----
-### `r fontawesome::fa("chart-line", height = "1em", fill = "#2e8b57")` From "are they different?" to "how are they related?"
-
-.pull-left[
-.font90[
-- A t-test compares **groups**.
-- **Regression** measures how an outcome moves with a **number** &mdash; e.g. does wage rise with **experience**?
-- The model draws the **best straight line** through the cloud of points.
-]
-]
-
-.pull-right[
-.content-box-blue[
-.font85[`r fontawesome::fa("equals", fill = "#4a7fb5")` &nbsp; The line: **wage = intercept + slope &times; experience**
-
-The **slope** is the headline: *how much wage changes per extra year.*]
-]
-]
-
-.font80[**DV** (outcome, *y*) = hourly wage &nbsp;&middot;&nbsp; **IV** (predictor, *x*) = years of experience.]
-
----
-### `r fontawesome::fa("draw-polygon", height = "1em", fill = "#2e8b57")` .b[RcF] &mdash; see the line of best fit
-
-.panelset[
-.panel[.panel-name[Python]
-```{python, fig.width=5.4, fig.height=2.7, out.width="44%", results="hide"}
-x = wages["experience_years"]; y = wages["hourly_wage"]
-b1, b0 = np.polyfit(x, y, 1)                         # slope, intercept  #<<
-plt.scatter(x, y, alpha=0.5, color="#4a7fb5")
-plt.plot(np.sort(x), b0 + b1*np.sort(x), color="#D55E00", lw=2)
-plt.xlabel("Years of experience"); plt.ylabel("Hourly wage ($)")
-plt.title(f"Best-fit line: slope = {b1:.2f}")
-plt.tight_layout(); plt.show()
-```
-]
-.panel[.panel-name[R]
-```{r, fig.width=5.4, fig.height=3.0, out.width="50%"}
-plot(wages$experience_years, wages$hourly_wage, col = "#4a7fb5",
-     xlab = "Years of experience", ylab = "Hourly wage ($)")
-abline(lm(hourly_wage ~ experience_years, data = wages),    # best-fit line  #<<
-       col = "#D55E00", lwd = 2)
-```
-]
-]
-
-.font80[`r fontawesome::fa("arrow-trend-up", fill = "#4a7fb5")` &nbsp; The line tilts **up**: more experience tends to mean higher pay. The slope puts a **number** on that tilt.]
-
----
-### `r fontawesome::fa("table", height = "1em", fill = "#2e8b57")` .b[RcS] &mdash; OLS regression with `statsmodels`
-
-.panelset[
-.panel[.panel-name[Python (statsmodels)]
-```{python}
-model = smf.ols("hourly_wage ~ experience_years", data=wages).fit()  # DV ~ IV  #<<
-print(model.summary().tables[1])
-```
-]
-.panel[.panel-name[R (base)]
-```{r}
-model <- lm(hourly_wage ~ experience_years, data = wages)   # DV ~ IV  #<<
-round(summary(model)$coefficients, 4)
-cat("R-squared =", round(summary(model)$r.squared, 3), "\n")
-```
-]
-]
-
-.font80[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; The row that matters is **`experience_years`** &mdash; its **coef / Estimate** is the slope. The intercept is the predicted wage at 0 years.]
-
----
-### `r fontawesome::fa("list-ol", height = "1em", fill = "#2e8b57")` Reading the output table, column by column
-
-.panelset[
-.panel[.panel-name[Python (statsmodels)]
-```{python, echo=FALSE}
-coef = model.params["experience_years"]; se = model.bse["experience_years"]
-tval = model.tvalues["experience_years"]; pv = model.pvalues["experience_years"]
-print(f"coef  (slope) = {coef:.3f}   -> wage rises ${coef:.2f}/hr per extra year")
-print(f"std err       = {se:.3f}   -> uncertainty around the slope")
-print(f"t             = {tval:.2f}    -> coef divided by std err")
-print(f"P>|t|         = {pv:.4f}  -> is the slope distinguishable from 0?")
-print(f"R-squared     = {model.rsquared:.3f}   -> share of wage variation explained")
-```
-]
-.panel[.panel-name[R (base)]
-```{r, echo=FALSE}
-co <- summary(model)$coefficients["experience_years", ]
-cat(sprintf("Estimate (slope) = %.3f   -> wage rises $%.2f/hr per extra year\n", co[1], co[1]))
-cat(sprintf("Std. Error       = %.3f   -> uncertainty around the slope\n", co[2]))
-cat(sprintf("t value          = %.2f    -> Estimate divided by Std. Error\n", co[3]))
-cat(sprintf("Pr(>|t|)         = %.4f  -> is the slope distinguishable from 0?\n", co[4]))
-cat(sprintf("R-squared        = %.3f   -> share of wage variation explained\n", summary(model)$r.squared))
-```
-]
-]
-
-.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; **p &lt; 0.05** on the slope = experience has a real link to wage. **R&sup2;** says how *much* of the story experience tells &mdash; here, only part of it.]
-
----
-### `r fontawesome::fa("comment", height = "1em", fill = "#2e8b57")` Say the slope out loud
-
-.content-box-green[
-.font90[`r fontawesome::fa("quote-left", fill = "#2e8b57")` &nbsp; *"For every **1 additional year** of experience, hourly wage increases by about **\$`r sprintf("%.2f", py$coef)`**, on average."*]
-]
-
-.pull-left[
-.content-box-blue[
+.mock-slide[
+#### The Gap & Our Question
 .font80[
-**The template:**<br>
-*"For every 1-unit increase in **X**, **Y** changes by **\<coef\>** units, on average."*
-]
+**What's missing:** Most studies track how **long** fire seasons have become. Fewer connect temperature **directly** to how much land actually burns each year over recent decades.
+
+**Our research question:** *Is average summer temperature associated with annual acres burned in the United States, 1990&ndash;2020?*
+
+**Our hypothesis:** Years with hotter summers will show more acres burned.
 ]
 ]
 
-.pull-right[
-.content-box-yellow[
-.font80[
-**Significant vs meaningful:**<br>
-\$`r sprintf("%.2f", py$coef)`/yr `r fontawesome::fa("arrow-right", fill="#c08a00")` ~\$`r sprintf("%.0f", py$coef*10)`/hr over a decade. **Is that a lot?** That's the real-world question the p-value can't answer.]
-]
-]
+--
+
+.font85[Say the magic sentence out loud: *"Because we don't yet know whether temperature tracks **acres burned**, we ask: is average summer temperature associated with annual acres burned?"* `r fontawesome::fa("arrow-right", fill="#2e8b57")` It flows &mdash; the slides are doing their job.]
 
 ---
-### `r fontawesome::fa("brain", height = "1em", fill = "#2e8b57")` Significant `r fontawesome::fa("not-equal")` meaningful &mdash; always ask both
+### `r fontawesome::fa("ban", height = "1em", fill = "#2e8b57")` Four ways these slides go wrong
 
 .three-col[
 .col[
-.content-box-blue[
-.font80[
-**Is it significant?**<br>
-Look at **P&gt;|t|**. Below 0.05 = unlikely to be chance.
-]
-]
-]
-.col[
-.content-box-green[
-.font80[
-**Is it meaningful?**<br>
-Look at the **coef** in real units. \$0.45/hr/yr &mdash; would a policymaker act on it?
-]
-]
-]
-.col[
-.content-box-yellow[
-.font80[
-**How much is explained?**<br>
-Look at **R&sup2;**. A real slope can still leave most variation unexplained.
-]
-]
-]
-]
-
 .content-box-red[
-.font85[`r fontawesome::fa("triangle-exclamation", fill = "#fff")` &nbsp; A slope can be **highly significant and tiny**, or **large but uncertain**. Report the **number with its units**, never just the stars.]
+.font78[
+**The wall of text**<br>
+Full sentences from the written review. Audience reads instead of listens.
+]
+]
+.content-box-red[
+.font78[
+**The name-drop**<br>
+"Smith (2020) found&hellip; Jones (2021) found&hellip;" &mdash; organized by author, no theme, no point.
+]
+]
+]
+.col[
+.content-box-red[
+.font78[
+**The orphan question**<br>
+A research question that doesn't follow from the gap &mdash; the audience wonders *"why THIS question?"*
+]
+]
+.content-box-red[
+.font78[
+**The missing citation**<br>
+A confident claim with no (Author, Year). Instantly costs you credibility.
+]
+]
+]
+.col[
+.content-box-green[
+.font80[
+`r fontawesome::fa("circle-check", fill = "#2e8b57")` **The fix is the same for all four:**
+
+One line per idea. Themes, not authors. Gap points at the question. Every claim cited.
+]
+]
+]
 ]
 
 ---
 class: segue-green
 
-# `r fontawesome::fa("trophy", fill = "#FFFFFF")` Team Task
-## .white[Run & Interpret Your Regression]
+# `r fontawesome::fa("trophy", fill = "#FFFFFF")` 1:45 &ndash; 2:45 &middot; Team Task
+## .white[Your Literature Review &rarr; Two Slides]
 
 ---
-### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` One predictor, one sentence &mdash; ~12 min
+### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#2e8b57")` Step 1 &mdash; Convert your literature review &mdash; ~25 min
 
 .pull-left[
 .font90[
-1. Pick a numeric **outcome (DV)** and numeric **predictor (IV)**.
-2. Fit it &mdash; `smf.ols("DV ~ IV", ...).fit()` (Python) **or** `lm(DV ~ IV, ...)` (R).
-3. Find the **coef**, its **p-value**, and **R&sup2;**.
-4. Plot the scatter + best-fit line.
+With your team, convert your literature review into the **two slides**:
+
+1. **Background slide** &mdash; 1&ndash;2 key definitions + **2&ndash;3 cited findings**, one line each, by theme.
+2. **Gap + Research Question slide** &mdash; the gap in 1&ndash;2 sentences, then your RQ **verbatim** (+ hypothesis).
+3. Test with the **magic sentence**: *"Because we don't yet know \_\_\_, we ask \_\_\_."*
 ]
 ]
 
 .pull-right[
 .content-box-blue[
 .font85[
-**Write the interpretation sentence:**
+`r fontawesome::fa("circle-check", fill = "#4a7fb5")` **Quality bar:**
 
-*"For every 1-unit increase in **[IV]**, **[DV]** changes by **[coef]**, on average (p = \_\_, R&sup2; = \_\_)."*
-
-Then discuss: **is the magnitude meaningful**, not just significant?
+- Could a stranger read each slide in **20 seconds**?
+- Is every claim **cited** (Author, Year)?
+- Does the question feel **inevitable** after the gap?
 ]
 ]
 
-.center[`r timer(12L)`]
+.center[`r timer(25L)`]
 ]
+
+---
+### `r fontawesome::fa("people-arrows", height = "1em", fill = "#2e8b57")` Step 2 &mdash; Present to a partner &mdash; 10 min
+
+.pull-left[
+.font90[
+Pair up with someone from **another team**. Each of you:
+
+1. Present your **two slides** in &le; 2 minutes &mdash; *speak to your partner, don't read the slides.*
+2. Partner gives **two pieces of feedback**:
+  - `r fontawesome::fa("bolt", fill = "#2e8b57")` *"The clearest moment was&hellip;"*
+  - `r fontawesome::fa("lightbulb", fill = "#c08a00")` *"I got lost when&hellip;"*
+3. Swap roles.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("ear-listen", fill = "#c08a00")` &nbsp; **Listeners:** you are the audience test. If you can't repeat back the gap and the question after 2 minutes, say so &mdash; that's the most useful feedback your partner will get today.]
+]
+
+.center[`r timer(10L)`]
+]
+
+--
+
+.font85[`r fontawesome::fa("rotate", fill = "#4a7fb5")` &nbsp; Back with your team: apply the feedback to the slides **now**, while it's fresh. These two slides go straight into your final presentation.]
 
 ---
 class: segue-green
 
 # 2:45 &ndash; 3:00 &middot; Scientific Storytelling
-## .white[Results Language]
+## .white[The Payoff: Results Language]
 
 ---
 ### `r fontawesome::fa("feather-pointed", height = "1em", fill = "#2e8b57")` Two registers &mdash; you need **both**
@@ -576,7 +319,7 @@ class: segue-green
 .content-box-blue[
 .font85[
 **The number** (for credibility)<br>
-*"The regression coefficient on experience was 0.34 (SE = 0.06, p &lt; 0.05, R&sup2; = 0.21)."*
+*"The regression coefficient on experience was 0.34 (p &lt; 0.05)."*
 
 Other researchers can **check** this.
 ]
@@ -587,7 +330,7 @@ Other researchers can **check** this.
 .content-box-green[
 .font85[
 **The plain language** (for the audience)<br>
-*"Workers earned about 34 cents more per hour for each additional year of experience."*
+*"Our analysis found that workers earned about 34 cents more per hour for each additional year of experience."*
 
 A policymaker can **act** on this.
 ]
@@ -598,18 +341,43 @@ A policymaker can **act** on this.
 .font85[`r fontawesome::fa("scale-balanced", fill = "#c08a00")` &nbsp; Strong results writing puts the **plain sentence first**, then backs it with the numbers in parentheses. Never make the reader decode statistics to learn what you found.]
 ]
 
+.font80[`r fontawesome::fa("circle-info", fill = "#4a7fb5")` &nbsp; You'll learn to **produce** numbers like these in Sessions 8&ndash;9. Today you learn how to **say** them.]
+
+---
+### `r fontawesome::fa("language", height = "1em", fill = "#2e8b57")` Translation practice &mdash; say it both ways
+
+.font85[Each statistical sentence below is **true but unusable** on its own. Translate it out loud:]
+
+.font85[**1.** *"Mean difference = \$2.28, p = 0.02."*]
+
+--
+
+.content-box-green[.font80[`r fontawesome::fa("arrow-right", fill="#2e8b57")` *"Our analysis found that men in our sample earned about **\$2.28 more per hour** than women &mdash; a gap larger than we'd expect from chance alone (p = 0.02)."*]]
+
+.font85[**2.** *"r = 0.62 between summer temperature and acres burned."*]
+
+--
+
+.content-box-green[.font80[`r fontawesome::fa("arrow-right", fill="#2e8b57")` *"Our analysis found that **hotter summers went hand in hand with more land burned** &mdash; a fairly strong association (r = 0.62). Association, not proof of cause."*]]
+
+--
+
+.content-box-blue[.font85[`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` &nbsp; Notice the pattern: **plain claim first** (direction + size in real units), **statistics in parentheses**, **caveat if needed**.]]
+
 ---
 ### `r fontawesome::fa("pen-fancy", height = "1em", fill = "#2e8b57")` Draft your team's headline finding &mdash; now
 
 .pull-left[
 .font90[
-Write **one results sentence** for your main finding, in this shape:
+Write **one results sentence** for your team's main finding, in this shape:
 
 .content-box-blue[
-.font80[*"Our analysis found that **[plain-English finding]** (**[stat]** = \_\_, p = \_\_)."*]
+.font80[*"Our analysis found that **[plain-English finding]** (**[stat]** = \_\_)."*]
 ]
 
-Then read it to a partner who is **not** a statistician. Did they get it?
+Then read it to a partner who is **not** on your team. Did they get it?
+
+.font80[*No statistics yet? Use your strongest **descriptive** finding &mdash; a difference, a trend, a pattern &mdash; and put its number in the parentheses.*]
 ]
 ]
 
@@ -621,7 +389,7 @@ Then read it to a partner who is **not** a statistician. Did they get it?
 - Plain-English claim **first**?
 - Direction clear (more / less / higher)?
 - The number **with units**?
-- p-value (and effect size / R&sup2;) in parentheses?
+- Statistics in parentheses?
 - No causal verb unless you can defend it?
 ]
 ]
@@ -632,8 +400,8 @@ Then read it to a partner who is **not** a statistician. Did they get it?
 ---
 class: segue-green
 
-# .white[You moved from *describing* to *making a claim.]
-## .white[A real claim names its number, its size, and its limits.]
+# .white[A research story earns trust twice:]
+## .white[once with the setup &mdash; and once with the numbers.]
 
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
