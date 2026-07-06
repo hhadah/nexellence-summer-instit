@@ -1,6 +1,7 @@
 ---
 title: "DataCORE"
 subtitle: "Portfolio Final Check, Data Art & Final Words"
+date: "July 16, 2026"
 # author: "Hussain Hadah (he/him)"
 output:
   xaringan::moon_reader:
