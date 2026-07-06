@@ -1,0 +1,434 @@
+---
+title: "Research Methods"
+subtitle: "Day 14 · Session 14: Final Preparations, Reflection & Camp Review"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#0148A4",
+    color_running_background = "#0148A4",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+      margin-top: 0.6em;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Final Polish Time</h4></li>
+    <li><h4 class="white">Camp Review & Synthesis Discussion</h4></li>
+    <li><h4 class="white">Camp Review Mission Sheet</h4></li>
+    <li><h4 class="white">Letter to Future Nexellence INQUIRE Students</h4></li>
+    <li><h4 class="white">Scientific Storytelling: Opening Line Practice</h4></li>
+</ol>
+
+---
+class: segue-yellow
+
+# Session 14: Final Preparations, <br> Reflection & Camp Review `r top_icon("flag-checkered")`
+
+---
+### Learning Objectives
+
+.font90[
+#### `r fontawesome::fa("wand-magic-sparkles", height = "1em", fill = "#4a7fb5")` &nbsp; Polish presentations to final presentation quality
+Last changes, final checks &mdash; everything Summit-ready.
+
+#### `r fontawesome::fa("brain", height = "1em", fill = "#4a7fb5")` &nbsp; Reflect on learning and growth across three weeks
+Name what you know now that you didn't when you started.
+
+#### `r fontawesome::fa("trophy", height = "1em", fill = "#4a7fb5")` &nbsp; Understand and celebrate the full research process
+See the whole arc &mdash; question to Summit &mdash; that you completed.
+
+#### `r fontawesome::fa("people-group", height = "1em", fill = "#4a7fb5")` &nbsp; Prepare for the Research Summit audience
+Parents, guests, and instructors &mdash; ready your hook and your poise.
+]
+
+---
+class: segue-yellow
+
+# Morning: ResearchCORE `r top_icon("sun")`
+
+---
+class: segue-green
+
+# Final Polish Time `r top_icon("magic")`
+
+---
+### Final Polish Time (45 min)
+
+.pull-left[.font90[
+Make any **remaining changes** to your slides &mdash; then stop tinkering.
+
+While you polish, the instructor does a **final review** of each team's:
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("quote-right", fill = "#0148A4")`</div><div class="chev-text"><strong>References slide</strong> &mdash; every cited source listed.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("robot", fill = "#0148A4")`</div><div class="chev-text"><strong>AI Attribution Statement</strong> &mdash; present and accurate.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("equals", fill = "#0148A4")`</div><div class="chev-text"><strong>Citation format</strong> &mdash; consistent throughout.</div></div>
+]]
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("hand", fill = "#c08a00")` Know when to stop**
+
+At some point, more edits add risk, not polish. When the checklist is green, close the laptop and rehearse instead.
+]
+]]
+
+.center[`r timer(45L)`]
+
+---
+class: segue-green
+
+# Camp Review & <br> Synthesis Discussion `r top_icon("comments")`
+
+---
+### Camp Review & Synthesis (30 min)
+
+.pull-left[.font90[
+An instructor-led discussion. One prompt:
+
+.content-box-blue[
+**What are the five most important things you know about research that you *didn't* know three weeks ago?**
+]
+
+Each student contributes **one idea.** We capture them all on the whiteboard under one heading:
+
+.content-box-green[
+.center[**"What Nexellence INQUIRE taught us"**]
+]
+]]
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("lightbulb", fill = "#c08a00")` Think across the whole arc**
+
+From a first curious question, to methods, to data, to a story you can defend &mdash; what shifted in how you *think*, not just what you can do?
+]
+]]
+
+.center[`r timer(30L)`]
+
+---
+### Session 14 Mission Sheet: Camp Review (30 min)
+
+.font90[Complete four reflections &mdash; your record of the journey:]
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>One thing that went well</strong> in your rehearsal.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Something <strong>interesting you learned from another team</strong>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">What you're <strong>most proud of</strong>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text">A <strong>new research question</strong> you'd love to explore in the future.</div></div>
+
+.content-box-blue[
+.font85[`r fontawesome::fa("seedling", fill = "#4a7fb5")` &nbsp; That last one matters most: the best sign of a real researcher is leaving with **more** questions than you arrived with.]
+]
+
+.center[`r timer(30L)`]
+
+---
+class: segue-yellow
+
+# Letter to Future <br> Nexellence INQUIRE Students `r top_icon("envelope")`
+
+---
+### Letter to a Future Student (30 min)
+
+.pull-left[.font90[
+Write a **one-page letter** &mdash; or record a voice note or video &mdash; to a future Nexellence INQUIRE student.
+
+**Speak to them honestly:**
+
+- What **advice** would you give?
+- What **surprised** you along the way?
+- What would you tell your **past self** before starting?
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**`r fontawesome::fa("box-archive", fill = "#009E73")` Your words will outlast you here**
+
+These letters are archived &mdash; future students really will read them. Write the thing you *wish* someone had told you on day one.
+]
+]]
+
+.center[`r timer(30L)`]
+
+---
+class: segue-yellow
+
+# Scientific Storytelling: <br> Opening Line Practice `r top_icon("bullhorn")`
+
+---
+### Your First 30 Seconds
+
+.pull-left[.font90[
+Each presenter rehearses their **opening line** and first-slide intro **one final time.**
+
+.content-box-yellow[
+**`r fontawesome::fa("ban", fill = "#c08a00")` The one rule:** no one starts with *"Hi, my name is&hellip;"*
+]
+
+Open with a **hook** instead:
+- a **surprising statistic**
+- a **compelling question**
+- a **striking image**
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("wave-square", fill = "#4a7fb5")` The first 30 seconds sets the tone**
+
+An audience decides whether to lean in almost immediately. Earn their attention before you spend it on introductions.
+]
+
+.content-box-green[
+.font88[*"Every year, teenagers lose two full weeks of sleep to their phones. We wanted to know what that costs them&hellip;"*]
+]
+]]
+
+.center[`r timer(15L)`]
+
+---
+### Session 14: What You Can Do Now
+
+.font80[
+**Final polish:**
+
+- Bring your slides, **References**, and **AI attribution** to final, consistent, Summit quality &mdash; and recognize when to stop editing and start rehearsing.
+
+**Reflection & growth:**
+
+- Articulate the **five biggest things** you learned about research, complete your Camp Review reflections, and write a letter that passes what you learned to the next cohort.
+
+**Summit readiness:**
+
+- Open with a **hook**, not "Hi, my name is" &mdash; a stat, a question, or an image that earns the room's attention in the first 30 seconds.
+]

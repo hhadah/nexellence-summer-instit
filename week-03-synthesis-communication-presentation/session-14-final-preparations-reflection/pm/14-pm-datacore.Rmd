@@ -1,0 +1,261 @@
+---
+title: "DataCORE"
+subtitle: "Portfolio Final Check, Data Art & Final Words"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | July 16, 2026</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "60%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_theme(style="whitegrid")
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+.card-grid { display: flex; flex-wrap: wrap; gap: 0.7em; margin-top: 0.6em; }
+.card { flex: 1 1 30%; background: #e7f3ec; border-radius: 8px; padding: 0.5em 0.8em; }
+.card h4 { margin: 0 0 0.2em 0; color: #2e8b57; font-size: 0.95em; }
+.card p { margin: 0; font-size: 0.8em; }
+.chev-row-sm { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.3em; }
+.chev-sm { flex: 0 0 50px; height: 56px; background: #cfe8d8;
+  clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #1a4731; }
+.chev-text { flex: 1; }
+```
+
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>DataCORE Portfolio Final Check <span style="color:#2e8b57;">(1:00&ndash;1:45)</span></h4></li>
+    <li><h4>Data Art + Celebration Visualization <span style="color:#2e8b57;">(1:45&ndash;2:45)</span></h4></li>
+    <li><h4>Scientific Storytelling &mdash; Final Words <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+</ol>
+
+.font90[*Lock the portfolio you'll display at the Summit, make one chart that's purely beautiful, and say out loud how far you've come.*]
+
+```{python load-data, include=FALSE}
+wages = pd.read_csv("wages.csv")
+```
+
+---
+class: segue-green
+
+# 1:00 &ndash; 1:45 &middot; DataCORE
+## .white[Portfolio Final Check]
+
+---
+### `r fontawesome::fa("box-open", height = "1em", fill = "#2e8b57")` Six items, checked one last time
+
+<div class="card-grid">
+  <div class="card">
+    <h4>`r fontawesome::fa("file-code", fill = "#2e8b57")` Analysis notebook</h4>
+    <p>Clean, commented, readable by someone who did <em>not</em> write it.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("image", fill = "#2e8b57")` Exported figures</h4>
+    <p>300 DPI, descriptive file names.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("table", fill = "#2e8b57")` Summary table</h4>
+    <p>Statistics table with a proper caption.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("broom", fill = "#2e8b57")` Data cleaning log</h4>
+    <p>What you changed, and why.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("robot", fill = "#2e8b57")` AI usage log</h4>
+    <p>Tools, prompts, and errors the AI made.</p>
+  </div>
+  <div class="card">
+    <h4>`r fontawesome::fa("file-pdf", fill = "#2e8b57")` Notebook PDF</h4>
+    <p>The exported document you display at the Summit.</p>
+  </div>
+</div>
+
+.content-box-yellow[
+.font85[`r fontawesome::fa("award", fill = "#c08a00")` &nbsp; **This portfolio is a real artifact.** Future versions of Nexellence INQUIRE may cite it as an example &mdash; treat it like a first publication.]
+]
+
+---
+### `r fontawesome::fa("magnifying-glass", height = "1em", fill = "#2e8b57")` The "someone else" test
+
+.pull-left[
+.font90[
+Hand your notebook to a person who has never seen it. Can they, **without you in the room**:
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("play", fill = "#2e8b57")`</div><div class="chev-text"><strong>Run it</strong> top to bottom with no errors?</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("book-open", fill = "#2e8b57")`</div><div class="chev-text"><strong>Follow it</strong> from the header cell to the limitations cell?</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("chart-simple", fill = "#2e8b57")`</div><div class="chev-text"><strong>Rebuild your main figure</strong> from your code?</div></div>
+]
+]
+
+.pull-right[
+.content-box-green[
+.font85[`r fontawesome::fa("circle-check", fill = "#009E73")` &nbsp; If the answer to all three is **yes**, your work is reproducible &mdash; the highest compliment a portfolio can earn.]
+]
+]
+
+.center[`r timer(45L)`]
+
+---
+class: segue-green
+
+# 1:45 &ndash; 2:45 &middot; Data Art
+## .white[Celebration Visualization]
+
+---
+### `r fontawesome::fa("palette", height = "1em", fill = "#2e8b57")` Make one chart that's beautiful *and* true
+
+.pull-left[
+.font90[
+Create one **"data art"** visualization from your team's data &mdash; beautiful and informative at once. **No rules on format:**
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("cloud", fill = "#2e8b57")`</div><div class="chev-text">Word cloud of key variables</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("film", fill = "#2e8b57")`</div><div class="chev-text">Animated plot</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("chart-area", fill = "#2e8b57")`</div><div class="chev-text">An unusual type: ridgeline, waffle, network graph</div></div>
+]
+]
+
+.pull-right[
+```{python dataart, echo=FALSE, out.width="99%", fig.width=5.4, fig.height=3.7}
+import seaborn as sns
+order = wages.groupby("education")["hourly_wage"].median().sort_values().index
+plt.figure()
+sns.violinplot(data=wages, x="hourly_wage", y="education", order=order,
+               palette="viridis", cut=0, linewidth=0.8, inner="quart")
+plt.title("The shape of wages, by education", fontsize=13, fontweight="bold")
+plt.xlabel("Hourly wage ($)", fontsize=12); plt.ylabel("")
+plt.tight_layout(); plt.show()
+```
+.font70[.center[*One example &mdash; a violin "ridgeline" in viridis.*]]
+]
+
+---
+### `r fontawesome::fa("share-nodes", height = "1em", fill = "#2e8b57")` Share &amp; celebrate
+
+.pull-left[.font90[
+An informal **show-and-tell**:
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("eye", fill = "#2e8b57")`</div><div class="chev-text">Put your data art on the screen.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("comment", fill = "#2e8b57")`</div><div class="chev-text">Say one sentence about what makes it <em>you</em>.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("hands-clapping", fill = "#2e8b57")`</div><div class="chev-text">Applaud every team.</div></div>
+]]
+
+.pull-right[.font90[
+.content-box-yellow[
+**`r fontawesome::fa("champagne-glasses", fill = "#c08a00")` Three weeks, one artifact**
+
+You turned a question into data, data into findings, and findings into a story. That's the whole of research &mdash; take a moment to see it.
+]
+]]
+
+.center[`r timer(60L)`]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Final Words]
+
+---
+### `r fontawesome::fa("quote-left", height = "1em", fill = "#2e8b57")` One sentence each
+
+.font90[Every team member writes and shares a single sentence:]
+
+.content-box-blue[
+.center[.font110[*"Three weeks ago I didn't know how to __________.*
+
+*Now I can __________."*]]
+]
+
+.pull-left[
+.content-box-green[
+.font85[`r fontawesome::fa("microphone", fill = "#009E73")` &nbsp; Say it out loud to the group. This is the **closing statement of your research apprenticeship**.]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("door-open", fill = "#c08a00")` &nbsp; &hellip;and the **opening statement** of whatever comes next.]
+]
+]
+
+.center[`r timer(15L)`]
+
+---
+class: segue-green
+
+# .white[You came in curious. You're leaving a researcher.]
+## .white[Congratulations &mdash; and see you at the Summit.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-14-final-preparations-reflection/pm/14-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-14-final-preparations-reflection/pm/14-pm-datacore.pdf")
+```
