@@ -1,0 +1,869 @@
+---
+title: "Research Methods"
+subtitle: "Day 11 · Session 11: Interpreting Findings & Discussion"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#0148A4",
+    color_running_background = "#0148A4",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Draft Report Feedback</h4></li>
+    <li><h4 class="white">How to Write a Discussion Section: The Four-Move Structure</h4></li>
+    <li><h4 class="white">Team Activity: Discussion Synthesis</h4></li>
+    <li><h4 class="white">Synthesizing Your Findings with the Literature</h4></li>
+    <li><h4 class="white">Presentations: Discussion + Conclusion Slides</h4></li>
+    <li><h4 class="white">Scientific Storytelling: Presentation Transitions</h4></li>
+</ol>
+
+---
+class: segue-yellow
+
+# Session 11: Interpreting <br> Findings & Discussion `r top_icon("lightbulb")`
+
+---
+### Learning Objectives
+
+.font90[
+#### `r fontawesome::fa("diagram-project", height = "1em", fill = "#4a7fb5")` &nbsp; Connect findings to the question &amp; literature
+Weave your data findings into a coherent narrative that ties back to the research question and to what others have found.
+
+#### `r fontawesome::fa("scale-balanced", height = "1em", fill = "#4a7fb5")` &nbsp; Write a Discussion that contextualizes without overclaiming
+Interpret your results honestly &mdash; say what they mean, and no more than the data can support.
+
+#### `r fontawesome::fa("triangle-exclamation", height = "1em", fill = "#4a7fb5")` &nbsp; Identify limitations honestly and constructively
+Name the caveats that most threaten your interpretation &mdash; and what they imply.
+
+#### `r fontawesome::fa("layer-group", height = "1em", fill = "#4a7fb5")` &nbsp; Begin integrating all sections into a complete presentation
+Assemble intro, methods, results, discussion, and conclusion into one connected story.
+]
+
+---
+### From Results to Meaning
+
+.pull-left[.font90[
+.content-box-yellow[
+**Results tell the audience *what* you found. The Discussion tells them *what it means*.**
+]
+
+The Results section reports the numbers. The Discussion is where you become the interpreter of your own evidence.
+
+**A strong Discussion answers four questions:**
+
+- **So what?** &mdash; why should anyone care?
+- **Why?** &mdash; what might explain the finding?
+- **Compared to what?** &mdash; how does it sit against the literature?
+- **What are the caveats?** &mdash; where could you be wrong?
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` The interpreter's job**
+
+You are the person who knows this dataset best. The Discussion is your chance to explain what the reader should take away &mdash; and to be honest about the limits of that claim.
+]
+
+.content-box-green[
+**`r fontawesome::fa("comments", fill = "#4a7fb5")` Discussion &ne; repeat of Results**
+
+Don't just restate every number again. Pick the findings that matter and interpret them.
+]
+]]
+
+---
+class: segue-yellow
+
+# Morning: ResearchCORE `r top_icon("chalkboard-teacher")`
+
+---
+### Draft Report Feedback (20 min)
+
+.pull-left[.font90[
+#### `r fontawesome::fa("file-pen", height = "1em", fill = "#4a7fb5")` &nbsp; Marked-up drafts returned
+Each RcS team gets their draft back with comments in the margins.
+
+#### `r fontawesome::fa("lightbulb", height = "1em", fill = "#4a7fb5")` &nbsp; Two class-wide teaching points
+We'll highlight two issues that showed up across *many* drafts &mdash; the patterns worth everyone hearing.
+
+#### `r fontawesome::fa("clock", height = "1em", fill = "#4a7fb5")` &nbsp; 10 minutes to review
+Teams read their feedback together and decide what to revise first.
+]]
+
+.pull-right[
+.content-box-blue[
+.font90[
+**As you read your feedback, ask:**
+
+- Which comment, if fixed, would improve the paper the *most*?
+- Is any comment pointing at a problem that appears in more than one place?
+- What can we fix *today* while we draft the Discussion?
+]
+]
+]
+
+.center[`r timer(10L)`]
+
+---
+class: segue-green
+
+# How to Write a <br> Discussion Section `r top_icon("pen-fancy")`
+
+---
+### The Four-Move Structure
+
+.font85[Every paragraph of a good Discussion moves through the same four steps:]
+
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("comment", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>1. Restate</strong><br>
+    Say the finding in plain language &mdash; no jargon, no table numbers.</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("gears", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>2. Explain</strong><br>
+    Why might this be happening? What is the mechanism?</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("scale-balanced", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>3. Compare</strong><br>
+    Agree, disagree, or add nuance to what the literature said?</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("triangle-exclamation", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>4. Limit</strong><br>
+    Name the limitation that most threatens the interpretation.</p>
+  </div>
+</div>
+
+--
+
+.content-box-yellow[
+.font85[**Use it as a template.** Take one key finding, walk it through all four moves, and you have a complete Discussion paragraph.]
+]
+
+---
+### Move 1 &mdash; Restate the Finding in Plain Language
+
+.pull-left[.font85[
+.content-box-blue[
+**`r fontawesome::fa("comment", fill = "#4a7fb5")` Plain language, not table-speak**
+
+Translate the statistic into a sentence a non-expert would understand.
+]
+
+- Drop the *p*-values and coefficients for a moment.
+- Say what actually happened to whom.
+- Anchor it to your research question.
+]]
+
+.pull-right[.font85[
+.content-box-yellow[
+**`r fontawesome::fa("xmark", fill = "#D55E00")` Instead of:**
+
+*"The coefficient on treatment was 4.2 (p &lt; 0.05)."*
+]
+
+.content-box-green[
+**`r fontawesome::fa("check", fill = "#009E73")` Say:**
+
+*"Students who used the study app scored about 4 points higher on the final test than those who did not."*
+]
+]]
+
+---
+### Move 2 &mdash; Explain It
+
+.pull-left[.font85[
+**Why might you have found this?** Offer a *mechanism* &mdash; a plausible story for how the cause produces the effect.
+
+- What do we already know about *why* this relationship could exist?
+- Is there a chain of steps linking your variables?
+- Could something else be driving it? (name the **alternative explanation**)
+]]
+
+.pull-right[.font85[
+.content-box-blue[
+**`r fontawesome::fa("gears", fill = "#4a7fb5")` Example mechanism**
+
+*"The app may help because it spaces practice over time, and spaced repetition is known to improve retention."*
+]
+
+.content-box-yellow[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Alternative explanation**
+
+*"But motivated students may have both chosen the app and studied more &mdash; so we can't rule out self-selection."*
+]
+]]
+
+---
+### Move 3 &mdash; Compare to the Literature
+
+.font85[Does your finding **agree**, **disagree**, or **add nuance** to what was already known?]
+
+.three-col[
+.col[
+`r fontawesome::fa("thumbs-up", height = "2.2em", fill = "#009E73")`
+
+**Agrees**
+
+*"This is consistent with Smith (2021), who also found a positive effect of spaced practice."*
+]
+.col[
+`r fontawesome::fa("code-compare", height = "2.2em", fill = "#D55E00")`
+
+**Disagrees**
+
+*"In contrast to Lee (2020), we found no gender difference &mdash; possibly because our sample was older."*
+]
+.col[
+`r fontawesome::fa("plus", height = "2.2em", fill = "#4a7fb5")`
+
+**Adds nuance**
+
+*"Building on Gomez (2022), we show the effect holds, but only for students who used the app weekly."*
+]
+]
+
+--
+
+.content-box-blue[
+.font85[**Every comparison needs a citation.** Tie each finding to at least one source from your literature review.]
+]
+
+---
+### Move 4 &mdash; Identify the Key Limitation
+
+.pull-left[.font85[
+Every study has limits. **Name the one that most threatens your interpretation** &mdash; not a laundry list.
+
+**Ask:**
+- What would a skeptic attack first?
+- Does this limitation change *what the finding means*?
+- What would you do differently with more time or data?
+]]
+
+.pull-right[.font85[
+.content-box-yellow[
+**`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` A limitation with teeth**
+
+*"Because students chose whether to use the app, our estimate may reflect who they are, not what the app does. A randomized trial would settle this."*
+]
+
+.content-box-green[
+**`r fontawesome::fa("check", fill = "#009E73")` Honest &ne; apologetic**
+
+State the limit, say what it implies, and move on. Don't undermine your whole study.
+]
+]]
+
+---
+### Interpret Without Overclaiming
+
+.font80[
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("xmark", fill = "#D55E00")` Overclaiming**
+
+- *"This proves the app causes higher scores."*
+- *"Our results show this will work everywhere."*
+- Treating correlation as causation.
+- Generalizing beyond your sample.
+]
+]
+
+.pull-right[
+.content-box-green[
+**`r fontawesome::fa("check", fill = "#009E73")` Calibrated claims**
+
+- *"Our results **suggest** the app **is associated with** higher scores."*
+- *"**Within our sample**, students who&hellip;"*
+- Hedging language: *may, suggests, is consistent with*.
+- Scope conditions: for whom, where, when.
+]
+]
+]
+
+.content-box-blue[
+.font85[**The test:** could you defend every sentence of your Discussion if the author you cited were sitting in the front row?]
+]
+
+---
+class: segue-green
+
+# Team Activity: <br> Discussion Synthesis `r top_icon("users")`
+
+---
+### Team Activity &mdash; Discussion Synthesis (30 min)
+
+.pull-left[.font90[
+#### `r fontawesome::fa("pen-to-square", height = "1em", fill = "#4a7fb5")` &nbsp; Draft your Discussion
+Take your **main finding** and write one paragraph using the **four-move structure**: restate &rarr; explain &rarr; compare &rarr; limit.
+
+#### `r fontawesome::fa("book", height = "1em", fill = "#4a7fb5")` &nbsp; Bring in the literature
+Connect the finding to at least **one source** from your literature review.
+
+#### `r fontawesome::fa("comments", height = "1em", fill = "#4a7fb5")` &nbsp; Instructor circulates
+Be ready for probing questions.
+]]
+
+.pull-right[
+.content-box-yellow[
+**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Probing questions to expect:**
+
+.font90[
+- *"Why do you think you found that?"*
+- *"What alternative explanation can you think of?"*
+- *"Who would challenge this finding &mdash; and how would you respond?"*
+]
+]
+]
+
+.center[`r timer(30L)`]
+
+---
+### Mission Sheet: Synthesizing Findings
+
+.font90[Before you leave the activity, your team should be able to fill in **four lines**:]
+
+<div class="chev-row">
+  <div class="chev">1</div>
+  <div class="chev-text"><strong>Main conclusion</strong> &mdash; in one plain-language sentence, what did you find?</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">2</div>
+  <div class="chev-text"><strong>Comparison to literature</strong> &mdash; one source your finding agrees with, disagrees with, or extends (with citation).</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">3</div>
+  <div class="chev-text"><strong>One important limitation</strong> &mdash; the caveat that most threatens your interpretation.</div>
+</div>
+
+<div class="chev-row">
+  <div class="chev">4</div>
+  <div class="chev-text"><strong>One next step</strong> &mdash; what should the next study do to build on or fix this?</div>
+</div>
+
+--
+
+.content-box-blue[
+.font85[**Then:** share your four lines with a neighboring team and get quick feedback before the next segment.]
+]
+
+---
+class: segue-yellow
+
+# Synthesizing Your Findings <br> with the Literature `r top_icon("book-open")`
+
+---
+### What Does Synthesis Mean?
+
+.pull-left[.font90[
+.content-box-yellow[
+**Synthesis is more than summary.** It means combining ideas from different sources to see *how they relate* &mdash; not just what each one says.
+]
+
+A good discussion doesn't list studies one after another. It **weaves** them together around *your* finding.
+
+**Ask of your sources:**
+- Do the authors **agree** or **disagree**?
+- Are they studying the same issue from **different angles**?
+- Does one source **support, expand on, or challenge** another?
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("diagram-project", fill = "#4a7fb5")` The "discuss" checklist**
+
+To *discuss* a result means to:
+
+1. Restate the key finding
+2. Compare to what the literature said
+3. Offer an explanation for it
+4. Acknowledge limitations
+5. Suggest what comes next
+]
+]]
+
+---
+### Group Ideas, Not Authors
+
+.pull-left[.font85[
+.content-box-yellow[
+**`r fontawesome::fa("xmark", fill = "#D55E00")` Don't organize by author:**
+
+*"Smith says&hellip; then Jones says&hellip; then Lee says&hellip;"*
+]
+
+This reads like a list, not an argument.
+]]
+
+.pull-right[.font85[
+.content-box-green[
+**`r fontawesome::fa("check", fill = "#009E73")` Organize by theme, issue, or trend:**
+
+*"Many studies agree that social media affects attention span (Smith, 2021; Lee, 2020), but a few challenge this idea (Gomez, 2022)."*
+]
+
+One sentence, three sources, one clear point.
+]]
+
+---
+### Use Comparative Language
+
+.pull-left[.font90[
+.content-box-blue[
+**`r fontawesome::fa("link", fill = "#4a7fb5")` Helpful connecting phrases**
+
+- *"Similarly&hellip;"*
+- *"In contrast&hellip;"*
+- *"Building on&hellip;"*
+- *"While some researchers argue&hellip;, others suggest&hellip;"*
+- *"There is a general consensus that&hellip;"*
+]
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**`r fontawesome::fa("magnifying-glass", fill = "#4a7fb5")` Highlight gaps or conflicts**
+
+Point out where sources disagree or where more research is needed.
+
+*"While most studies link sleep to better memory, few explore how this differs by age group."*
+]
+]]
+
+--
+
+.content-box-yellow[
+.font85[**End with the big picture:** what have you learned from all the sources *combined*? What patterns, debates, or gaps set the stage for your own finding?]
+]
+
+---
+class: segue-green
+
+# Presentations: Discussion <br> + Conclusion Slides `r top_icon("chalkboard")`
+
+---
+### Present the Ending (30 min)
+
+.pull-left[.font90[
+Each team presents the **full ending** of their presentation &mdash; the Discussion and Conclusion slides.
+
+**Feedback focuses on two questions:**
+
+#### `r fontawesome::fa("arrows-left-right", height = "1em", fill = "#4a7fb5")` &nbsp; Does the discussion connect back?
+Do the findings tie clearly to the **original research question**?
+
+#### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#4a7fb5")` &nbsp; Does the conclusion land?
+Does it leave the audience with **one clear takeaway**?
+]]
+
+.pull-right[
+.content-box-blue[
+.font90[
+**Draft your Discussion + Conclusion slides around three questions:**
+
+- What do our results **mean**?
+- Did they **support or challenge** our hypothesis?
+- **Who should care** about this?
+]
+]
+]
+
+.center[`r timer(30L)`]
+
+---
+### Anatomy of a Strong Conclusion Slide
+
+.font85[
+.pull-left[
+.content-box-green[
+**`r fontawesome::fa("bullseye", fill = "#4a7fb5")` One takeaway**
+
+Lead with the single sentence you want the audience to remember.
+]
+
+.content-box-green[
+**`r fontawesome::fa("link", fill = "#4a7fb5")` Answers the question**
+
+Explicitly close the loop back to the question you opened with.
+]
+]
+
+.pull-right[
+.content-box-blue[
+**`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` Honest caveat**
+
+One limitation, stated plainly &mdash; it builds credibility.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("arrow-right", fill = "#4a7fb5")` Where next**
+
+A forward-looking line: what this opens up or what should follow.
+]
+]
+]
+
+.content-box-yellow[
+.font85[**Avoid** ending on a wall of numbers or a plain "Thank you." End on *meaning*.]
+]
+
+---
+class: segue-yellow
+
+# Scientific Storytelling: <br> Presentation Transitions `r top_icon("comments")`
+
+---
+### Verbal Transitions Between Sections (10 min)
+
+.font90[Smooth transitions signal a **well-told story**. Practice the sentences that carry your audience from one section to the next.]
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("arrow-right", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Methods &rarr; Results:</strong> <em>"Now that we've seen the methods, let me walk you through what we found&hellip;"</em></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("arrow-right", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Results &rarr; Discussion:</strong> <em>"Our results suggest that&hellip; This aligns with / differs from what [Author, Year] found in their study&hellip;"</em></div>
+</div>
+
+<div class="chev-row">
+  <div class="chev-sm">`r fontawesome::fa("arrow-right", fill = "#0148A4")`</div>
+  <div class="chev-text"><strong>Discussion &rarr; Conclusion:</strong> <em>"So what does all of this mean? Here is the one thing we want you to remember&hellip;"</em></div>
+</div>
+
+--
+
+.content-box-blue[
+.font85[**Practice out loud.** The transition is where a presentation feels either seamless or stitched together. Rehearse the hand-offs, especially when the speaker changes.]
+]
+
+.center[`r timer(10L)`]
+
+---
+### Putting the Whole Story Together
+
+.font85[
+<div class="chev-flow">
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("circle-question", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>Question</strong><br>
+    What did we set out to answer?</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("flask", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>Methods</strong><br>
+    How did we go about answering it?</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("chart-line", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>Results</strong><br>
+    What did we find?</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("lightbulb", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>Discussion</strong><br>
+    What does it mean, and how does it fit?</p>
+  </div>
+  <div class="chev-step">
+    <div class="chev-right">`r fontawesome::fa("flag-checkered", height = "1.6em", fill = "#0148A4")`</div>
+    <p><strong>Conclusion</strong><br>
+    So what &mdash; and what next?</p>
+  </div>
+</div>
+]
+
+.content-box-yellow[
+.font85[**Integration is today's goal:** every section should point back to the question and forward to the takeaway. That through-line *is* the story.]
+]
+
+---
+class: segue-green
+
+# Homework &amp; Teamwork `r top_icon("laptop-house")`
+
+---
+### Homework &mdash; Teamwork
+
+.pull-left[.font80[
+**`r fontawesome::fa("users", fill = "#4a7fb5")` As a team**
+
+- Write your **synthesis**: conclusion sentence, comparison to one literature source, one limitation, one next step.
+- Draft the **Discussion slide** &mdash; *"What do our results mean?"* &mdash; connecting each finding to at least one source from your literature review.
+- Finalize slide content and **assign who presents which slide**. Then **practice!**
+
+**`r fontawesome::fa("clipboard-check", fill = "#4a7fb5")` Slide check (async is fine)**
+
+- Are all charts labeled? Does the story flow? Identify **3 specific things to fix** in tomorrow's session.
+]]
+
+.pull-right[.font80[
+**`r fontawesome::fa("user", fill = "#4a7fb5")` Individual (evening)**
+
+- Draft your **Discussion paragraph**: did the results support your hypothesis? How do findings compare to the literature? *(200&ndash;250 words)*
+
+**`r fontawesome::fa("file-lines", fill = "#4a7fb5")` Written report (RcS)**
+
+- Add a **Discussion / Conclusion** section to your written report. Include at least **2 literature comparisons with citations**. *(Target: 300&ndash;400 words)*
+]]
+
+---
+### Session 11: What You Can Do Now
+
+.font80[
+**Interpreting findings:**
+
+- Take a key result and move it through the **four-move structure** &mdash; restate in plain language, explain the mechanism, compare to the literature, and name the limitation that most threatens it.
+
+**Writing the Discussion:**
+
+- Contextualize results **without overclaiming** &mdash; use calibrated language (*suggests, is associated with*), state scope conditions, and treat correlation as correlation.
+- **Synthesize** sources by theme rather than by author, using comparative language to show agreement, conflict, and gaps.
+
+**Building the presentation:**
+
+- Draft **Discussion and Conclusion slides** that connect findings back to the research question and leave one clear takeaway.
+- Deliver smooth **verbal transitions** between sections so the whole talk reads as one coherent story.
+]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-11-interpreting-findings-discussion/am/11-class.html
+
+to_pdf(from = "~/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-11-interpreting-findings-discussion/am/11-class.html",
+       to = "~/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-11-interpreting-findings-discussion/am/11-class.pdf")
+to_pdf(from = "~/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-11-interpreting-findings-discussion/am/11-class.html")
+```

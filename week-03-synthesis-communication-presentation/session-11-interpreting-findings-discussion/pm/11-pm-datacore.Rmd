@@ -1,0 +1,397 @@
+---
+title: "DataCORE"
+subtitle: "Robustness, Interactive Visualization & Figure Captions"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | July 13, 2026</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "60%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import statsmodels.formula.api as smf
+sns.set_theme(style="whitegrid")
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+.card-grid { display: flex; flex-wrap: wrap; gap: 0.7em; margin-top: 0.6em; }
+.card { flex: 1 1 30%; background: #e7f3ec; border-radius: 8px; padding: 0.5em 0.8em; }
+.card h4 { margin: 0 0 0.2em 0; color: #2e8b57; font-size: 0.95em; }
+.card p { margin: 0; font-size: 0.8em; }
+.chev-row-sm { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.3em; }
+.chev-sm { flex: 0 0 50px; height: 56px; background: #cfe8d8;
+  clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #1a4731; }
+.chev-text { flex: 1; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Final Analysis Cleanup &amp; Robustness <span style="color:#2e8b57;">(1:00&ndash;2:00)</span></h4></li>
+    <li><h4>Interactive Visualization &mdash; Plotly <span style="color:#2e8b57;">(2:00&ndash;2:45)</span></h4></li>
+    <li><h4>Scientific Storytelling &mdash; Figure Captions <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+</ol>
+
+.font90[*Your last chance to make the analysis **more convincing**: stress-test it, make one chart worth exploring, and caption it so it speaks for itself.*]
+
+```{python load-data, include=FALSE}
+wages = pd.read_csv("wages.csv")
+```
+
+```{r load-data-r, include=FALSE}
+wages <- read.csv("wages.csv")
+```
+
+---
+class: segue-green
+
+# 1:00 &ndash; 2:00 &middot; Final Analysis
+## .white[Cleanup &amp; Robustness]
+
+---
+### `r fontawesome::fa("vials", height = "1em", fill = "#2e8b57")` What is a robustness check?
+
+.pull-left[
+.font90[
+A finding you can only get **one way** is fragile. A robustness check asks:
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">Re-run your main analysis on a <strong>subset</strong> of the data &mdash; one year, one region, one group.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Does the result hold?</strong> Same direction, similar size?</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Report what you find &mdash; either way it makes you stronger.</div></div>
+]
+]
+
+.pull-right[
+.content-box-green[
+.font85[`r fontawesome::fa("circle-check", fill = "#2e8b57")` &nbsp; **Holds?** Your finding is more convincing.]
+]
+.content-box-yellow[
+.font85[`r fontawesome::fa("triangle-exclamation", fill = "#c08a00")` &nbsp; **Breaks?** That's not a failure &mdash; it's a **limitation** to discuss honestly.]
+]
+]
+
+---
+### `r fontawesome::fa("filter", height = "1em", fill = "#2e8b57")` Robustness: re-run on one subgroup
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+full = smf.ols("hourly_wage ~ experience_years", data=wages).fit()   # main analysis
+urban = smf.ols("hourly_wage ~ experience_years",
+                data=wages[wages.region == "Urban"]).fit()           # subset: Urban only
+print(f"experience coef (all regions) = {full.params['experience_years']:.3f}")
+print(f"experience coef (Urban only)  = {urban.params['experience_years']:.3f}")
+```
+]
+.panel[.panel-name[R]
+```{r}
+full <- lm(hourly_wage ~ experience_years, data = wages)               # main analysis
+urban <- lm(hourly_wage ~ experience_years,
+            data = subset(wages, region == "Urban"))                  # subset: Urban only
+cat(sprintf("experience coef (all regions) = %.3f\n", coef(full)["experience_years"]))
+cat(sprintf("experience coef (Urban only)  = %.3f\n", coef(urban)["experience_years"]))
+```
+]
+]
+
+```{python rb-extract, include=FALSE}
+b_all = float(full.params["experience_years"])
+b_sub = float(urban.params["experience_years"])
+same_sign = (b_all > 0) == (b_sub > 0)
+```
+
+.content-box-green[
+.font82[`r fontawesome::fa("magnifying-glass", fill = "#2e8b57")` &nbsp; The Urban-only slope points the **same direction** and is close in size &mdash; the experience&ndash;wage link **survives** the subset. That sentence belongs in your Discussion.]
+]
+
+---
+### `r fontawesome::fa("plus", height = "1em", fill = "#2e8b57")` Add one control &mdash; watch the coefficient move
+
+.panelset[
+.panel[.panel-name[Python]
+```{python}
+base = smf.ols("hourly_wage ~ experience_years + C(gender)",
+               data=wages).fit()                                     # baseline model
+plus = smf.ols("hourly_wage ~ experience_years + C(gender) + C(education)",
+               data=wages).fit()                                     # + education control
+print(f"experience coef (baseline)        = {base.params['experience_years']:.3f}")
+print(f"experience coef (+ education)      = {plus.params['experience_years']:.3f}")
+```
+]
+.panel[.panel-name[R]
+```{r}
+base <- lm(hourly_wage ~ experience_years + gender, data = wages)      # baseline model
+plus <- lm(hourly_wage ~ experience_years + gender + education, data = wages) # + education
+cat(sprintf("experience coef (baseline)   = %.3f\n", coef(base)["experience_years"]))
+cat(sprintf("experience coef (+ education) = %.3f\n", coef(plus)["experience_years"]))
+```
+]
+]
+
+```{python ctrl-extract, include=FALSE}
+c_base = float(base.params["experience_years"])
+c_plus = float(plus.params["experience_years"])
+c_pct = abs(c_plus - c_base) / abs(c_base) * 100
+```
+
+.content-box-yellow[
+.font82[`r fontawesome::fa("scale-balanced", fill = "#c08a00")` &nbsp; Adding **education** shifts the experience coefficient by about **`r sprintf("%.0f", py$c_pct)`%**. **Interpret it:** if the coefficient barely moves, experience matters *independently* of schooling; if it drops a lot, part of what looked like an "experience effect" was really education.]
+]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI limitation exercise
+
+.pull-left[
+.content-box-blue[
+.font82[
+**Ask ChatGPT:**
+
+*"What are three limitations of a study that uses this method and this dataset?"*
+]
+]
+.font80[Paste in your method (e.g. OLS regression) and a one-line description of your data. **Take notes on all three.**]
+]
+
+.pull-right[
+.content-box-green[
+.font80[
+**Then sort them yourself:**
+- Which limitations **actually apply** to your study?
+- Which does the AI **get wrong** or invent?
+- Which is the **most serious** for your claim?
+]
+]
+.content-box-yellow[
+.font80[`r fontawesome::fa("pen", fill = "#c08a00")` &nbsp; The survivors go straight into your **Discussion** section.]
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[`r timer(1L, 30L)`]
+
+---
+class: segue-green
+
+# 2:00 &ndash; 2:45 &middot; Interactive Visualization
+## .white[Plotly Express]
+
+---
+### `r fontawesome::fa("hand-pointer", height = "1em", fill = "#2e8b57")` Why interactive charts?
+
+.pull-left[
+.font90[
+A static chart shows **one view**. An interactive chart lets the reader **explore**:
+
+- **Hover** to read exact values
+- **Zoom** into a dense region
+- **Filter** groups on and off
+]
+.font80[You'll use one library: **Plotly Express**, imported as `px`.]
+]
+
+.pull-right[
+.content-box-blue[
+.font82[
+`r fontawesome::fa("newspaper", fill = "#4a7fb5")` &nbsp; These show up in **policy briefs**, **science journalism**, and **academic supplemental materials** &mdash; anywhere the audience wants to poke at the data themselves.
+]
+]
+]
+
+---
+### `r fontawesome::fa("circle-nodes", height = "1em", fill = "#2e8b57")` `px.scatter()` with hover details
+
+.pull-left[
+.font85[Point-level detail appears on **hover** via `hover_data`:]
+```{python, eval=FALSE}
+import plotly.express as px
+fig = px.scatter(
+    wages, x="experience_years", y="hourly_wage",
+    color="gender",       # color by group
+    hover_data=["education", "region"],   # hover info
+    labels={"experience_years": "Experience (yrs)",
+            "hourly_wage": "Hourly wage ($)"},
+    title="Experience vs. wage")
+fig.show()
+```
+.font75[`r fontawesome::fa("hand-pointer", fill = "#2e8b57")` &nbsp; Hovering any point reveals its education and region.]
+]
+
+.pull-right[
+```{python scatter-preview, echo=FALSE, out.width="98%", fig.width=5.2, fig.height=3.6}
+fig, ax = plt.subplots()
+for g, sub in wages.groupby("gender"):                 # static stand-in for the px chart
+    ax.scatter(sub.experience_years, sub.hourly_wage, label=g, alpha=0.65, s=18)
+ax.set_xlabel("Experience (yrs)"); ax.set_ylabel("Hourly wage ($)")
+ax.set_title("Experience vs. wage"); ax.legend(title="gender")
+plt.tight_layout(); plt.show()
+```
+.font70[.center[*Static preview &mdash; the real `px` chart is zoomable &amp; hoverable.*]]
+]
+
+---
+### `r fontawesome::fa("chart-column", height = "1em", fill = "#2e8b57")` `px.bar()` &mdash; grouped by color
+
+.pull-left[
+.font85[The `color` argument splits each bar into groups:]
+```{python, eval=FALSE}
+means = (wages.groupby(["education", "gender"])
+         ["hourly_wage"].mean().reset_index())
+fig = px.bar(
+    means, x="education", y="hourly_wage",
+    color="gender",       # grouped bars
+    barmode="group",
+    labels={"hourly_wage": "Mean hourly wage ($)"},
+    title="Mean wage by education & gender")
+fig.show()
+```
+]
+
+.pull-right[
+```{python bar-preview, echo=FALSE, out.width="98%", fig.width=5.2, fig.height=3.6}
+means = wages.groupby(["education", "gender"])["hourly_wage"].mean().unstack()
+means.plot(kind="bar")                            # static stand-in for the px chart
+plt.ylabel("Mean hourly wage ($)"); plt.xlabel("education")
+plt.title("Mean wage by education & gender")
+plt.xticks(rotation=0); plt.legend(title="gender")
+plt.tight_layout(); plt.show()
+```
+.font70[.center[*Static preview &mdash; in Plotly, click a legend entry to filter a group.*]]
+]
+
+---
+### `r fontawesome::fa("floppy-disk", height = "1em", fill = "#2e8b57")` Your deliverable &mdash; and how to export it
+
+.pull-left[
+.content-box-blue[
+.font82[
+**`r fontawesome::fa("seedling", fill = "#4a7fb5")` RcF**
+
+Create **one Plotly chart** of your main finding.
+]
+]
+.content-box-green[
+.font82[
+**`r fontawesome::fa("tree", fill = "#2e8b57")` RcS**
+
+Create an **interactive scatter plot with a regression line** (`px.scatter(..., trendline="ols")`). Export as **HTML** for your portfolio.
+]
+]
+]
+
+.pull-right[
+.font85[Export the interactive chart as a standalone file:]
+```{python, eval=FALSE}
+# export as a standalone, still-interactive file
+fig.write_html("main_finding.html")
+```
+.content-box-yellow[
+.font80[`r fontawesome::fa("link", fill = "#c08a00")` &nbsp; An **HTML** export keeps it interactive &mdash; a PNG would freeze it. Add the HTML to your portfolio and supplemental materials.]
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[`r timer(45L)`]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[Figure Captions for Presentation]
+
+---
+### `r fontawesome::fa("closed-captioning", height = "1em", fill = "#2e8b57")` A caption that works without you
+
+.font90[Every chart in your Summit talk needs a caption that stands **alone** &mdash; three sentences:]
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>What the chart shows</strong> &mdash; the variables and chart type.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>The key finding or pattern</strong> &mdash; what the viewer should notice.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>The sample and data source</strong> &mdash; who/what the data is, and where it came from.</div></div>
+
+.content-box-green[
+.font82[`r fontawesome::fa("quote-left", fill = "#2e8b57")` &nbsp; *"This scatter plot shows hourly wage against years of experience for 220 workers. Wages rise with experience, roughly $1 per additional year. Data come from the 2023 wage survey."*]
+]
+
+.content-box-blue[
+.font85[`r fontawesome::fa("volume-high", fill = "#4a7fb5")` &nbsp; **Read it aloud.** If a stranger could understand the chart from the caption alone, it's ready.]
+]
+
+.center[`r timer(15L)`]
+
+---
+class: segue-green
+
+# .white[Stress-test it. Make one chart worth exploring.]
+## .white[Then let the caption do the talking.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-11-interpreting-findings-discussion/pm/11-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-11-interpreting-findings-discussion/pm/11-pm-datacore.pdf")
+```
