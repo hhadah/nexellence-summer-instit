@@ -1,0 +1,345 @@
+---
+title: "DataCORE"
+subtitle: "Reproducibility, Slide Sync & AI Attribution"
+# author: "Hussain Hadah (he/him)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false
+    seal: true
+    nature:
+      beforeInit: ["assets/remark-zoom.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | DataCORE | July 14, 2026</div>
+
+<!--- footer -->
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(reticulate)
+use_virtualenv("r-reticulate", required = TRUE)
+suppressMessages(library(tidyverse))
+options(readr.show_col_types = FALSE)
+opts_chunk$set(echo = TRUE, comment = "", message = FALSE, warning = FALSE,
+               fig.align = "center", dpi = 150, fig.width = 6, fig.height = 3.4,
+               out.width = "60%")
+```
+
+```{python py-setup, include=FALSE}
+import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_theme(style="whitegrid")
+pd.set_option("display.width", 100)
+pd.set_option("display.max_columns", 12)
+```
+
+```{r xaringan-panelset, echo=FALSE, eval=TRUE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#2e8b57",
+    color_running_background = "#2e8b57",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+```{css, echo=FALSE, eval=TRUE}
+.remark-code, .remark-inline-code { font-size: 0.72em; }
+.panelset .panel-tabs .panel-tab { font-size: 0.9em; }
+.three-col { display: flex; gap: 1.5em; margin-top: 1em; }
+.three-col .col { flex: 1; }
+.big-stat { font-size: 2.2rem; font-weight: 700; color: #2e8b57; }
+.card-grid { display: flex; flex-wrap: wrap; gap: 0.7em; margin-top: 0.6em; }
+.card { flex: 1 1 30%; background: #e7f3ec; border-radius: 8px; padding: 0.5em 0.8em; }
+.card h4 { margin: 0 0 0.2em 0; color: #2e8b57; font-size: 0.95em; }
+.card p { margin: 0; font-size: 0.8em; }
+.chev-row-sm { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.3em; }
+.chev-sm { flex: 0 0 50px; height: 56px; background: #cfe8d8;
+  clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: #1a4731; }
+.chev-text { flex: 1; }
+```
+
+# .text-shadow[Afternoon: DataCORE]
+
+<ol>
+    <li><h4>Reproducibility, Open Science &amp; Your Code Portfolio <span style="color:#2e8b57;">(1:00&ndash;1:45)</span></h4></li>
+    <li><h4>Presentation Data Storytelling &mdash; Slide Sync <span style="color:#2e8b57;">(1:45&ndash;2:45)</span></h4></li>
+    <li><h4>Scientific Storytelling &mdash; AI Attribution Statement <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+</ol>
+
+.font90[*A finding only counts if someone else can rebuild it. Today you make your notebook shareable, sync it to your slides, and disclose your AI use.*]
+
+```{python load-data, include=FALSE}
+wages = pd.read_csv("wages.csv")
+```
+
+---
+class: segue-green
+
+# 1:00 &ndash; 1:45 &middot; Reproducibility
+## .white[Open Science &amp; Your Code Portfolio]
+
+---
+### `r fontawesome::fa("rotate", height = "1em", fill = "#2e8b57")` A finding only matters if it replicates
+
+.pull-left[
+.font90[
+**Open science** means sharing your **data and code**, not just your conclusions.
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("box-open", fill = "#2e8b57")`</div><div class="chev-text">Others can <strong>check</strong> your work &mdash; and build on it.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("shield", fill = "#2e8b57")`</div><div class="chev-text">Transparency is a <strong>defense</strong>: nothing to hide.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("recycle", fill = "#2e8b57")`</div><div class="chev-text">Reproducible work is <strong>reusable</strong> work.</div></div>
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font82[`r fontawesome::fa("triangle-exclamation", fill = "#c08a00")` &nbsp; **The challenges are real:** privacy of participants, credit and being scooped, and the plain effort of cleaning a notebook enough for a stranger to follow. Worth it anyway.]
+]
+.content-box-blue[
+.font82[`r fontawesome::fa("bullseye", fill = "#4a7fb5")` &nbsp; **Today's goal:** clean your analysis notebook so another researcher could open it and understand it without you in the room.]
+]
+]
+
+---
+### `r fontawesome::fa("tag", height = "1em", fill = "#2e8b57")` Name things like you mean it
+
+.panelset[
+.panel[.panel-name[Before]
+```{python, eval=FALSE}
+df2 = pd.read_csv("data.csv")     # what is df2?
+x = df2[df2.a > 0]                # what is a?
+y = x.groupby("g").b.mean()       # g? b?
+```
+]
+.panel[.panel-name[After]
+```{python, eval=FALSE}
+health_outcomes = pd.read_csv("wages.csv")          # source is obvious
+health_outcomes_clean = health_outcomes.dropna()    # what happened
+wage_by_education = (health_outcomes_clean
+                     .groupby("education")["hourly_wage"].mean())
+```
+]
+]
+
+.content-box-green[
+.font85[`r fontawesome::fa("lightbulb", fill = "#2e8b57")` &nbsp; A variable name should tell a reader **what it holds** without them running the cell. `df2` costs a stranger five minutes; `health_outcomes_clean` costs them nothing.]
+]
+
+---
+### `r fontawesome::fa("broom", height = "1em", fill = "#2e8b57")` Cut the clutter
+
+.pull-left[
+.font90[
+Before you share, delete the scaffolding you built the analysis on:
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("trash", fill = "#2e8b57")`</div><div class="chev-text"><strong>Dead code</strong> &mdash; cells that no longer run or feed anything.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("clone", fill = "#2e8b57")`</div><div class="chev-text"><strong>Redundant cells</strong> &mdash; the same thing tried five ways.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("print", fill = "#2e8b57")`</div><div class="chev-text">Debug <strong>print()</strong> spam you left behind.</div></div>
+]
+]
+
+.pull-right[
+.content-box-blue[
+.font85[`r fontawesome::fa("arrows-down-to-line", fill = "#4a7fb5")` &nbsp; **The test:** *Restart &amp; Run All*, top to bottom, with no errors and no leftovers. If a cell isn't needed for that clean run, it shouldn't ship.]
+]
+.content-box-yellow[
+.font82[`r fontawesome::fa("comment", fill = "#c08a00")` &nbsp; Keep one **comment per step of intent** &mdash; enough to follow, not a novel.]
+]
+]
+
+---
+### `r fontawesome::fa("file-lines", height = "1em", fill = "#2e8b57")` Two Markdown cells that frame the notebook
+
+.pull-left[
+.font80[**Top of the notebook &mdash; a header cell:**]
+```markdown
+# Wage & Experience Analysis
+Authors: Team 3
+Date: 2026-07-14
+Data source: 2023 Wage Survey (N = 220)
+Research question: Does hourly wage
+rise with years of experience?
+```
+]
+
+.pull-right[
+.font80[**Bottom of the notebook &mdash; a limitations cell:**]
+```markdown
+## Limitations
+- Observational data — no causal claims
+- Wages self-reported; possible recall error
+- One survey year — may not generalize
+```
+]
+
+.content-box-green[
+.font85[`r fontawesome::fa("bookmark", fill = "#2e8b57")` &nbsp; The header answers *"what is this and who made it?"* in five seconds; the limitations cell answers *"what shouldn't I conclude from it?"* Together they make the notebook self-contained.]
+]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` AI assist &mdash; a reader's-eye review
+
+.pull-left[
+.content-box-blue[
+.font85[
+**Ask your AI tool:**
+
+*"Review my notebook and suggest three ways to make it easier for another researcher to understand."*
+]
+]
+]
+
+.pull-right[
+.content-box-green[
+.font82[
+**Good suggestions to expect:**
+- Rename cryptic variables
+- Add a comment above each analysis step
+- Split a giant cell into logical pieces
+]
+]
+.content-box-yellow[
+.font82[`r fontawesome::fa("user-check", fill = "#c08a00")` &nbsp; **You decide** which suggestions to take &mdash; and note that you used AI for this pass (we'll write that statement at 2:45).]
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[`r timer(45L)`]
+
+---
+class: segue-green
+
+# 1:45 &ndash; 2:45 &middot; Data Storytelling
+## .white[Slide Sync]
+
+---
+### `r fontawesome::fa("link", height = "1em", fill = "#2e8b57")` Every chart on a slide = the chart in your notebook
+
+.pull-left[
+.font90[
+Open your **slides** and your **analysis notebook** side by side. They must tell the **same** story, chart for chart.
+
+A chart that appears on a slide but not in the notebook &mdash; or looks different from it &mdash; is a **red flag** to any careful audience.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font85[`r fontawesome::fa("triangle-exclamation", fill = "#c08a00")` &nbsp; If a reviewer can't find the slide's chart in your notebook, they can't trust it &mdash; and they'll wonder what else doesn't match.]
+]
+]
+
+---
+### `r fontawesome::fa("list-check", height = "1em", fill = "#2e8b57")` The four Slide-Sync checks
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Chart title matches the slide text</strong> &mdash; the same claim in both places.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Axis labels legible at slide zoom</strong> &mdash; minimum <strong>14pt</strong> font.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>A caption sits below each chart</strong> &mdash; what it shows, the finding, the source.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text"><strong>No orphan charts</strong> &mdash; every chart is explained in the speaker notes.</div></div>
+
+.content-box-blue[
+.font85[`r fontawesome::fa("people-arrows", fill = "#4a7fb5")` &nbsp; **Peer check:** swap laptops with another team. Can they say what each chart shows **without asking you?** If not &mdash; revise until they can.]
+]
+
+.center[`r timer(60L)`]
+
+---
+### `r fontawesome::fa("chart-line", height = "1em", fill = "#2e8b57")` What "presentation-ready" looks like
+
+.pull-left[
+```{python slidechart, echo=FALSE, out.width="98%", fig.width=5.4, fig.height=3.5}
+fig, ax = plt.subplots()
+ax.scatter(wages.experience_years, wages.hourly_wage, alpha=0.55, s=16, color="#2e8b57")
+ax.set_title("Wages rise with experience", fontsize=15, fontweight="bold")  # title = finding
+ax.set_xlabel("Experience (years)", fontsize=14)     # >= 14pt, legible
+ax.set_ylabel("Hourly wage ($)", fontsize=14)
+ax.tick_params(labelsize=12)
+plt.tight_layout(); plt.show()
+```
+]
+
+.pull-right[
+.font85[
+.content-box-green[
+`r fontawesome::fa("check", fill = "#009E73")` **Title is the finding**, not "wage vs experience".
+
+`r fontawesome::fa("check", fill = "#009E73")` **Axis labels &ge; 14pt**, readable from the back.
+]
+]
+.content-box-blue[
+.font80[`r fontawesome::fa("quote-left", fill = "#4a7fb5")` &nbsp; *Caption:* "Hourly wage against years of experience for 220 workers; wages rise roughly $1 per year. Source: 2023 Wage Survey."]
+]
+]
+
+---
+class: segue-green
+
+# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+## .white[AI Attribution Statement]
+
+---
+### `r fontawesome::fa("robot", height = "1em", fill = "#2e8b57")` Write your AI attribution statement
+
+.font90[Fill in the brackets for **your** project, then add it to your presentation:]
+
+.content-box-blue[
+.font85[*"AI tools were used in this project for **[specific tasks &mdash; e.g. code drafting, language editing]**. All analyses were conducted and verified by the research team. All interpretations and conclusions are our own."*]
+]
+
+.pull-left[
+.content-box-green[
+.font82[`r fontawesome::fa("building-columns", fill = "#2e8b57")` &nbsp; This mirrors the transparency standards now required by major journals &mdash; **Nature, Science, APA.**]
+]
+]
+
+.pull-right[
+.content-box-yellow[
+.font82[`r fontawesome::fa("microphone", fill = "#c08a00")` &nbsp; **Practice saying it out loud** as part of your presentation &mdash; disclosure is spoken, not buried on a final slide.]
+]
+]
+
+<div style="clear: both;"></div>
+
+.center[`r timer(15L)`]
+
+---
+class: segue-green
+
+# .white[Reproducible. Synced. Disclosed.]
+## .white[That's a portfolio you can stand behind.]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+
+to_pdf(from = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/pm/12-pm-datacore.html",
+       to = "/Users/hhadah/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/pm/12-pm-datacore.pdf")
+```

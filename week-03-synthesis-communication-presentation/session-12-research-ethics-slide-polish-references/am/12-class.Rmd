@@ -1,0 +1,707 @@
+---
+title: "Research Methods"
+subtitle: "Day 12 · Session 12: Research Ethics, Final Slide Polish & References"
+# author: "Hussain Hadah (he/him)"
+# date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/tulane-fonts.css", "assets/tulane.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+layout: true
+<div style="position: absolute;left:20px;bottom:5px;color:black;font-size: 12px;">Nexellence Institute | `r rmarkdown::metadata$title` | `r format(Sys.time(), '%d %B %Y')`</div>
+
+<!--- `r rmarkdown::metadata$subtitle` | `r format(Sys.time(), '%d %B %Y')`-->
+
+---
+
+class: title-slide
+background-position: 10% 90%, 100% 50%
+background-size: 160px, 50% 100%
+background-color: #0148A4
+
+```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = 'authoryear',
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+myBib <- ReadBib("assets/example.bib", check = FALSE)
+top_icon = function(x) {
+  icons::icon_style(
+    icons::fontawesome(x),
+    position = "fixed", top = 10, right = 10
+  )
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+options(modelsummary_factory_latex = "kableExtra")
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",
+  fig.height=4, fig.width=6,
+  out.width="748px", out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+```
+
+
+```{r, cache=FALSE, message=FALSE, warning=FALSE, include=TRUE, eval=TRUE, results=FALSE, echo=FALSE, tidy.opts = list(width.cutoff = 50), tidy = TRUE}
+## Load and install the packages that we'll be using today
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tictoc, parallel, pbapply, future, future.apply, furrr, RhpcBLASctl, memoise, here, foreign, mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, lmtest, margins, vtable, broom, modelsummary, stargazer, fastDummies, recipes, dummy, gplots, haven, huxtable, kableExtra, gmodels, survey, gtsummary, data.table, tidyfast, dtplyr, microbenchmark, ggpubr, tibble, viridis, wesanderson, censReg, rstatix, srvyr, formatR, sysfonts, showtextdb, showtext, thematic, sampleSelection, RefManageR, DT, googleVis, png, grid)
+
+font_add_google("Fira Sans", "firasans")
+font_add_google("Fira Code", "firasans")
+
+showtext_auto()
+
+theme_customs <- theme(
+  text = element_text(family = 'firasans', size = 16),
+  plot.title.position = 'plot',
+  plot.title = element_text(
+    face = 'bold',
+    colour = thematic::okabe_ito(8)[6],
+    margin = margin(t = 2, r = 0, b = 7, l = 0, unit = "mm")
+  ),
+)
+
+colors <-  thematic::okabe_ito(5)
+
+theme_set(hrbrthemes::theme_ipsum() + theme_customs)
+
+# COLOR PALLETES
+library(paletteer)
+
+### COLOR BLIND PALLETES
+colorBlindness <- paletteer_d("colorBlindness::Blue2Orange12Steps")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# To use for fills, add
+  scale_fill_manual(values="colorBlindness::Blue2Orange12Steps")
+
+# To use for line and point colors, add
+  scale_colour_manual(values="colorBlindness::Blue2Orange12Steps")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r countdown-setup, echo=FALSE}
+library(countdown)
+timer <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0.4em auto;",
+    color_border = "#0148A4",
+    color_running_background = "#0148A4",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+```
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: auto !important; /* Adjusts table width */
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+
+    .chev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      margin-bottom: 0.6em;
+    }
+    .chev {
+      flex: 0 0 62px;
+      height: 78px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.7em;
+      color: #1a1a1a;
+    }
+    .chev-text {
+      flex: 1;
+    }
+    .chev-sm {
+      flex: 0 0 52px;
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 78%, 50% 100%, 0 78%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chev-row-sm {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      margin-bottom: 0.25em;
+    }
+
+    .chev-flow {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chev-step {
+      flex: 1;
+      text-align: center;
+    }
+    .chev-step p {
+      text-align: left;
+    }
+    .chev-right {
+      height: 58px;
+      background: #c9e4f6;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6em;
+    }
+
+    .three-col {
+      display: flex;
+      gap: 1.5em;
+      margin-top: 1.5em;
+    }
+    .three-col .col {
+      flex: 1;
+      text-align: center;
+    }
+    .three-col .col p:first-child {
+      margin-bottom: 0.4em;
+    }
+
+    .img-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8em;
+    }
+    .img-row img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .img-row .cell {
+      flex: 1;
+      text-align: center;
+    }
+
+    .remark-code {
+      font-size: 0.75em !important;
+    }
+
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+      margin-top: 0.6em;
+    }
+
+```
+
+# .text-shadow[.white[Outline for Today]]
+
+<ol>
+    <li><h4 class="white">Research Ethics &mdash; Why It Matters</h4></li>
+    <li><h4 class="white">'Cite That Right' Team Activity</h4></li>
+    <li><h4 class="white">Slide Design Workshop</h4></li>
+    <li><h4 class="white">Full Run-Through</h4></li>
+</ol>
+
+---
+class: segue-yellow
+
+# Session 12: Research Ethics, <br> Slide Polish & References `r top_icon("gavel")`
+
+---
+### Learning Objectives
+
+.font90[
+#### `r fontawesome::fa("scale-balanced", height = "1em", fill = "#4a7fb5")` &nbsp; Understand core principles of research ethics
+Attribution, honesty, limitations, and consent &mdash; the values that make research trustworthy.
+
+#### `r fontawesome::fa("quote-right", height = "1em", fill = "#4a7fb5")` &nbsp; Complete the References slide with proper citations
+Every source cited, every citation consistent, AI use disclosed.
+
+#### `r fontawesome::fa("wand-magic-sparkles", height = "1em", fill = "#4a7fb5")` &nbsp; Polish slides for visual clarity and professional appearance
+One idea per slide, clean design, findings-first chart titles.
+
+#### `r fontawesome::fa("person-chalkboard", height = "1em", fill = "#4a7fb5")` &nbsp; Practice a full presentation run-through for the first time
+End to end, timed, with focused peer and instructor feedback.
+]
+
+---
+class: segue-yellow
+
+# Morning: ResearchCORE `r top_icon("sun")`
+
+---
+class: segue-green
+
+# Research Ethics &mdash; <br> Why It Matters `r top_icon("balance-scale")`
+
+---
+### Why Ethics Matters
+
+.pull-left[.font90[
+.content-box-yellow[
+**Research earns trust only when it is done honestly.** One dishonest study can undo the credibility of an entire field.
+]
+
+As a researcher you make promises &mdash; to your participants, your readers, and the people your findings might affect.
+
+**Four pillars we'll return to today:**
+
+- **Attribution** &mdash; credit every source and tool
+- **Honesty** &mdash; report what you found, not what you hoped
+- **Limitations** &mdash; own what your study can't say
+- **Consent** &mdash; respect the people behind the data
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("triangle-exclamation", fill = "#4a7fb5")` The stakes are real**
+
+Findings become policy, medicine, and code. Someone will act on what you publish &mdash; ethics is how you make sure that action is well-founded.
+]
+]]
+
+---
+### Core Ethical Considerations
+
+<div class="card-grid">
+  <div class="content-box-blue" style="flex:1 1 45%;">
+    <p><strong>`r fontawesome::fa("user-shield", fill = "#4a7fb5")` Respect Privacy</strong></p>
+    <p class="font85">Protect participants' identities and personal information. Use anonymous responses whenever possible.</p>
+  </div>
+  <div class="content-box-blue" style="flex:1 1 45%;">
+    <p><strong>`r fontawesome::fa("file-signature", fill = "#4a7fb5")` Informed Consent</strong></p>
+    <p class="font85">Ensure participants understand what they are agreeing to. Get permission from parents for minors.</p>
+  </div>
+  <div class="content-box-green" style="flex:1 1 45%;">
+    <p><strong>`r fontawesome::fa("hand-holding-heart", fill = "#4a7fb5")` Minimize Harm</strong></p>
+    <p class="font85">Design research that does not cause physical or emotional distress to participants.</p>
+  </div>
+  <div class="content-box-green" style="flex:1 1 45%;">
+    <p><strong>`r fontawesome::fa("stamp", fill = "#4a7fb5")` Get Approvals</strong></p>
+    <p class="font85">Obtain necessary permissions from teachers, administrators, or other authorities.</p>
+  </div>
+</div>
+
+---
+### Plagiarism & Proper Attribution
+
+.pull-left[.font85[
+.content-box-yellow[
+**Plagiarism** = using someone's words, ideas, data, or figures without credit &mdash; whether on purpose or by accident.
+]
+
+**Give credit for:**
+- Direct quotes *and* paraphrased ideas
+- Data, tables, and figures you didn't create
+- Methods or frameworks you borrowed
+]]
+
+.pull-right[.font85[
+.content-box-green[
+**`r fontawesome::fa("check", fill = "#009E73")` The safe habit**
+
+When in doubt, cite. A citation never weakens your work &mdash; it shows you know the landscape and stand on solid ground.
+]
+
+.content-box-blue[
+**`r fontawesome::fa("quote-left", fill = "#4a7fb5")` Quote vs. paraphrase**
+
+Quoting copies exact words (in quotation marks); paraphrasing restates in your own words. **Both** still need a citation.
+]
+]]
+
+---
+### AI Ethics &mdash; What Do You Have to Disclose?
+
+.pull-left[.font85[
+Using AI tools is allowed &mdash; **hiding it is not.** Major journals (Nature, Science, APA) now require disclosure.
+
+**Disclose:**
+- Which AI tools you used
+- What you used them *for* (coding, editing, brainstorming)
+- That you **verified** the outputs yourself
+]]
+
+.pull-right[.font85[
+.content-box-blue[
+**`r fontawesome::fa("robot", fill = "#4a7fb5")` A sample attribution statement**
+
+*"AI tools were used in this project for code drafting and language editing. All analyses were conducted and verified by the research team. All interpretations and conclusions are our own."*
+]
+
+.content-box-yellow[
+.font90[`r fontawesome::fa("circle-exclamation", fill = "#4a7fb5")` &nbsp; **You** remain responsible for every number and claim &mdash; the AI is a tool, not an author.]
+]
+]]
+
+---
+### Researcher Bias &mdash; and How to Minimize It
+
+.pull-left[.font90[
+**Bias** is the pull toward the answer you *want* to find. Everyone has it; good researchers guard against it.
+
+**Common forms:**
+- **Confirmation bias** &mdash; noticing only evidence that fits
+- **Selection bias** &mdash; a sample that isn't representative
+- **Funding/interest bias** &mdash; a stake in the outcome
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**`r fontawesome::fa("shield-halved", fill = "#4a7fb5")` Guardrails**
+
+- Pre-decide your analysis *before* seeing results
+- Report findings that **don't** fit your hypothesis
+- Show your full data and code
+- Invite someone to challenge your interpretation
+]
+]]
+
+---
+### Overstating Findings: p-Hacking & Cherry-Picking
+
+.font80[
+.pull-left[
+.content-box-yellow[
+**`r fontawesome::fa("magnifying-glass-dollar", fill = "#c08a00")` p-hacking**
+
+Trying test after test until something crosses *p* &lt; 0.05, then reporting only that one. It manufactures "significance" that won't replicate.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**`r fontawesome::fa("hand-pointer", fill = "#c08a00")` Cherry-picking**
+
+Reporting only the results, cases, or time-windows that support your story &mdash; and quietly dropping the rest.
+]
+]
+]
+
+.content-box-green[
+.font85[`r fontawesome::fa("check", fill = "#009E73")` &nbsp; **The honest alternative:** report all the analyses you ran, use hedged language (*suggests*, *is associated with*), and let a non-significant result stand as a finding. A true null is not a failure.]
+]
+
+---
+### The Responsibility of Publishing
+
+.pull-left[.font90[
+Once your findings are public, **you no longer control how they're used.**
+
+Ask before you publish:
+
+- Who might **act** on this result?
+- Could it be **misread** or **misused** to harm a group?
+- Have I stated my **limitations** loudly enough to prevent overreach?
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("bullhorn", fill = "#4a7fb5")` Frame findings carefully**
+
+A single correlation, stripped of caveats, can become a headline or a policy. Precise, honest framing is part of your ethical duty &mdash; not an afterthought.
+]
+]]
+
+---
+### When Research Goes Wrong
+
+.three-col[
+.col[
+`r fontawesome::fa("user-doctor", height = "2.2em", fill = "#D55E00")`
+
+**Tuskegee Study**
+
+For 40 years, treatment was withheld from Black men with syphilis without their informed consent &mdash; the case that reshaped U.S. consent rules.
+]
+.col[
+`r fontawesome::fa("flask-vial", height = "2.2em", fill = "#D55E00")`
+
+**Data Fabrication**
+
+Fabricated results in psychology helped fuel the **replication crisis** &mdash; famous findings that collapsed when others tried to reproduce them.
+]
+.col[
+`r fontawesome::fa("camera", height = "2.2em", fill = "#D55E00")`
+
+**AI Facial Recognition Bias**
+
+Systems trained on skewed data misidentified women and darker-skinned faces at far higher rates &mdash; biased data, biased harm.
+]
+]
+
+--
+
+.content-box-yellow[
+.font85[**The common thread:** each failure came from ignoring one of our pillars &mdash; consent, honesty, or attribution of the data's limits.]
+]
+
+---
+class: segue-green
+
+# 'Cite That Right' <br> Team Activity `r top_icon("quote-right")`
+
+---
+### 'Cite That Right' &mdash; Team Activity (20 min)
+
+.pull-left[.font90[
+Complete the **'Cite That Right' Handout** for your full reference list. Run these four checks:
+
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">Every source <strong>cited in your slides</strong> appears in References.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Every source <strong>in References</strong> was actually cited in a slide.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>Consistent citation style</strong> throughout (pick one and hold it).</div></div>
+<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text"><strong>AI tools documented</strong> with an attribution statement.</div></div>
+]]
+
+.pull-right[.font80[
+.content-box-blue[
+**`r fontawesome::fa("list-check", fill = "#4a7fb5")` In-text &rarr; reference list**
+
+*In a slide:* "…failing to plan is planning to fail (Yin & Ogut, 2025)."
+
+*In References:*
+Yin & Ogut (2025). *Nexellence ResearchCORE: An Introduction to Research Methods.* Nexellence Press.
+
+Toska, G. (2023). *Counseling Centers in Türkiye.* National Conference on Counseling Psychology, Istanbul.
+]
+]]
+
+.center[`r timer(20L)`]
+
+---
+class: segue-yellow
+
+# Slide Design Workshop `r top_icon("palette")`
+
+---
+### Slide Design Principles
+
+.pull-left[.font85[
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("lightbulb", fill = "#0148A4")`</div><div class="chev-text"><strong>One idea per slide.</strong> If a slide makes two points, split it.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">6&times;6</div><div class="chev-text"><strong>The 6&times;6 rule:</strong> at most 6 bullets, 6 words each. Slides are cues, not scripts.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("chart-column", fill = "#0148A4")`</div><div class="chev-text"><strong>Chart titles are findings,</strong> not labels: "Wages rise with experience" &gt; "Wage vs. experience".</div></div>
+]]
+
+.pull-right[.font85[
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("font", fill = "#0148A4")`</div><div class="chev-text"><strong>Two fonts, maximum.</strong> One for headings, one for body.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("circle-half-stroke", fill = "#0148A4")`</div><div class="chev-text"><strong>High-contrast colors.</strong> Dark text on light, or light on dark &mdash; never mid-gray on white.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("universal-access", fill = "#0148A4")`</div><div class="chev-text"><strong>Accessible palettes.</strong> Color-blind-safe; never rely on color alone to carry meaning.</div></div>
+]]
+
+--
+
+.content-box-yellow[
+.font85[`r fontawesome::fa("eye", fill = "#c08a00")` &nbsp; **Read every slide from the back of the room.** If you can't, your audience can't either.]
+]
+
+---
+### The Slide Design Checklist
+
+.pull-left[.font85[
+Trade slides with another team and score each one:
+
+.content-box-blue[
+- One clear idea, stated in the title
+- &le; 6 bullets, &le; 6 words each
+- Chart title states the **finding**
+- Axis labels legible at slide size
+- &le; 2 fonts; consistent throughout
+- High-contrast, color-blind-safe
+- Sources cited on the slide
+]
+]]
+
+.pull-right[.font85[
+.content-box-green[
+**`r fontawesome::fa("users", fill = "#009E73")` Peer review, out loud**
+
+For each slide your partner team can't instantly "get," ask: *what is the one thing this slide is trying to say?* If it takes more than a sentence to answer, the slide needs work.
+]
+
+.content-box-yellow[
+.font90[`r fontawesome::fa("scissors", fill = "#c08a00")` &nbsp; When in doubt, **cut**. Less on the slide means more attention on you.]
+]
+]]
+
+---
+### Slide Showdown
+
+.font90[Put your work up for a friendly, fast critique:]
+
+.pull-left[
+.content-box-green[
+**`r fontawesome::fa("thumbs-up", fill = "#009E73")` Show 2 slides of your *best* work**
+
+What makes them land? Name the design choice so the class can steal it.
+]
+]
+
+.pull-right[
+.content-box-yellow[
+**`r fontawesome::fa("circle-question", fill = "#c08a00")` Show 2 slides you're *unsure* about**
+
+The class suggests one concrete fix each. No slide leaves without an action.
+]
+]
+
+.center[`r timer(30L)`]
+
+---
+### Reference: The Presentation Outline
+
+.font70[
+| Slide | What it contains |
+|---|---|
+| **Title** | Project title, presenters, date, institution, logos |
+| **Topic** | The global challenge; define it and say why it matters (cite sources) |
+| **Literature Review** | What's known, arranged by theme (cite sources) |
+| **Research Question** | Your question(s) and, if possible, a hypothesis |
+| **Methods** | Secondary analysis; data source & year; sample size & traits; key variables; tools |
+| **Results** | Descriptive stats per variable, then figures/tables (may be several slides) |
+| **Discussion** | How you interpret what you found |
+| **Conclusion** | Final takeaway and close |
+| **References** | Full list, one consistent style |
+]
+
+.content-box-blue[
+.font85[`r fontawesome::fa("route", fill = "#4a7fb5")` &nbsp; Every polished deck follows this arc. If a slide doesn't fit the arc, ask whether it belongs.]
+]
+
+---
+class: segue-green
+
+# Full Run-Through `r top_icon("chalkboard-teacher")`
+
+---
+### Full Run-Through (40 min)
+
+.pull-left[.font90[
+Each team presents the **entire** presentation, beginning to end &mdash; the first real rehearsal.
+
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("stopwatch", fill = "#0148A4")`</div><div class="chev-text"><strong>Time it:</strong> target <strong>10&ndash;12 minutes</strong> per team.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("volume-xmark", fill = "#0148A4")`</div><div class="chev-text"><strong>Class observes silently</strong> &mdash; take notes, hold questions.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("comment-dots", fill = "#0148A4")`</div><div class="chev-text"><strong>3 notes per team</strong> from the instructor.</div></div>
+]]
+
+.pull-right[.font90[
+.content-box-green[
+**`r fontawesome::fa("plus", fill = "#009E73")` 2 strengths**
+
+What worked &mdash; keep doing it.
+]
+.content-box-yellow[
+**`r fontawesome::fa("wrench", fill = "#c08a00")` 1 specific improvement**
+
+One concrete, actionable change for next time &mdash; not a vague "be clearer."
+]
+]]
+
+.center[`r timer(12L)`]
+
+---
+### What to Listen For
+
+.three-col[
+.col[
+`r fontawesome::fa("clock", height = "2em", fill = "#4a7fb5")`
+
+**Timing**
+
+Does it fit 10&ndash;12 minutes? Where does it drag or rush?
+]
+.col[
+`r fontawesome::fa("arrows-left-right-to-line", height = "2em", fill = "#4a7fb5")`
+
+**Transitions**
+
+Do the hand-offs between speakers and sections feel smooth?
+]
+.col[
+`r fontawesome::fa("bullseye", height = "2em", fill = "#4a7fb5")`
+
+**Takeaway**
+
+Could you state the team's main finding in one sentence afterward?
+]
+]
+
+--
+
+.content-box-blue[
+.font85[`r fontawesome::fa("seedling", fill = "#4a7fb5")` &nbsp; A first run-through is *supposed* to be rough. Its job is to surface the fixes while there's still time to make them.]
+]
+
+---
+### Session 12: What You Can Do Now
+
+.font80[
+**Research ethics:**
+
+- Explain the four pillars &mdash; **attribution, honesty, limitations, consent** &mdash; and spot p-hacking, cherry-picking, and researcher bias in your own work.
+- Name why historical cases (Tuskegee, fabrication in the replication crisis, AI facial-recognition bias) still shape research rules today.
+
+**References & attribution:**
+
+- Complete a **References slide** where every citation matches a source in the text, in one consistent style, with AI use disclosed.
+
+**Slide polish & delivery:**
+
+- Apply the design principles &mdash; one idea per slide, the 6&times;6 rule, findings-first chart titles, &le; 2 fonts, high-contrast accessible color &mdash; and review a peer's deck with the checklist.
+- Deliver a full, timed run-through and turn feedback (2 strengths + 1 fix) into concrete revisions.
+]
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+library(renderthis)
+# https://hhadah.github.io/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/am/12-class.html
+
+to_pdf(from = "~/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/am/12-class.html",
+       to = "~/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/am/12-class.pdf")
+to_pdf(from = "~/Projects/GiT/nexellence-summer-instit/week-03-synthesis-communication-presentation/session-12-research-ethics-slide-polish-references/am/12-class.html")
+```
