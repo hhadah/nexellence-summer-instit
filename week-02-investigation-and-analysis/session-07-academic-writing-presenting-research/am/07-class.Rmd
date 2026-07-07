@@ -271,6 +271,36 @@ By the end of the morning you will be able to:
 <img src="assets/07-writing.png" style="width:100%; border-radius:6px;">
 ]
 
+---
+## This week 
+
+#### Schedule for the Week and what we'll be doing
+
+##### I would like you to send me the literature review  today
+
+##### Intro slide
+
+##### Tomorrow we will work on your data
+
+##### Thursday we we will work on the analysis
+
+##### Friday We will work on the presenting the analysis, methods, and results
+
+##### Friday select the table, and the figures 
+
+##### So we will have intro, literature review slides ready and most of the paper
+
+---
+## Next week
+
+### Day 12 July 14 written proposal due and complete slide deck
+
+### Day 13 July 15 full reversal of the presentation
+
+### Final presentation is on July 17th
+
+#### Presentation will be 10 to 12 minutes with 3 minutes for questions
+
 
 ---
 class: segue-green
