@@ -56,10 +56,85 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 .mock-slide h4 { margin: 0 0 0.3em 0; color: #0148A4; }
 ```
 
+### `r fontawesome::fa("table-cells", height = "1em", fill = "#2e8b57")` Warm-up: creating a correlation matrix
+
+.font85[A **correlation matrix** shows the pairwise correlation between every pair of numeric variables &mdash; usually your **first look** at how the variables in your data move together.]
+
+.pull-left[
+.font85[**R** &mdash; `cor()` is built into base R (the `stats` package, loaded automatically &mdash; nothing to install):]
+
+```{r cor-matrix-r, eval=TRUE}
+wages <- read.csv("wages.csv")
+cor(wages[, c("experience_years",
+              "hourly_wage")])
+```
+]
+
+.pull-right[
+.font85[**Python** &mdash; needs the **pandas** library (`pip install pandas`):]
+
+```python
+import pandas as pd
+
+wages = pd.read_csv("wages.csv")
+wages[["experience_years",
+       "hourly_wage"]].corr()
+```
+]
+
+.content-box-blue[
+.font80[`r fontawesome::fa("palette", fill = "#4a7fb5")` &nbsp; **Hard to read as a table of numbers?** Turn it into a **heatmap** &mdash; next slide.]
+]
+
+---
+### `r fontawesome::fa("palette", height = "1em", fill = "#2e8b57")` Warm-up: the correlation matrix as a heatmap
+
+.font85[A **heatmap** colors each cell by the strength of the correlation &mdash; patterns jump out that a table of numbers hides.]
+
+.pull-left[
+.font85[**R** &mdash; needs the **corrplot** library (`install.packages("corrplot")`):]
+
+```{r cor-heatmap-r, eval=TRUE, fig.width=4.5, fig.height=4.5, out.width="38%"}
+library(corrplot)
+
+vars <- wages[, c("experience_years",
+                  "hourly_wage")]
+colnames(vars) <- c("Years of experience",
+                    "Hourly wage")
+
+corrplot(cor(vars), method = "color",
+         addCoef.col = "black")
+```
+]
+
+.pull-right[
+.font85[**Python** &mdash; needs **seaborn** + **matplotlib** (`pip install seaborn matplotlib`):]
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+corr = wages.rename(columns={
+    "experience_years": "Years of experience",
+    "hourly_wage": "Hourly wage"
+}).corr(numeric_only=True)
+
+sns.heatmap(corr, annot=True,
+            cmap="coolwarm", vmin=-1, vmax=1)
+plt.show()
+```
+
+.content-box-blue[
+.font80[`r fontawesome::fa("lightbulb", fill = "#4a7fb5")` &nbsp; `annot=True` / `addCoef.col` print the numbers **on** the colors &mdash; best of both worlds.]
+]
+]
+
+---
+
 # .text-shadow[Afternoon: Scientific Storytelling]
 
 <ol>
-    <li><h4>The Setup &mdash; Your Literature Review as a Story <span style="color:#2e8b57;">(1:00&ndash;1:45)</span></h4></li>
+    <li><h4>The Setup &mdash; Your Literature Review as a Story <span style="color:#2e8b57;">(1:15&ndash;1:45)</span></h4></li>
     <li><h4>Practice &mdash; Your Two Slides, Out Loud <span style="color:#2e8b57;">(1:45&ndash;2:45)</span></h4></li>
     <li><h4>The Payoff &mdash; Results Language <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
 </ol>
