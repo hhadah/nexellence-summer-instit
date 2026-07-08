@@ -26,11 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
-
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
 BibOptions(check.entries = FALSE,
@@ -259,18 +254,6 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 }
 ```
 
-
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">Introduction Presentations: "The Beginning"</h4></li>
-    <li><h4 class="white">What Is Data? Types &amp; Sources</h4></li>
-    <li><h4 class="white">Data Quality &amp; Common Mistakes</h4></li>
-    <li><h4 class="white">Accuracy in Data Recording</h4></li>
-    <li><h4 class="white">Data Warm-Up &amp; Your Data Story</h4></li>
-</ol>
-
----
 ### Welcome to Day 8!
 
 .pull-left[.font90[
@@ -297,7 +280,7 @@ class: segue-yellow
 ### Introduction Presentations `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 40 min
 
 .content-box-blue[
-Each team presents its **introduction slides** (from the Session 7 homework).
+Each team presents its **introduction slides**.
 ]
 
 .pull-left[.font90[
@@ -413,12 +396,6 @@ class: segue-green
     <p class="font80">Combines approaches for a comprehensive understanding.</p>
   </div>
 </div>
-
---
-
-.content-box-yellow[
-.font90[**The best projects mix both** &mdash; numbers show *what* is happening; words and context explain *why*.]
-]
 
 ---
 ### Primary vs. Secondary Data
