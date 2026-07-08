@@ -26,11 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
-
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
 BibOptions(check.entries = FALSE,
@@ -259,18 +254,6 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 }
 ```
 
-
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">What Does the Data Say vs. What Do We Conclude?</h4></li>
-    <li><h4 class="white">Finding Patterns, Trends &amp; Outliers</h4></li>
-    <li><h4 class="white">Correlation, Regression &amp; Causation</h4></li>
-    <li><h4 class="white">Team Analysis &amp; Instructor Conferences</h4></li>
-    <li><h4 class="white">Scientific Storytelling: Results Sentences</h4></li>
-</ol>
-
----
 ### Welcome to Day 9!
 
 .pull-left[.font90[

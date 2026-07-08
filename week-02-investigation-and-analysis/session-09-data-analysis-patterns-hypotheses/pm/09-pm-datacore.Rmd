@@ -300,7 +300,7 @@ A great results slide is a **chart + one sentence** that fit together perfectly.
 ---
 class: segue-green
 
-# .white[Foundation or Scholars, the discipline is the same:]
+# .white[The discipline is the same:]
 ## .white[a clear finding, an honest interpretation, a chart that proves it.]
 
 
