@@ -90,12 +90,12 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 # .text-shadow[Afternoon: DataCORE]
 
 <ol>
-    <li><h4>Final Analysis + AI Results Check <span style="color:#2e8b57;">(1:00&ndash;1:45)</span></h4></li>
-    <li><h4>Final Dataset Documentation &amp; Portfolio Prep <span style="color:#2e8b57;">(1:45&ndash;2:45)</span></h4></li>
-    <li><h4>Scientific Storytelling &mdash; Final Chart Set Selection <span style="color:#2e8b57;">(2:45&ndash;3:00)</span></h4></li>
+    <li><h4>Final Analysis + AI Results Check</h4></li>
+    <li><h4>Final Dataset Documentation &amp; Portfolio Prep</h4></li>
+    <li><h4>Scientific Storytelling &mdash; Final Chart Set Selection</h4></li>
 </ol>
 
-.font90[*Today you don't learn a new technique &mdash; you **finish.** One clean run, an honest error-check, and a portfolio you'd be proud to show at the Research Summit.*]
+.font90[*Today you don't learn a new technique &mdash; you **finish.** We'll walk through all three together first; then you have the rest of class to run your analysis, build your portfolio, and lock your charts.*]
 
 ```{python load-data, include=FALSE}
 wages = pd.read_csv("wages.csv")
@@ -108,7 +108,7 @@ wages <- read.csv("wages.csv")
 ---
 class: segue-green
 
-# 1:00 &ndash; 1:45 &middot; Final Analysis
+# Final Analysis
 ## .white[&amp; AI Results Check]
 
 ---
@@ -234,7 +234,7 @@ pct = abs(b_red - b_full) / abs(b_full) * 100
 ---
 class: segue-green
 
-# 1:45 &ndash; 2:45 &middot; Portfolio Prep
+# Portfolio Prep
 ## .white[Your Analysis as a Research Artifact]
 
 ---
@@ -357,7 +357,7 @@ ggsave("fig1_experience_wage_scatter.png",
 ---
 class: segue-green
 
-# 2:45 &ndash; 3:00 &middot; Scientific Storytelling
+# Scientific Storytelling
 ## .white[Final Chart Set Selection]
 
 ---
@@ -392,7 +392,26 @@ class: segue-green
 .font90[`r fontawesome::fa("award", fill = "#4a7fb5")` &nbsp; **A clear, simple chart beats a complex one every time.** When in doubt, cut a variable, not a viewer.]
 ]
 
-.center[`r timer(15L)`]
+---
+class: segue-green
+
+# Your Turn
+## .white[Work for the Rest of Class]
+
+---
+### `r fontawesome::fa("list-check", height = "1em", fill = "#2e8b57")` What to work on now
+
+.content-box-blue[
+.font90[We've covered all three tasks. Use the rest of class to **finish** &mdash; work in your team, and wave me over when you need help.]
+]
+
+.font78[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Final analysis + AI results check</strong> &mdash; restart, run top-to-bottom once, confirm every number reproduces with a comment on each block. Paste your key results into the AI for an error check, then run one robustness check (drop a control, re-run) and note any big swing.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Portfolio prep</strong> &mdash; assemble the artifact: commented notebook, exported figures (300 DPI), summary table + APA caption, data-cleaning log, AI-usage log, and the exported PDF you'll show at the Summit.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>Final chart set</strong> &mdash; lock your 2&ndash;3 Summit charts. Each must be relevant, readable at presentation size, and explainable in under 30 seconds.</div></div>
+]
+
+.center[`r timer(90L)`]
 
 ---
 class: segue-green

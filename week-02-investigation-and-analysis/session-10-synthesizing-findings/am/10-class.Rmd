@@ -279,34 +279,6 @@ By the end of the day you will be able to:
 ]
 
 ---
-class: segue-yellow
-
-# Methods + Results Presentations: <br> "The Middle" `r top_icon("microphone")`
-
----
-### Methods + Results Presentations `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 40 min
-
-.content-box-blue[
-Each team presents its **Methods** and **Results** slides &mdash; same structured format: **2 min present + 2 min feedback.**
-]
-
-.pull-left[.font90[
-**As the audience, focus on three questions:**
-
-<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">Are the <strong>results clear</strong>?</div></div>
-<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Are the <strong>figures interpretable</strong>?</div></div>
-<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Is the <strong>methods description accurate</strong>?</div></div>
-]]
-
-.pull-right[
-.content-box-yellow[
-.font85[`r fontawesome::fa("comments", fill = "#c08a00")` &nbsp; Feedback names **one strength** and **one specific fix** &mdash; "the axis needs units," not "nice chart."]
-]
-
-.center[`r timer(40L)`]
-]
-
----
 class: segue-green
 
 # Results vs. Discussion <br> vs. Conclusion `r top_icon("layer-group")`
@@ -370,7 +342,7 @@ class: segue-yellow
 # Synthesizing Results <br> with the Literature `r top_icon("book-open")`
 
 ---
-### What Does "Discuss" Actually Mean? `r fontawesome::fa("clock", fill="#fff", height="0.8em")` 
+### What Does "Discuss" Actually Mean?
 
 .font90[To **discuss** your findings is to do **five things, in order**:]
 
@@ -385,8 +357,6 @@ class: segue-yellow
 .content-box-green[
 .font90[This is the skeleton of **every** Discussion section you'll ever read. Master the order and the writing gets much easier.]
 ]
-
-.center[`r timer(25L)`]
 
 ---
 ### Synthesis in Action
@@ -437,56 +407,22 @@ Naming limitations isn't weakness &mdash; it's **credibility.** It shows you und
 ---
 class: segue-green
 
-# Synthesizing Findings <br> Mission Sheet `r top_icon("clipboard")`
+# Your Turn: Work for <br> the Rest of Class `r top_icon("clipboard")`
 
 ---
-### **"Synthesize your Findings"** &mdash; four sentences.
-
+### What to Work On &mdash; Rest of Class
 
 .content-box-blue[
-As a team, complete the **"Synthesizing Findings"** Mission Sheet &mdash; four sentences.
+.font90[Work through these three tasks **as a team** for the remainder of class. I'll circulate &mdash; wave me over with questions.]
 ]
 
-.font88[
-<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Main conclusion</strong> &mdash; your single biggest takeaway.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>Comparison to literature</strong> &mdash; one source you agree or disagree with.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>One important limitation.</strong></div></div>
-<div class="chev-row-sm"><div class="chev-sm">4</div><div class="chev-text"><strong>One next step.</strong></div></div>
+.font78[
+<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text"><strong>Methods + Results presentations</strong> &mdash; each team presents its Methods & Results slides: <strong>2 min present + 2 min feedback.</strong> As audience, ask: results clear? figures interpretable? methods accurate? Give <strong>one strength + one specific fix</strong> ("the axis needs units," not "nice chart").</div></div>
+<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text"><strong>"Synthesizing Findings" Mission Sheet</strong> &mdash; four sentences: (1) main conclusion, (2) comparison to one source you agree/disagree with, (3) one limitation, (4) one next step. <strong>Swap with a neighboring team</strong> for feedback before finalizing.</div></div>
+<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text"><strong>Draft your Discussion &amp; Conclusion slides</strong> &mdash; answer: What do our results <strong>mean</strong>? Did they <strong>support or challenge</strong> our hypothesis? Who should <strong>care</strong>? Add interpretation &mdash; don't just repeat the chart.</div></div>
 ]
 
---
-
-.content-box-yellow[
-.font90[`r fontawesome::fa("people-arrows", fill = "#c08a00")` &nbsp; **Swap with a neighboring team** for feedback before you finalize.]
-]
-
-.center[`r timer(35L)`]
-
----
-class: segue-yellow
-
-# Scientific Storytelling: <br> Discussion Slides Draft `r top_icon("pen")`
-
----
-### Draft Your Discussion &amp; Conclusion Slides `r fontawesome::fa("clock", fill="#fff", height="0.8em")`
-
-.pull-left[.font90[
-Draft your **Discussion** and **Conclusion** slides.
-
-Answer three key questions:
-
-<div class="chev-row-sm"><div class="chev-sm">1</div><div class="chev-text">What do our results <strong>mean</strong>?</div></div>
-<div class="chev-row-sm"><div class="chev-sm">2</div><div class="chev-text">Did they <strong>support or challenge</strong> our hypothesis?</div></div>
-<div class="chev-row-sm"><div class="chev-sm">3</div><div class="chev-text">Who should <strong>care</strong> about this?</div></div>
-]]
-
-.pull-right[
-.content-box-green[
-.font85[`r fontawesome::fa("circle-check", fill = "#009E73")` &nbsp; A strong Discussion slide **adds interpretation** &mdash; it never just repeats what the chart already shows.]
-]
-
-.center[`r timer(20L)`]
-]
+.center[`r timer(90L)`]
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 library(renderthis)
