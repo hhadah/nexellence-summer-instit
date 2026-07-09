@@ -198,7 +198,7 @@ cat(sprintf("N = %d, gap = $%.2f, r = %.2f (p = %.4f)\n",
 .font80[`r fontawesome::fa("scale-balanced", fill = "#4a7fb5")` &nbsp; **Does it flag anything you missed? Does it miss anything important?** You are still the analyst &mdash; the AI is the reviewer.]
 
 ---
-### `r fontawesome::fa("vials", height = "1em", fill = "#2e8b57")` .b[RcS] &mdash; robustness: drop a control, re-run
+### `r fontawesome::fa("vials", height = "1em", fill = "#2e8b57")` Robustness: drop a control, re-run
 
 .panelset[
 .panel[.panel-name[Python]
