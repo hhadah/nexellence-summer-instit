@@ -26,11 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
-
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
 BibOptions(check.entries = FALSE,
@@ -116,6 +111,21 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
     color_running_text = "#FFFFFF",
     color_finished_background = "#D55E00",
     font_size = "2rem",
+    warn_when = 30L,
+    ...
+  )
+}
+timer_sm <- function(minutes = 1L, seconds = 0L, ...) {
+  countdown::countdown(
+    minutes = minutes, seconds = seconds,
+    style = "position: relative; display: inline-block; margin: 0 0 0 0.3em; vertical-align: middle;",
+    color_border = "#0148A4",
+    color_running_background = "#0148A4",
+    color_running_text = "#FFFFFF",
+    color_finished_background = "#D55E00",
+    font_size = "0.9rem",
+    padding = "3px 6px",
+    margin = "0",
     warn_when = 30L,
     ...
   )
@@ -233,21 +243,39 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 
 ```
 
-# .text-shadow[.white[Outline for Today]]
+### Warm-Up &mdash; Show Us Your Figures (20 min)
 
-<ol>
-    <li><h4 class="white">Draft Report Feedback</h4></li>
-    <li><h4 class="white">How to Write a Discussion Section: The Four-Move Structure</h4></li>
-    <li><h4 class="white">Team Activity: Discussion Synthesis</h4></li>
-    <li><h4 class="white">Synthesizing Your Findings with the Literature</h4></li>
-    <li><h4 class="white">Presentations: Discussion + Conclusion Slides</h4></li>
-    <li><h4 class="white">Scientific Storytelling: Presentation Transitions</h4></li>
-</ol>
+.pull-left[.font85[
+Each team takes the floor for **~3 minutes** and presents **2&ndash;3 figures** from their results.
 
----
-class: segue-yellow
+#### `r fontawesome::fa("chart-line", height = "1em", fill = "#4a7fb5")` &nbsp; What to show
+Your **best** figures &mdash; the ones you would actually put in the paper or the talk.
 
-# Session 11: Interpreting <br> Findings & Discussion `r top_icon("lightbulb")`
+#### `r fontawesome::fa("comment", height = "1em", fill = "#4a7fb5")` &nbsp; How to present each one
+One sentence on **what the figure shows**, one on **what it means**. No table-speak.
+
+#### `r fontawesome::fa("users", height = "1em", fill = "#4a7fb5")` &nbsp; Audience job
+Say one thing that **works** and one thing that would make the figure **clearer**.
+]]
+
+.pull-right[
+.content-box-blue[
+.font85[
+**For each figure, be ready to answer:**
+
+- What is on the **x- and y-axis**, and what is the unit?
+- What is the **one pattern** you want us to see?
+- Does it stand on its own &mdash; **title, labels, legend**, readable text?
+- Which figure is your **headline** result?
+]
+]
+
+.content-box-yellow[
+.font85[**Keep these figures handy** &mdash; you'll interpret them in the Discussion we build today.]
+]
+.center[`r timer(20L)`]
+]
+
 
 ---
 ### Learning Objectives
@@ -297,39 +325,6 @@ You are the person who knows this dataset best. The Discussion is your chance to
 Don't just restate every number again. Pick the findings that matter and interpret them.
 ]
 ]]
-
----
-class: segue-yellow
-
-# Morning: ResearchCORE `r top_icon("chalkboard-teacher")`
-
----
-### Draft Report Feedback (20 min)
-
-.pull-left[.font90[
-#### `r fontawesome::fa("file-pen", height = "1em", fill = "#4a7fb5")` &nbsp; Marked-up drafts returned
-Each RcS team gets their draft back with comments in the margins.
-
-#### `r fontawesome::fa("lightbulb", height = "1em", fill = "#4a7fb5")` &nbsp; Two class-wide teaching points
-We'll highlight two issues that showed up across *many* drafts &mdash; the patterns worth everyone hearing.
-
-#### `r fontawesome::fa("clock", height = "1em", fill = "#4a7fb5")` &nbsp; 10 minutes to review
-Teams read their feedback together and decide what to revise first.
-]]
-
-.pull-right[
-.content-box-blue[
-.font90[
-**As you read your feedback, ask:**
-
-- Which comment, if fixed, would improve the paper the *most*?
-- Is any comment pointing at a problem that appears in more than one place?
-- What can we fix *today* while we draft the Discussion?
-]
-]
-]
-
-.center[`r timer(10L)`]
 
 ---
 class: segue-green
@@ -517,70 +512,6 @@ State the limit, say what it implies, and move on. Don't undermine your whole st
 ]
 
 ---
-class: segue-green
-
-# Team Activity: <br> Discussion Synthesis `r top_icon("users")`
-
----
-### Team Activity &mdash; Discussion Synthesis (30 min)
-
-.pull-left[.font90[
-#### `r fontawesome::fa("pen-to-square", height = "1em", fill = "#4a7fb5")` &nbsp; Draft your Discussion
-Take your **main finding** and write one paragraph using the **four-move structure**: restate &rarr; explain &rarr; compare &rarr; limit.
-
-#### `r fontawesome::fa("book", height = "1em", fill = "#4a7fb5")` &nbsp; Bring in the literature
-Connect the finding to at least **one source** from your literature review.
-
-#### `r fontawesome::fa("comments", height = "1em", fill = "#4a7fb5")` &nbsp; Instructor circulates
-Be ready for probing questions.
-]]
-
-.pull-right[
-.content-box-yellow[
-**`r fontawesome::fa("circle-question", fill = "#4a7fb5")` Probing questions to expect:**
-
-.font90[
-- *"Why do you think you found that?"*
-- *"What alternative explanation can you think of?"*
-- *"Who would challenge this finding &mdash; and how would you respond?"*
-]
-]
-]
-
-.center[`r timer(30L)`]
-
----
-### Mission Sheet: Synthesizing Findings
-
-.font90[Before you leave the activity, your team should be able to fill in **four lines**:]
-
-<div class="chev-row">
-  <div class="chev">1</div>
-  <div class="chev-text"><strong>Main conclusion</strong> &mdash; in one plain-language sentence, what did you find?</div>
-</div>
-
-<div class="chev-row">
-  <div class="chev">2</div>
-  <div class="chev-text"><strong>Comparison to literature</strong> &mdash; one source your finding agrees with, disagrees with, or extends (with citation).</div>
-</div>
-
-<div class="chev-row">
-  <div class="chev">3</div>
-  <div class="chev-text"><strong>One important limitation</strong> &mdash; the caveat that most threatens your interpretation.</div>
-</div>
-
-<div class="chev-row">
-  <div class="chev">4</div>
-  <div class="chev-text"><strong>One next step</strong> &mdash; what should the next study do to build on or fix this?</div>
-</div>
-
---
-
-.content-box-blue[
-.font85[**Then:** share your four lines with a neighboring team and get quick feedback before the next segment.]
-]
-
----
 class: segue-yellow
 
 # Synthesizing Your Findings <br> with the Literature `r top_icon("book-open")`
@@ -675,33 +606,31 @@ class: segue-green
 # Presentations: Discussion <br> + Conclusion Slides `r top_icon("chalkboard")`
 
 ---
-### Present the Ending (30 min)
+### What the Ending Has to Do
 
 .pull-left[.font90[
-Each team presents the **full ending** of their presentation &mdash; the Discussion and Conclusion slides.
+The last two slides of your talk carry the whole argument home.
 
-**Feedback focuses on two questions:**
-
-#### `r fontawesome::fa("arrows-left-right", height = "1em", fill = "#4a7fb5")` &nbsp; Does the discussion connect back?
-Do the findings tie clearly to the **original research question**?
-
-#### `r fontawesome::fa("flag-checkered", height = "1em", fill = "#4a7fb5")` &nbsp; Does the conclusion land?
-Does it leave the audience with **one clear takeaway**?
-]]
-
-.pull-right[
-.content-box-blue[
-.font90[
-**Draft your Discussion + Conclusion slides around three questions:**
+**Build your Discussion + Conclusion slides around three questions:**
 
 - What do our results **mean**?
 - Did they **support or challenge** our hypothesis?
 - **Who should care** about this?
-]
-]
+]]
+
+.pull-right[.font90[
+.content-box-blue[
+**`r fontawesome::fa("arrows-left-right", fill = "#4a7fb5")` Does the discussion connect back?**
+
+The findings must tie clearly to the **original research question**.
 ]
 
-.center[`r timer(30L)`]
+.content-box-green[
+**`r fontawesome::fa("flag-checkered", fill = "#4a7fb5")` Does the conclusion land?**
+
+The audience should leave with **one clear takeaway**.
+]
+]]
 
 ---
 ### Anatomy of a Strong Conclusion Slide
@@ -746,9 +675,9 @@ class: segue-yellow
 # Scientific Storytelling: <br> Presentation Transitions `r top_icon("comments")`
 
 ---
-### Verbal Transitions Between Sections (10 min)
+### Verbal Transitions Between Sections
 
-.font90[Smooth transitions signal a **well-told story**. Practice the sentences that carry your audience from one section to the next.]
+.font90[Smooth transitions signal a **well-told story**. These are the sentences that carry your audience from one section to the next.]
 
 <div class="chev-row">
   <div class="chev-sm">`r fontawesome::fa("arrow-right", fill = "#0148A4")`</div>
@@ -768,10 +697,8 @@ class: segue-yellow
 --
 
 .content-box-blue[
-.font85[**Practice out loud.** The transition is where a presentation feels either seamless or stitched together. Rehearse the hand-offs, especially when the speaker changes.]
+.font85[**Practice out loud.** The transition is where a presentation feels either seamless or stitched together. Rehearse the hand-offs, especially when the speaker changes &mdash; you'll do this in the activity block.]
 ]
-
-.center[`r timer(10L)`]
 
 ---
 ### Putting the Whole Story Together
@@ -813,51 +740,46 @@ class: segue-yellow
 ---
 class: segue-green
 
-# Homework &amp; Teamwork `r top_icon("laptop-house")`
+# In-Class Activities `r top_icon("users")`
 
 ---
-### Homework &mdash; Teamwork
+### In-Class Activities &mdash; Run in This Order (90 min)
 
-.pull-left[.font80[
-**`r fontawesome::fa("users", fill = "#4a7fb5")` As a team**
+.font70[
+.pull-left[
+.content-box-blue[
+**1. `r fontawesome::fa("file-pen", fill = "#4a7fb5")` Draft Report Feedback** &mdash; 20 min &nbsp; `r timer_sm(20L)`
 
-- Write your **synthesis**: conclusion sentence, comparison to one literature source, one limitation, one next step.
-- Draft the **Discussion slide** &mdash; *"What do our results mean?"* &mdash; connecting each finding to at least one source from your literature review.
-- Finalize slide content and **assign who presents which slide**. Then **practice!**
-
-**`r fontawesome::fa("clipboard-check", fill = "#4a7fb5")` Slide check (async is fine)**
-
-- Are all charts labeled? Does the story flow? Identify **3 specific things to fix** in tomorrow's session.
-]]
-
-.pull-right[.font80[
-**`r fontawesome::fa("user", fill = "#4a7fb5")` Individual (evening)**
-
-- Draft your **Discussion paragraph**: did the results support your hypothesis? How do findings compare to the literature? *(200&ndash;250 words)*
-
-**`r fontawesome::fa("file-lines", fill = "#4a7fb5")` Written report (RcS)**
-
-- Add a **Discussion / Conclusion** section to your written report. Include at least **2 literature comparisons with citations**. *(Target: 300&ndash;400 words)*
-]]
-
----
-### Session 11: What You Can Do Now
-
-.font80[
-**Interpreting findings:**
-
-- Take a key result and move it through the **four-move structure** &mdash; restate in plain language, explain the mechanism, compare to the literature, and name the limitation that most threatens it.
-
-**Writing the Discussion:**
-
-- Contextualize results **without overclaiming** &mdash; use calibrated language (*suggests, is associated with*), state scope conditions, and treat correlation as correlation.
-- **Synthesize** sources by theme rather than by author, using comparative language to show agreement, conflict, and gaps.
-
-**Building the presentation:**
-
-- Draft **Discussion and Conclusion slides** that connect findings back to the research question and leave one clear takeaway.
-- Deliver smooth **verbal transitions** between sections so the whole talk reads as one coherent story.
+Marked-up drafts returned; two class-wide teaching points. Teams read the comments together and ask: *which fix would improve the paper most? What can we fix today?*
 ]
+
+.content-box-yellow[
+**2. `r fontawesome::fa("pen-to-square", fill = "#4a7fb5")` Team Activity: Discussion Synthesis** &mdash; 30 min &nbsp; `r timer_sm(30L)`
+
+Write one paragraph on your **main finding** using the four moves (restate &rarr; explain &rarr; compare &rarr; limit), citing **at least one source**. Expect probing questions: *Why do you think you found that? What alternative explanation is there? Who would challenge this?*
+
+**Mission sheet &mdash; four lines:** (1) main conclusion in plain language; (2) comparison to literature, with citation; (3) one important limitation; (4) one next step. Then swap with a neighboring team for quick feedback.
+]
+]
+
+.pull-right[
+.content-box-green[
+**3. `r fontawesome::fa("chalkboard", fill = "#4a7fb5")` Present the Ending** &mdash; 30 min &nbsp; `r timer_sm(30L)`
+
+Each team presents their **Discussion + Conclusion slides**. Feedback focuses on two questions:
+
+- Does the discussion **connect back** to the original research question?
+- Does the conclusion **land** on one clear takeaway?
+]
+
+.content-box-blue[
+**4. `r fontawesome::fa("comments", fill = "#4a7fb5")` Transition Practice** &mdash; 10 min &nbsp; `r timer_sm(10L)`
+
+Rehearse the hand-offs **out loud**: Methods &rarr; Results &rarr; Discussion &rarr; Conclusion &mdash; especially where the speaker changes.
+]
+]
+]
+
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
 library(renderthis)
