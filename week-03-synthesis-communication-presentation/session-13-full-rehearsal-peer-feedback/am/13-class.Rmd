@@ -26,11 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
-
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
 BibOptions(check.entries = FALSE,
@@ -240,20 +235,6 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 
 ```
 
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">Full Dress Rehearsal &mdash; Round 1</h4></li>
-    <li><h4 class="white">Feedback Integration Time</h4></li>
-    <li><h4 class="white">Scientific Storytelling: Q&A Practice</h4></li>
-</ol>
-
----
-class: segue-yellow
-
-# Session 13: Full Rehearsal <br> & Peer Feedback `r top_icon("chalkboard-teacher")`
-
----
 ### Learning Objectives
 
 .font90[

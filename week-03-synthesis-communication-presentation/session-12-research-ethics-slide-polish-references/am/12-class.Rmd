@@ -26,10 +26,6 @@ layout: true
 
 ---
 
-class: title-slide
-background-position: 10% 90%, 100% 50%
-background-size: 160px, 50% 100%
-background-color: #0148A4
 
 ```{r, load_refs, echo=FALSE, cache=FALSE, message=FALSE}
 library(RefManageR)
@@ -240,21 +236,6 @@ timer <- function(minutes = 1L, seconds = 0L, ...) {
 
 ```
 
-# .text-shadow[.white[Outline for Today]]
-
-<ol>
-    <li><h4 class="white">Research Ethics &mdash; Why It Matters</h4></li>
-    <li><h4 class="white">'Cite That Right' Team Activity</h4></li>
-    <li><h4 class="white">Slide Design Workshop</h4></li>
-    <li><h4 class="white">Full Run-Through</h4></li>
-</ol>
-
----
-class: segue-yellow
-
-# Session 12: Research Ethics, <br> Slide Polish & References `r top_icon("gavel")`
-
----
 ### Learning Objectives
 
 .font90[
@@ -612,89 +593,6 @@ The class suggests one concrete fix each. No slide leaves without an action.
 
 .content-box-blue[
 .font85[`r fontawesome::fa("route", fill = "#4a7fb5")` &nbsp; Every polished deck follows this arc. If a slide doesn't fit the arc, ask whether it belongs.]
-]
-
----
-class: segue-green
-
-# Full Run-Through `r top_icon("chalkboard-teacher")`
-
----
-### Full Run-Through (40 min)
-
-.pull-left[.font90[
-Each team presents the **entire** presentation, beginning to end &mdash; the first real rehearsal.
-
-<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("stopwatch", fill = "#0148A4")`</div><div class="chev-text"><strong>Time it:</strong> target <strong>10&ndash;12 minutes</strong> per team.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("volume-xmark", fill = "#0148A4")`</div><div class="chev-text"><strong>Class observes silently</strong> &mdash; take notes, hold questions.</div></div>
-<div class="chev-row-sm"><div class="chev-sm">`r fontawesome::fa("comment-dots", fill = "#0148A4")`</div><div class="chev-text"><strong>3 notes per team</strong> from the instructor.</div></div>
-]]
-
-.pull-right[.font90[
-.content-box-green[
-**`r fontawesome::fa("plus", fill = "#009E73")` 2 strengths**
-
-What worked &mdash; keep doing it.
-]
-.content-box-yellow[
-**`r fontawesome::fa("wrench", fill = "#c08a00")` 1 specific improvement**
-
-One concrete, actionable change for next time &mdash; not a vague "be clearer."
-]
-]]
-
-.center[`r timer(12L)`]
-
----
-### What to Listen For
-
-.three-col[
-.col[
-`r fontawesome::fa("clock", height = "2em", fill = "#4a7fb5")`
-
-**Timing**
-
-Does it fit 10&ndash;12 minutes? Where does it drag or rush?
-]
-.col[
-`r fontawesome::fa("arrows-left-right-to-line", height = "2em", fill = "#4a7fb5")`
-
-**Transitions**
-
-Do the hand-offs between speakers and sections feel smooth?
-]
-.col[
-`r fontawesome::fa("bullseye", height = "2em", fill = "#4a7fb5")`
-
-**Takeaway**
-
-Could you state the team's main finding in one sentence afterward?
-]
-]
-
---
-
-.content-box-blue[
-.font85[`r fontawesome::fa("seedling", fill = "#4a7fb5")` &nbsp; A first run-through is *supposed* to be rough. Its job is to surface the fixes while there's still time to make them.]
-]
-
----
-### Session 12: What You Can Do Now
-
-.font80[
-**Research ethics:**
-
-- Explain the four pillars &mdash; **attribution, honesty, limitations, consent** &mdash; and spot p-hacking, cherry-picking, and researcher bias in your own work.
-- Name why historical cases (Tuskegee, fabrication in the replication crisis, AI facial-recognition bias) still shape research rules today.
-
-**References & attribution:**
-
-- Complete a **References slide** where every citation matches a source in the text, in one consistent style, with AI use disclosed.
-
-**Slide polish & delivery:**
-
-- Apply the design principles &mdash; one idea per slide, the 6&times;6 rule, findings-first chart titles, &le; 2 fonts, high-contrast accessible color &mdash; and review a peer's deck with the checklist.
-- Deliver a full, timed run-through and turn feedback (2 strengths + 1 fix) into concrete revisions.
 ]
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
